@@ -63,7 +63,6 @@ class Contact implements \JsonSerializable
      */
     private $updated_by;
 
-
     /**
      * @var  Phone[]
      */
@@ -119,7 +118,7 @@ class Contact implements \JsonSerializable
     /**
      * @param Email[] $emails
      */
-    public function setEmails($emails)
+    public function setEmails(array $emails)
     {
         $this->emails = $emails;
     }
@@ -151,7 +150,7 @@ class Contact implements \JsonSerializable
     /**
      * @param Phone[] $phones
      */
-    public function setPhones($phones)
+    public function setPhones(array $phones)
     {
         $this->phones = $phones;
     }
