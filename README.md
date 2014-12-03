@@ -49,25 +49,24 @@ $address->setCity('Berlin');
 $address->setAddress1('Main Street');
 $address->setAddress2('Mitte');
 
-$lead->addAddress($address);
-
-// email
-$email = new Email();
-$email->setEmail('testcontactemail@dynamic-lead-test.com');
-$email->setType('work');
-
-// phone
-$phone = new Phone();
-$phone->setPhone('01244349656');
-$phone->setType('mobile');
-
-// create contact, add phone and email
+// contacts
 $contact = new Contact();
 $contact->setName('Dynamic Testcontact');
 $contact->setTitle('Dynamic Contact Test Title');
+
+// emails
+$email = new Email();
+$email->setEmail('testcontactemail@dynamic-lead-test.com');
+$email->setType('work');
 $contact->addEmail($email);
+
+// phones
+$phone = new Phone();
+$phone->setPhone('01244349656');
+$phone->setType('mobile');
 $contact->addPhone($phone);
 
+$lead->addAddress($address);
 $lead->addContact($contact);
 
 $response = $leadsApi->addLead($lead);
