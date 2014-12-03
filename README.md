@@ -94,3 +94,4 @@ License
 -------
 
 The Close.io API Wrapper is licensed under the MIT License - see the LICENSE file for details
+We are not affiliated with Close.io itself.
