@@ -6,7 +6,7 @@ php:
     - 5.3
 
 before_script:
-    - /home/travis/.phpenv/versions/$(phpenv version-name)/bin/composer self-update
+    - /home/travis/.phpenv/versions/`phpenv version-name`/bin/composer self-update
     - composer update
 
 script: phpunit --configuration tests/phpunit.xml
