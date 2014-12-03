@@ -1,0 +1,4 @@
+# @see authentication section at http://developer.close.io/
+# : is needed at the end of your API key, do not remove it
+api_key: <YOUR_API_KEY>
+url: https://app.close.io/api/v1

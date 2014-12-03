@@ -1,0 +1,12 @@
+<phpunit backupGlobals="true" bootstrap="./bootstrap.php">
+    <filter>
+        <whitelist>
+            <directory>/src</directory>
+        </whitelist>
+    </filter>
+    <testsuites>
+        <testsuite name="Close.io Api Wrapper Tests">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
