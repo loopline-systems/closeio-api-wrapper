@@ -13,15 +13,71 @@ PHP Wrapper to use the Close.io API
 [![Packagist](http://img.shields.io/packagist/dd/loopline-systems/closeio-api-wrapper.svg)](https://packagist.org/packages/loopline-systems/closeio-api-wrapper)
 
 
+Installation and Configuration
+------------
+* Require via composer<br />
+  "loopline-systems/closeio-api-wrapper": "dev-master"
+* Copy the config/config.sample.yml into config/config.yml and add your API Key.<br />
+   ! Probably a good idea to use testing credentials first.
+! You can use different endpoints if you want to.
+  Just create another config file like so "config.anothername.yml" and instanciate the CloseIoApiWrapper
+  using the anothername as the first argument
+
+```php
+$closeIoApiWrapper = new CloseIoApiWrapper();
+
+$anotherCloseIoApiWrapper = new CloseIoApiWrapper('anothername');
+```
+
+
 Usage
 ------------
-to be done.
+```php
+$closeIoApiWrapper = new CloseIoApiWrapper();
+$leadsApi = $closeIoApiWrapper->getLeadApi();
+
+// create lead
+$lead = new Lead();
+$lead->setName('Dynamic Test');
+$lead->setDescription('Dynamic lead test description');
+$lead->setUrl('www.dynamic-lead-test.com');
+
+// address
+$address = new Address();
+$address->setCountry('DE');
+$address->setCity('Berlin');
+$address->setAddress1('Main Street');
+$address->setAddress2('Mitte');
+
+$lead->addAddress($address);
+
+// email
+$email = new Email();
+$email->setEmail('testcontactemail@dynamic-lead-test.com');
+$email->setType('work');
+
+// phone
+$phone = new Phone();
+$phone->setPhone('01244349656');
+$phone->setType('mobile');
+
+// create contact, add phone and email
+$contact = new Contact();
+$contact->setName('Dynamic Testcontact');
+$contact->setTitle('Dynamic Contact Test Title');
+$contact->addEmail($email);
+$contact->addPhone($phone);
+
+$lead->addContact($contact);
+
+$response = $leadsApi->addLead($lead);
+```
 
 
 Requirements
 ------------
 
-PHP 5.3.2 or above
+PHP 5.4.0 or above
 
 Authors
 -------
