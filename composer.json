@@ -1,5 +1,5 @@
 {
-    "name": "LooplineSystems/CloseIoApiWrapper",
+    "name": "loopline-systems/closeio-api-wrapper",
     "description": "A PHP wrapper for the Close.io Api",
     "license": "MIT",
     "keywords": ["closeio php wrapper"],
