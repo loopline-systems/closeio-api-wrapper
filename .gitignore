@@ -1,10 +1,4 @@
-config/dev/
-!config/dev/.gitkeep
-!config/dev/config.sample.yml
-config/test/
-!config/test/config.sample.yml
-config/prod/
-!config/prod/.gitkeep
-!config/prod/config.sample.yml
+config/
+!config/config.sample.yml
 vendor/
 composer.lock

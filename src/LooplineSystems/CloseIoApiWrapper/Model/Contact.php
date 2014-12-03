@@ -116,6 +116,14 @@ class Contact implements \JsonSerializable
     }
 
     /**
+     * @param Email $email
+     */
+    public function addEmail(Email $email)
+    {
+        $this->emails[] = $email;
+    }
+    
+    /**
      * @param Email[] $emails
      */
     public function setEmails(array $emails)
@@ -147,6 +155,14 @@ class Contact implements \JsonSerializable
         return $this->phones;
     }
 
+    /**
+     * @param Phone $phone
+     */
+    public function addPhone(Phone $phone)
+    {
+        $this->phones[] = $phone;
+    }
+    
     /**
      * @param Phone[] $phones
      */

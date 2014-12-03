@@ -34,6 +34,11 @@ class Lead implements \JsonSerializable
      */
     private $status_id;
 
+    /*
+     * @var string
+     */
+    private $status_label;
+
     /**
      * @var string
      */
@@ -204,9 +209,17 @@ class Lead implements \JsonSerializable
     }
 
     /**
+     * @param Address $address
+     */
+    public function addAddress($address)
+    {
+        $this->addresses[] = $address;
+    }
+    
+    /**
      * @param Address[] $addresses
      */
-    public function setAddresses($addresses)
+    public function setAddresses(array $addresses)
     {
         $this->addresses = $addresses;
     }
@@ -220,9 +233,17 @@ class Lead implements \JsonSerializable
     }
 
     /**
+     * @param Contact $contact
+     */
+    public function addContact(Contact $contact)
+    {
+        $this->contacts[] = $contact;
+    }
+    
+    /**
      * @param Contact[] $contacts
      */
-    public function setContacts($contacts)
+    public function setContacts(array $contacts)
     {
         $this->contacts = $contacts;
     }

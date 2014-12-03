@@ -10,13 +10,11 @@
 namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException;
-use LooplineSystems\Library\Api\AbstractApi;
 
 class ApiHandler
 {
     const CONFIG_API_KEY = 'api_key';
     const CONFIG_URL = 'url';
-    const CONFIG_TEST_DATA = 'test_data';
 
     /**
      * @var array

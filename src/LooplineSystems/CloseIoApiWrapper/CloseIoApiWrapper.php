@@ -55,13 +55,18 @@ class CloseIoApiWrapper
     }
 
     /**
-     * @param $env
+     * @param null $config
      * @return array
      * @throws \Exception
      */
-    public function readConfig($env)
+    public function readConfig($config = null)
     {
-        $fileNameAbsolute = CLOSE_IO_APP_ROOT . '../../../config/' . $env . '/config';
+        $fileName = 'config.yml';
+        if ($config) {
+            $fileName = 'config.' . $config . '.yml';
+        }
+        
+        $fileNameAbsolute = CLOSE_IO_APP_ROOT . '../../../config/' . $fileName;
         return self::parseYml($fileNameAbsolute);
     }
 
@@ -72,7 +77,6 @@ class CloseIoApiWrapper
      */
     protected function parseYml($fileName)
     {
-        $fileName .= '.yml';
         if (!file_exists($fileName)) {
             throw new \Exception($fileName . ' not found');
         }

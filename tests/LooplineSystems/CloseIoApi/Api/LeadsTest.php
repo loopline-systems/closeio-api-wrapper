@@ -14,7 +14,6 @@ use LooplineSystems\CloseIoApiWrapper\Model\Address;
 use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 use LooplineSystems\CloseIoApiWrapper\Model\Email;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
-use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
 use LooplineSystems\CloseIoApiWrapper\Model\Phone;
 
@@ -40,12 +39,15 @@ class LeadsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @description test adding a lead from test data contained in configuration file 
+     * @description test adding a lead from test data contained in configuration file
+     * @param $testData
+     * 
+     * @dataProvider getTestData
      */
-    public function testAddLeadFromData()
+    public function testAddLeadFromData($testData)
     {
         // create lead
-        $lead = new Lead($this->getTestData($this->closeIoApiWrapper));
+        $lead = new Lead($testData);
         $response = $this->leadsApi->addLead($lead);
 
         // check if request is successful
@@ -75,8 +77,6 @@ class LeadsTest extends \PHPUnit_Framework_TestCase
         $address->setAddress1('Main Street');
         $address->setAddress2('Mitte');
 
-        $lead->setAddresses(array($address));
-
         // contacts
         $contact = new Contact();
         $contact->setName('Dynamic Testcontact');
@@ -86,15 +86,16 @@ class LeadsTest extends \PHPUnit_Framework_TestCase
         $email = new Email();
         $email->setEmail('testcontactemail@dynamic-lead-test.com');
         $email->setType('work');
-        $contact->setEmails([$email]);
+        $contact->addEmail($email);
 
         // phones
         $phone = new Phone();
         $phone->setPhone('01244349656');
         $phone->setType('mobile');
-        $contact->setPhones([$phone]);
+        $contact->addPhone($phone);
 
-        $lead->setContacts([$contact]);
+        $lead->addAddress($address);
+        $lead->addContact($contact);
 
         $response = $this->leadsApi->addLead($lead);
 
@@ -109,10 +110,7 @@ class LeadsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * test getting all available leads
-     * 
-     */
-    /**
-     * testAddLeadFromData
+     * @depends testAddLeadFromData
      */
     public function testGetAllLeads()
     {
@@ -140,11 +138,29 @@ class LeadsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param CloseIoApiWrapper $closeIoApi
      * @return array
      */
-    public function getTestData(CloseIoApiWrapper $closeIoApi)
+    public function getTestData()
     {
-        return $closeIoApi->getApiHandler()->getConfig()[ApiHandler::CONFIG_TEST_DATA];
+        $testData = [
+            "name" => "Test Company",
+            "email" => "info@testcompany.com",
+            "url" => "www.test-company-site.com",
+            "contacts" => [
+                "name" => "Tester Contactsson",
+                "title" => "Chief Tester",
+                "phones" => [
+                    "phone" => "00353861245532",
+                    "type" => "mobile"
+                ],
+                "emails" => [
+                    "email" => "t.contactsson@testcompany.com",
+                    "type" => "office"
+                ]
+            ]
+        ];
+        
+        //data providers must be arrays of arrays
+        return [$testData];
     }
 }
