@@ -12,8 +12,6 @@ namespace LooplineSystems\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 
-use Symfony\Component\Yaml\Yaml;
-
 define('CLOSE_IO_APP_ROOT', realpath(__DIR__) . '/');
 
 class CloseIoApiWrapper
@@ -25,12 +23,16 @@ class CloseIoApiWrapper
     private $apiHandler;
 
     /**
-     * @param string $env
+     * @param CloseIoConfig $config
+     * @throws \Exception
      */
-    public function __construct($env)
+    public function __construct(CloseIoConfig $config)
     {
-        $config = $this->readConfig($env);
-        $this->apiHandler = $this->initApiHandler($config);
+        if ($config->getApiKey() !== '' && $config->getUrl() !== ''){
+            $this->apiHandler = $this->initApiHandler($config->toArray());
+        } else {
+            throw new \Exception('Config must contain url and api key');
+        }
     }
 
     /**
@@ -52,35 +54,6 @@ class CloseIoApiWrapper
     public function getLeadApi()
     {
         return $this->apiHandler->getApi(LeadApi::NAME);
-    }
-
-    /**
-     * @param null $config
-     * @return array
-     * @throws \Exception
-     */
-    public function readConfig($config = null)
-    {
-        $fileName = 'config.yml';
-        if ($config) {
-            $fileName = 'config.' . $config . '.yml';
-        }
-        
-        $fileNameAbsolute = CLOSE_IO_APP_ROOT . '../../../config/' . $fileName;
-        return self::parseYml($fileNameAbsolute);
-    }
-
-    /**
-     * @param $fileName
-     * @return array
-     * @throws \Exception
-     */
-    protected function parseYml($fileName)
-    {
-        if (!file_exists($fileName)) {
-            throw new \Exception($fileName . ' not found');
-        }
-        return Yaml::parse($fileName);
     }
 
     /**
