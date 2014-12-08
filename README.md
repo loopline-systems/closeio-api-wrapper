@@ -18,23 +18,14 @@ Installation and Configuration
 ------------
 * Require via composer<br />
   "loopline-systems/closeio-api-wrapper": "dev-master"
-* Copy the config/config.sample.yml into config/config.yml and add your API Key.<br />
-   ! Probably a good idea to use testing credentials first.<br />
-! You can use different endpoints if you want to.<br />
-  Just create another config file like so "config.anothername.yml" and instanciate the CloseIoApiWrapper
-  using the anothername as the first argument
-
-```php
-$closeIoApiWrapper = new CloseIoApiWrapper();
-
-$anotherCloseIoApiWrapper = new CloseIoApiWrapper('anothername');
-```
-
 
 Usage
 ------------
 ```php
-$closeIoApiWrapper = new CloseIoApiWrapper();
+$closeIoConfig = new CloseIoConfig();
+$closeIoConfig->setApiKey('yourApiKey');
+
+$closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
 $leadsApi = $closeIoApiWrapper->getLeadApi();
 
 // create lead
