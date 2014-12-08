@@ -63,12 +63,4 @@ class CloseIoConfig
     {
         $this->url = $url;
     }
-
-    public function toArray()
-    {
-        return array(
-            'url' => $this->getUrl(),
-            'api_key' => $this->getApiKey()
-        );
-    }
 }

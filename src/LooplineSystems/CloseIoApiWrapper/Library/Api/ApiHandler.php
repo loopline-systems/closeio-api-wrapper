@@ -9,15 +9,13 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
 
+use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException;
 
 class ApiHandler
 {
-    const CONFIG_API_KEY = 'api_key';
-    const CONFIG_URL = 'url';
-
     /**
-     * @var array
+     * @var CloseIoConfig
      */
     private $config;
 
@@ -27,9 +25,9 @@ class ApiHandler
     private $apis;
 
     /**
-     * @param array $config
+     * @param CloseIoConfig $config
      */
-    public function __construct(array $config)
+    public function __construct(CloseIoConfig $config)
     {
         $this->config = $config;
     }
@@ -57,7 +55,7 @@ class ApiHandler
     }
 
     /**
-     * @return array
+     * @return CloseIoConfig
      */
     public function getConfig()
     {

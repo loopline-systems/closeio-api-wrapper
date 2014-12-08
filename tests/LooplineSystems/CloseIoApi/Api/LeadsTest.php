@@ -27,4 +27,13 @@ class LeadsTest extends \PHPUnit_Framework_TestCase
         $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
         $this->assertTrue(get_class($closeIoApiWrapper) === 'LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper');
     }
+
+    public function testCreateLeadApi()
+    {
+        $closeIoConfig = new CloseIoConfig();
+        $closeIoConfig->setApiKey('testapikey');
+        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+        $leadApi = $closeIoApiWrapper->getLeadApi();
+        $this->assertTrue(get_class($leadApi) === 'LooplineSystems\CloseIoApiWrapper\Api\LeadApi');
+    }
 }
