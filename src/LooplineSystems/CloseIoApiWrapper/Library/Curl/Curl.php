@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Curl;
 
@@ -13,7 +13,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\CurlConstantsInterface;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\Library\Exception\UrlNotSetException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 
 class Curl implements CurlConstantsInterface
 {
@@ -42,6 +42,7 @@ class Curl implements CurlConstantsInterface
 
     /**
      * @param CloseIoRequest $request
+     * @return CloseIoResponse
      * @throws BadApiRequestException
      * @throws UrlNotSetException
      */

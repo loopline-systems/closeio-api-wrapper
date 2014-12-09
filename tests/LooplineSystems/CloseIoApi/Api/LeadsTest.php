@@ -11,12 +11,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Tests;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
-use LooplineSystems\CloseIoApiWrapper\Model\Address;
-use LooplineSystems\CloseIoApiWrapper\Model\Contact;
-use LooplineSystems\CloseIoApiWrapper\Model\Email;
-use LooplineSystems\CloseIoApiWrapper\Model\Lead;
-use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
-use LooplineSystems\CloseIoApiWrapper\Model\Phone;
 
 class LeadsTest extends \PHPUnit_Framework_TestCase
 {
