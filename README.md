@@ -80,7 +80,7 @@ Authors
 Michael Devery - <michaeldevery@gmail.com><br />
 Marco Roßdeutscher - <marco.rossdeutscher@gmail.com><br />
 
-See also the list of [contributors](https://github.com/composer/composer/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/loopline-systems/closeio-api-wrapper/contributors) who participated in this project.
 
 License
 -------
