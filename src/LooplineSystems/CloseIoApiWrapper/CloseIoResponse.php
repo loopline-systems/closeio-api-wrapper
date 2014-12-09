@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
@@ -109,7 +109,14 @@ class CloseIoResponse
      */
     public function getErrors()
     {
-        return array_merge($this->getData()['errors'], $this->getData()['field-errors']);
+        $errors = array();
+        $data = $this->getData();
+
+        if (isset($data['errors'])) $errors['errors'] = $data['errors'];
+        if (isset($data['error'])) $errors['error'] = $data['error'];
+        if (isset($data['field-errors'])) $errors['field-errors'] = $data['field-errors'];
+
+        return $errors;
     }
 
     /**
