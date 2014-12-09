@@ -6,7 +6,11 @@ php:
 
 before_script:
     - /home/travis/.phpenv/versions/`phpenv version-name`/bin/composer self-update
-    - composer --version
-    - composer update
+    - php composer.phar install --dev --no-interaction
 
-script: phpunit --configuration tests/phpunit.xml
+script:
+    - mkdir -p build/logs
+    - phpunit --configuration tests/phpunit.xml
+
+after_script:
+    - php vendor/bin/coveralls
