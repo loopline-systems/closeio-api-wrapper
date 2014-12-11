@@ -17,7 +17,9 @@ PHP Wrapper to use the Close.io API
 Installation and Configuration
 ------------
 * Require via composer<br />
-  "loopline-systems/closeio-api-wrapper": "dev-master"
+```bash
+loopline-systems/closeio-api-wrapper": "dev-master"
+```
 
 Usage
 ------------
