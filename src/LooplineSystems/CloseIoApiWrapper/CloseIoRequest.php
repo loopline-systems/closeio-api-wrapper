@@ -57,7 +57,11 @@ class CloseIoRequest
     {
         // check validity of json
         if (!is_array($data) || !is_object($data)) {
-            json_decode($data);
+            try {
+                json_decode($data);
+            } catch (\Exception $e) {
+                throw new JsonDecodingException(JSON_ERROR_SYNTAX, null, $e->getMessage());
+            }
             if (json_last_error() !== JSON_ERROR_NONE) {
                 throw new JsonDecodingException(json_last_error());
             }

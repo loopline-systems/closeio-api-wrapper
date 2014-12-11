@@ -9,6 +9,8 @@
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+
 class CloseIoConfig
 {
     /**
@@ -26,7 +28,7 @@ class CloseIoConfig
      */
     public function __construct($url = 'https://app.close.io/api/v1')
     {
-        $this->url = $url;
+        $this->setUrl($url);
     }
 
     /**
@@ -42,7 +44,7 @@ class CloseIoConfig
      */
     public function setApiKey($apiKey)
     {
-        if (substr($apiKey, -1) !== ':'){
+        if ($apiKey && substr($apiKey, -1) !== ':'){
             $apiKey = $apiKey . ':';
         }
         $this->apiKey = $apiKey;
@@ -57,10 +59,15 @@ class CloseIoConfig
     }
 
     /**
-     * @param string $url
+     * @param $url
+     * @throws InvalidParamException
      */
     public function setUrl($url)
     {
-        $this->url = $url;
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            $this->url = $url;
+        } else {
+            throw new InvalidParamException('Api Url must be valid url');
+        }
     }
 }
