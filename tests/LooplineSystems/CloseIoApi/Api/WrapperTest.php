@@ -12,14 +12,13 @@ namespace LooplineSystems\CloseIoApiWrapper\Tests;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 
-class LeadsTest extends \PHPUnit_Framework_TestCase
+class WrapperTest extends \PHPUnit_Framework_TestCase
 {
-    public function testCreateLeadApi()
+    public function testCreateCloseIoWrapper()
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-        $leadApi = $closeIoApiWrapper->getLeadApi();
-        $this->assertTrue(get_class($leadApi) === 'LooplineSystems\CloseIoApiWrapper\Api\LeadApi');
+        $config = new CloseIoConfig();
+        $config->setApiKey('testkey');
+        $closeIoApiWrapper = new CloseIoApiWrapper($config);
+        $this->assertTrue(get_class($closeIoApiWrapper) === 'LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper');
     }
 }
