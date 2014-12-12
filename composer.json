@@ -18,9 +18,14 @@
         "symfony/yaml": "2.5.2",
         "zendframework/zend-filter": "2.3.3"
     },
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/mickadoo/php-test-reporter"
+    }],
     "require-dev": {
         "phpunit/phpunit": "4.3.5",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "codeclimate/php-test-reporter": "dev-master"
     },
     "autoload": {
         "psr-0": {
