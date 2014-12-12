@@ -18,7 +18,7 @@ Installation and Configuration
 ------------
 * Require via composer<br />
 ```bash
-loopline-systems/closeio-api-wrapper": "dev-master"
+"loopline-systems/closeio-api-wrapper": "0.0.2"
 ```
 
 Usage
