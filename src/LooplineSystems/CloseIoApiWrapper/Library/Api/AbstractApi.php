@@ -61,7 +61,7 @@ abstract class AbstractApi implements ApiInterface
             return static::NAME;
         }
 
-        throw new \Exception("Please  implement a CONST NAME = '<Name>' in zur concrete Api!");
+        throw new \Exception("Please  implement a CONST NAME = '<Name>' in your concrete Api!");
     }
 
     /**

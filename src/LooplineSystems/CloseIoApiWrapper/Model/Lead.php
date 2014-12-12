@@ -9,13 +9,12 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
-
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 
 class Lead implements \JsonSerializable
 {
-
     const LEAD_STATUS_POTENTIAL = 'Potential';
     const LEAD_STATUS_BAD_FIT = 'Bad Fit';
     const LEAD_STATUS_QUALIFIED = 'Qualified';
@@ -25,7 +24,7 @@ class Lead implements \JsonSerializable
     use JsonSerializableHelperTrait;
 
     /**
-     * @var int
+     * @var string
      */
     private $id;
 
@@ -75,7 +74,7 @@ class Lead implements \JsonSerializable
     private $tasks;
 
     /**
-     * @var Address[]
+     * @var string
      */
     private $name;
 
@@ -135,57 +134,21 @@ class Lead implements \JsonSerializable
     public function __construct(array $data = null)
     {
         if ($data) {
-            // NON OBJECTS
-            $nested_objects = ['contacts', 'tasks', 'addresses', 'opportunities', 'custom'];
+            // custom is not a class and should be set separately
+            if (isset($data['custom'])){
+                $this->setCustom($data['custom']);
+                unset($data['custom']);
+            }
 
-            $this->hydrate($data, $nested_objects);
+            // child objects
+            $nestedObjects = ['contacts', 'tasks', 'addresses', 'opportunities', 'custom'];
 
-            // OBJECTS
-            // contacts
-            if (!empty($data['contacts'])) {
-                $contacts = array();
-                foreach ($data['contacts'] as $contact_raw) {
-                    $contacts[] = new Contact($contact_raw);
-                }
-                $this->setContacts($contacts);
-            }
-            // tasks
-            if (!empty($data['tasks'])) {
-                $tasks = array();
-                foreach ($data['tasks'] as $task_raw) {
-                    $tasks[] = new Task($task_raw);
-                }
-                $this->setTasks($tasks);
-            }
-            // addresses
-            if (!empty($data['addresses'])) {
-                $addresses = array();
-                foreach ($data['addresses'] as $address_raw) {
-                    $addresses[] = new Address($address_raw);
-                }
-                $this->setAddresses($addresses);
-            }
-            // opportunities
-            if (!empty($data['opportunities'])) {
-                $opportunities = array();
-                foreach ($data['opportunities'] as $opportunity_raw) {
-                    $opportunities[] = new Opportunity($opportunity_raw);
-                }
-                $this->setOpportunities($opportunities);
-            }
-            // custom
-            if (!empty($data['custom'])) {
-                $custom_fields = array();
-                foreach ($data['custom'] as $key => $custom_raw) {
-                    $custom_fields[$key][] = $custom_raw;
-                }
-                $this->setCustom($custom_fields);
-            }
+            $this->hydrate($data, $nestedObjects);
         }
     }
 
     /**
-     * @return integer
+     * @return string
      */
     public function getId()
     {
@@ -193,7 +156,8 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param integer $id
+     * @param string $id
+     * @throws InvalidParamException
      */
     public function setId($id)
     {
@@ -535,6 +499,4 @@ class Lead implements \JsonSerializable
     {
         $this->updated_by_name = $updated_by_name;
     }
-
-
 }

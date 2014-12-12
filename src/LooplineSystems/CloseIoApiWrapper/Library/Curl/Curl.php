@@ -11,7 +11,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Library\Curl;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\CurlConstantsInterface;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 
