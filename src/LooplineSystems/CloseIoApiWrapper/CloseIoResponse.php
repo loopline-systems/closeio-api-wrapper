@@ -124,7 +124,8 @@ class CloseIoResponse
      */
     public function hasErrors()
     {
-        if (!empty($this->getData()['errors']) || (!empty($this->getData()['field-errors']))) {
+        $errors = $this->getErrors();
+        if (!empty($errors)) {
             return true;
         }
         return false;
