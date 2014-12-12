@@ -24,6 +24,7 @@ Installation and Configuration
 Usage
 ------------
 ```php
+// optionally pass in close.io api endpoint as init argument
 $closeIoConfig = new CloseIoConfig();
 $closeIoConfig->setApiKey('yourApiKey');
 
