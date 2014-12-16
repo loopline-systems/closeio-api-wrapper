@@ -72,6 +72,8 @@ Info
 Right now just a few request are implemented, because the main need was to create leads.
 Feel free to add requests and create pull requests or go on forking the repo.
 
+We use https://github.com/btford/adj-noun for our release names, so don`t worry they have no special meaning :)
+
 Requirements
 ------------
 
