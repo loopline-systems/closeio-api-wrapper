@@ -16,6 +16,6 @@ class BadApiRequestException extends \Exception {
      */
     public function __construct(array $errors)
     {
-        parent::__construct('Api request returned an error:' . var_dump($errors));
+        parent::__construct('Api request returned an error: ' . implode('<br>' . PHP_EOL, $errors));
     }
 } 
