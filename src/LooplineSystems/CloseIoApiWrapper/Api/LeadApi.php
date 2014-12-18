@@ -27,8 +27,8 @@ class LeadApi extends AbstractApi
         $this->urls = [
             'get-leads' => '/lead/',
             'add-lead' => '/lead/',
-            'get-lead' => '/lead/[:id]',
-            'update-lead' => 'lead/[:id]'
+            'get-lead' => '/lead/[:id]/',
+            'update-lead' => '/lead/[:id]/',
         ];
     }
 
