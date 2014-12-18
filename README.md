@@ -1,7 +1,7 @@
 closeio-api-wrapper
 ===================
 
-PHP Wrapper to use the Close.io API
+PHP Wrapper to use the Close.io API 
 
 [![License](https://img.shields.io/packagist/l/loopline-systems/closeio-api-wrapper.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](http://img.shields.io/travis/loopline-systems/closeio-api-wrapper.svg)](https://travis-ci.org/loopline-systems/closeio-api-wrapper)
@@ -16,15 +16,19 @@ PHP Wrapper to use the Close.io API
 
 Installation and Configuration
 ------------
-* Require via composer<br />
+Require via [Composer](https://github.com/composer/composer)<br />
 ```bash
-"loopline-systems/closeio-api-wrapper": "0.0.2"
+{
+    "require": {
+        "loopline-systems/closeio-api-wrapper": "0.0.2"
+    }
+}
 ```
 
 Usage
 ------------
 ```php
-// optionally pass in close.io api endpoint as init argument
+// optionally pass in close.io api endpoint
 $closeIoConfig = new CloseIoConfig();
 $closeIoConfig->setApiKey('yourApiKey');
 
@@ -71,6 +75,8 @@ Info
 ------------
 Right now just a few request are implemented, because the main need was to create leads.
 Feel free to add requests and create pull requests or go on forking the repo.
+
+We use https://github.com/btford/adj-noun for our release names, so don`t worry they have no special meaning :)
 
 Requirements
 ------------
