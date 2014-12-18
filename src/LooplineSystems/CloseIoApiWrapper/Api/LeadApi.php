@@ -11,6 +11,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 
@@ -26,7 +27,8 @@ class LeadApi extends AbstractApi
         $this->urls = [
             'get-leads' => '/lead/',
             'add-lead' => '/lead/',
-            'get-lead' => '/lead/[:id]'
+            'get-lead' => '/lead/[:id]',
+            'update-lead' => 'lead/[:id]'
         ];
     }
 
@@ -81,5 +83,42 @@ class LeadApi extends AbstractApi
         $lead = json_encode($lead);
         $apiRequest = $this->prepareRequest('add-lead', $lead);
         return $this->triggerPost($apiRequest);
+    }
+
+    /**
+     * @param Lead $lead
+     * @return Lead|string
+     * @throws InvalidParamException
+     * @throws ResourceNotFoundException
+     */
+    public function updateLead(Lead $lead)
+    {
+        // check if lead has id
+        if ($lead->getId() == null) {
+            throw new InvalidParamException('When updating a lead you must provide the lead ID');
+        }
+        // remove id from lead since it won't be part of the patch data
+        $id = $lead->getId();
+        $lead->setId(null);
+
+        $lead = json_encode($lead);
+        $apiRequest = $this->prepareRequest('update-lead', $lead, ['id' => $id]);
+        $response = $this->triggerPut($apiRequest);
+
+        // return Lead object if successful
+        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
+            $lead = new Lead($response->getData());
+        } else {
+            throw new ResourceNotFoundException();
+        }
+        return $lead;
+    }
+
+    /**
+     * @param Curl $curl
+     */
+    public function setCurl($curl)
+    {
+        $this->curl = $curl;
     }
 }
