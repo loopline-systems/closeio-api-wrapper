@@ -115,6 +115,11 @@ class LeadApi extends AbstractApi
         return $lead;
     }
 
+    /**
+     * @param $id
+     * @return CloseIoResponse
+     * @throws ResourceNotFoundException
+     */
     public function deleteLead($id){
         $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
 
@@ -128,6 +133,7 @@ class LeadApi extends AbstractApi
         }
     }
 
+
     /**
      * @param Curl $curl
      */
@@ -135,4 +141,5 @@ class LeadApi extends AbstractApi
     {
         $this->curl = $curl;
     }
+
 }

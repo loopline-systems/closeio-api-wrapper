@@ -29,6 +29,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
         $request->setUrl('www.google.com');
         $request->setMethod(Curl::METHOD_GET);
         $response = $curl->getResponse($request);
+        $response =  $curl->getResponse($request);
         $this->assertEquals($response->getReturnCode(), '200');
         $this->assertNotEmpty($response->getRawData());
         $this->assertFalse($response->hasErrors());
