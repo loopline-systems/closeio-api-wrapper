@@ -28,6 +28,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
         $request = new CloseIoRequest($closeIoApiWrapper->getApiHandler());
         $request->setUrl('www.google.com');
         $request->setMethod(Curl::METHOD_GET);
+        $response = $curl->getResponse($request);
         $response =  $curl->getResponse($request);
         $this->assertEquals($response->getReturnCode(), '200');
         $this->assertNotEmpty($response->getRawData());
@@ -45,5 +46,14 @@ class CurlTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException');
 
         $leadApi->getLead('bad-id');
+    }
+
+    public function testInterface()
+    {
+        $this->assertTrue(Curl::METHOD_GET === 'GET');
+        $this->assertTrue(Curl::METHOD_PUT === 'PUT');
+        $this->assertTrue(Curl::METHOD_PATCH === 'PATCH');
+        $this->assertTrue(Curl::METHOD_DELETE === 'DELETE');
+        $this->assertTrue(Curl::METHOD_POST === 'POST');
     }
 }

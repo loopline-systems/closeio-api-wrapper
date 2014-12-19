@@ -81,30 +81,6 @@ class Contact implements \JsonSerializable
         if ($data) {
             $this->hydrate($data, ['phones', 'emails', 'urls']);
         }
-
-        if (!empty($data['phones'])) {
-            $phones = array();
-            foreach ($data['phones'] as $phone_raw) {
-                $phones[] = new Phone($phone_raw);
-            }
-            $this->setPhones($phones);
-        }
-
-        if (!empty($data['emails'])) {
-            $emails = array();
-            foreach ($data['emails'] as $email_raw) {
-                $emails[] = new Email($email_raw);
-            }
-            $this->setEmails($emails);
-        }
-
-        if (!empty($data['urls'])) {
-            $urls = array();
-            foreach ($data['urls'] as $url_raw) {
-                $urls[] = new Url($url_raw);
-            }
-            $this->setUrls($urls);
-        }
     }
 
     /**

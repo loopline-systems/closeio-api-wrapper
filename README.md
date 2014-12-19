@@ -28,7 +28,7 @@ Require via [Composer](https://github.com/composer/composer)<br />
 Usage
 ------------
 ```php
-// optionally pass in close.io api endpoint
+// optionally pass in close.io api endpoint as init argument
 $closeIoConfig = new CloseIoConfig();
 $closeIoConfig->setApiKey('yourApiKey');
 

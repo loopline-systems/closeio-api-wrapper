@@ -35,7 +35,7 @@ class Task implements \JsonSerializable
     /**
      * @var bool
      */
-    private $is_complete;
+    private $completed;
 
     /**
      * @var string
@@ -101,7 +101,7 @@ class Task implements \JsonSerializable
     public function __construct($data = null)
     {
         if ($data) {
-            $this->hydrate($data);
+            $this->hydrate($data, [], ['setIsCompleted' => 'setCompleted']);
         }
     }
 
@@ -140,17 +140,17 @@ class Task implements \JsonSerializable
     /**
      * @return boolean
      */
-    public function isComplete()
+    public function isCompleted()
     {
-        return $this->is_complete;
+        return $this->completed;
     }
 
     /**
      * @param boolean $is_complete
      */
-    public function setIsComplete($is_complete)
+    public function setCompleted($is_complete)
     {
-        $this->is_complete = $is_complete;
+        $this->completed = $is_complete;
     }
 
     /**

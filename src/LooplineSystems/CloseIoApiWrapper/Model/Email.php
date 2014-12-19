@@ -9,8 +9,10 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Email implements \JsonSerializable
 {
@@ -51,11 +53,16 @@ class Email implements \JsonSerializable
     }
 
     /**
-     * @param string $email
+     * @param $email
+     * @throws InvalidParamException
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidParamException('Invalid email format');
+        } else {
+            $this->email = $email;
+        }
     }
 
     /**
