@@ -84,10 +84,6 @@ class Task implements \JsonSerializable
 
     /**
      * @var string
-     * */
-
-    /**
-     * @var string
      */
     private $lead_id;
     /**
