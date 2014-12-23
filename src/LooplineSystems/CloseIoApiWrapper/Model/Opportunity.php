@@ -14,7 +14,6 @@ use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 
 class Opportunity implements \JsonSerializable
 {
-
     const OPPORTUNITY_FREQUENCY_ONE_OFF = 'One-Time';
     const OPPORTUNITY_FREQUENCY_MONTHLY = 'Monthly';
     const OPPORTUNITY_FREQUENCY_ANNUAL = 'Annual';

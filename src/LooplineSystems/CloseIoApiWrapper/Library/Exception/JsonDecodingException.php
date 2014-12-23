@@ -11,6 +11,13 @@ namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
 class JsonDecodingException extends \RuntimeException
 {
+    const JSON_ERROR_DEPTH_MESSAGE = 'The maximum stack depth has been exceeded';
+    const JSON_ERROR_STATE_MISMATCH_MESSAGE = 'Invalid or malformed JSON';
+    const JSON_ERROR_CTRL_CHAR_MESSAGE = 'Control character error, possibly incorrectly encoded';
+    const JSON_ERROR_UTF8_MESSAGE = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+    const JSON_ERROR_SYNTAX_MESSAGE = 'JSON syntax is malformed';
+    const JSON_ERROR_DEFAULT_MESSAGE = 'Syntax error';
+
     /**
      * @param int|string $code
      * @param \Exception $previous
@@ -19,22 +26,22 @@ class JsonDecodingException extends \RuntimeException
     {
         switch ($code) {
             case JSON_ERROR_DEPTH:
-                $message = 'The maximum stack depth has been exceeded';
+                $message = self::JSON_ERROR_DEPTH_MESSAGE;
                 break;
             case JSON_ERROR_STATE_MISMATCH:
-                $message = 'Invalid or malformed JSON';
+                $message = self::JSON_ERROR_STATE_MISMATCH_MESSAGE;
                 break;
             case JSON_ERROR_CTRL_CHAR:
-                $message = 'Control character error, possibly incorrectly encoded';
+                $message = self::JSON_ERROR_CTRL_CHAR_MESSAGE;
                 break;
             case JSON_ERROR_UTF8:
-                $message = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                $message = self::JSON_ERROR_UTF8_MESSAGE;
                 break;
             case JSON_ERROR_SYNTAX:
-                $message = 'JSON syntax is malformed';
+                $message = self::JSON_ERROR_SYNTAX_MESSAGE;
                 break;
             default:
-                $message = 'Syntax error';
+                $message = self::JSON_ERROR_DEFAULT_MESSAGE;
         }
         parent::__construct($message, $code, $previous);
     }

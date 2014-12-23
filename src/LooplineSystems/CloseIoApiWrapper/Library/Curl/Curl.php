@@ -14,8 +14,14 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 
-class Curl implements CurlConstantsInterface
+class Curl
 {
+    const METHOD_POST = 'POST';
+    const METHOD_GET = 'GET';
+    const METHOD_PUT = 'PUT';
+    const METHOD_DELETE = 'DELETE';
+    const METHOD_PATCH = 'PATCH';
+
     /**
      * @param CloseIoRequest $request
      * @return resource
