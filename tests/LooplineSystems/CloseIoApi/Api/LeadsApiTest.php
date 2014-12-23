@@ -69,38 +69,18 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider leadProvider
-     * @param Lead $lead
+     * @dataProvider leadArrayProvider
+     * @param Lead[] $leadsArray
      */
-    public function testGetAllLeads($lead)
+    public function testGetAllLeads($leadsArray)
     {
-        // set up leads to be returned
-        $leadOne = clone $lead;
-        $leadTwo = clone $lead;
-        $leadThree = clone $lead;
-
-        $leadOne->setId('TestIdOne');
-        $leadTwo->setId('TestIdTwo');
-        $leadThree->setId('TestIdThree');
-
-        $leadsArray = [
-            $leadOne,
-            $leadTwo,
-            $leadThree
-        ];
-
         $responseBody = [
             CloseIoResponse::GET_ALL_RESPONSE_HAS_MORE_KEY => false,
             CloseIoResponse::GET_ALL_RESPONSE_TOTAL_RESULTS_KEY => '3',
             CloseIoResponse::GET_ALL_RESPONSE_LEADS_KEY => $leadsArray
         ];
 
-        // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('test-api-key');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-        $leadsApi = $closeIoApiWrapper->getLeadApi();
-
+        $leadsApi = $this->getLeadsApi();
 
         $expectedResponse = new CloseIoResponse();
         $expectedResponse->setReturnCode(200);
@@ -116,7 +96,6 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
         foreach ($returnedLeads as $key => $lead){
             $this->assertTrue($lead == $leadsArray[$key]);
         }
-
     }
 
     /**
@@ -216,6 +195,35 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
             [
                 (new Lead(['name'=>'Test Name', 'description' => 'Test Description']))
             ]
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function leadArrayProvider()
+    {
+        $lead = new Lead(['name'=>'Test Name', 'description' => 'Test Description']);
+
+        // set up leads to be returned
+        $leadOne = clone $lead;
+        $leadTwo = clone $lead;
+        $leadThree = clone $lead;
+
+        $leadOne->setId('TestIdOne');
+        $leadTwo->setId('TestIdTwo');
+        $leadThree->setId('TestIdThree');
+
+        $leadsArray = [
+            $leadOne,
+            $leadTwo,
+            $leadThree
+        ];
+
+        return [
+            [
+                $leadsArray
+            ],
         ];
     }
 }
