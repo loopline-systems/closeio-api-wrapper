@@ -47,7 +47,7 @@ class LeadApi extends AbstractApi
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()['data'];
+            $rawData = $result->getData()[CloseIoResponse::GET_ALL_RESPONSE_LEADS_KEY];
             foreach ($rawData as $lead) {
                 $leads[] = new Lead($lead);
             }
