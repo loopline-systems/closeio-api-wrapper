@@ -18,23 +18,17 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateLeadApi()
     {
-        // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-
-        $leadApi = $closeIoApiWrapper->getLeadApi();
+        $leadApi = $this->getLeadsApi();
         $this->assertTrue(get_class($leadApi) === 'LooplineSystems\CloseIoApiWrapper\Api\LeadApi');
     }
 
+    /**
+     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
+     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
+     */
     public function testUpdateLead()
     {
-        // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-
-        $leadApi = $closeIoApiWrapper->getLeadApi();
+        $leadApi = $this->getLeadsApi();
 
         // init lead
         $lead = new Lead();
@@ -52,17 +46,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
         $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
 
         // create stub
-        $mockCurl = $this->getMockBuilder('Curl')
-            ->setMethods(array('getResponse'))
-            ->getMock();
-
-        // configure the stub.
-        $mockCurl->method('getResponse')
-            ->willReturn($expectedResponse);
-
-        $mockCurl->expects($this->once())
-            ->method('getResponse');
-
+        $mockCurl = $this->getMockResponderCurl($expectedResponse);
         $leadApi->setCurl($mockCurl);
 
         /* @var Lead $response */
@@ -72,38 +56,58 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($originalLead->getId(), $response->getId());
     }
 
+    /**
+     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
+     */
     public function testDeleteLead()
     {
+        $leadApi = $this->getLeadsApi();
+
         $id = 'lead-to-be-deleted';
-
-        // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('your-api-key');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-
-        $leadApi = $closeIoApiWrapper->getLeadApi();
 
         // init expected response
         $expectedResponse = new CloseIoResponse();
         $expectedResponse->setReturnCode('200');
-        $expectedResponse->setCurlInfoRaw(['url' => $closeIoConfig->getUrl() . $id]);
+        $expectedResponse->setCurlInfoRaw(['url' => $leadApi->getApiHandler()->getConfig()->getUrl() . $id]);
 
+        // create stub
+        $mockCurl = $this->getMockResponderCurl($expectedResponse);
+        $leadApi->setCurl($mockCurl);
+
+        $response = $leadApi->deleteLead($id);
+        $this->assertTrue($response === $expectedResponse);
+    }
+
+    /**
+     * @return \LooplineSystems\CloseIoApiWrapper\Api\LeadApi
+     */
+    private function getLeadsApi()
+    {
+        // init wrapper
+        $closeIoConfig = new CloseIoConfig();
+        $closeIoConfig->setApiKey('testapikey');
+        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+
+        return $closeIoApiWrapper->getLeadApi();
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getMockResponderCurl($expectedResponse)
+    {
         // create stub
         $mockCurl = $this->getMockBuilder('Curl')
             ->setMethods(array('getResponse'))
             ->getMock();
 
-        // configure the stub.
-        $mockCurl->method('getResponse')
-            ->willReturn($expectedResponse);
-
         $mockCurl->expects($this->once())
             ->method('getResponse');
 
-        $leadApi->setCurl($mockCurl);
+        // configure the stub.
+        $mockCurl->method('getResponse')->willReturn($expectedResponse);
 
-        $response = $leadApi->deleteLead($id);
-
-        $this->assertTrue($response === $expectedResponse);
+        return $mockCurl;
     }
 }
+
