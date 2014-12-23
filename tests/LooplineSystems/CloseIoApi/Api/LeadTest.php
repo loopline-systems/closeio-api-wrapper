@@ -18,7 +18,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
      * @param $data
      * @param $shouldSucceed
      * @param $expectedException
-     * @dataProvider hydrateDataProvider
+     * @dataProvider testLeadProvider
      */
     public function testHydrateLead($data, $shouldSucceed, $expectedException)
     {
@@ -35,202 +35,13 @@ class LeadTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return array
+     * @param array $data
+     * @param bool $shouldSucceed
+     * @param string $expectedException
+     * @dataProvider fullLeadProvider
      */
-    public function hydrateDataProvider()
+    public function testCreateDynamicLead($data)
     {
-        return array(
-            // good data set 1
-            [
-                [
-                    'name' => 'Test'
-                ],
-                true, // whether should succeed or not
-                null // expected exception
-            ],
-            // good data set 2
-            [
-                [
-                    'name' => 'Test',
-                    'id' => 'ABasflkajflkewjl312309',
-                ],
-                true, // whether should succeed or not
-                null // expected exception
-            ],
-            // good data set 3
-            [
-                [
-                    'name' => 'Test',
-                    'id' => 'ABasflkajflkewjl312309',
-                    'description' => 'Test Description',
-                    'contacts' => [
-                        [
-                            'name' => 'Test Contact',
-                            'title' => 'Test Title',
-                            'phones' => [
-                                [
-                                    'phone' => '23211434332323',
-                                    'type' => 'office'
-                                ]
-                            ],
-                            'emails' => [
-                                [
-                                    'email' => 'testemail@mail.com',
-                                    'type' => 'office'
-                                ]
-                            ],
-                            'urls' => [
-                                [
-                                    'url' => 'www.test.com',
-                                    'type' => 'office'
-                                ]
-                            ]
-                        ]
-                    ],
-                    'tasks' => [
-                        [
-                            'text' => 'Test task content',
-                            'completed' => 'false',
-                        ],
-                        [
-                            'text' => 'Test task content 2',
-                            'completed' => 'true',
-                        ]
-                    ],
-                    'addresses' => [
-                        [
-                            'address_1' => 'Test Street',
-                            'address_2' => 'Test Town',
-                            'state' => 'Test State',
-                            'country' => 'de',
-                            'zipcode' => '12345'
-                        ]
-                    ],
-                    'opportunities' => [
-                        [
-                            'date_created' => '01-01-2014',
-                            'note' => 'Test note for opportunity',
-                            'lead_name' => 'Test Name',
-                            'confidence' => 'Confident',
-                            'value_period' => Opportunity::OPPORTUNITY_FREQUENCY_ANNUAL,
-                            'created_by' => 'Creator',
-                            'date_won' => '01-01-2015',
-                            'user_name' => 'Test User',
-                            'date_updated' => '01-01-2015',
-                            'created_by_name' => 'Test User',
-                            'contact_id' => 'Contasdfsalkfjwfawljclkjas',
-                            'id' => 'oppsaflklj4kljsdl',
-                            'updated_by_name' => 'Test User',
-                            'date_lost' => '01-01-2014',
-                            'status_type' => '3230923i4902df',
-                            'status_id' => '324lsdkjflakj',
-                            'organization_id' => 'llk3j4lkjkla',
-                            'lead_id' => '32lkjsdalfkj34lkj',
-                            'status_label' => Opportunity::OPPORTUNITY_STATUS_WON,
-                            'value' => '42342'
-                        ]
-                    ],
-                    'custom' => [
-                        'custom_field' => 'custom value'
-                    ]
-                ],
-                true, // whether should succeed or not
-                null // expected exception
-            ],
-            // bad data set 1
-            [
-                [
-                    'nane' => 'Test'
-                ],
-                false, // whether should succeed or not
-                'LooplineSystems\CloseIoApiWrapper\Library\Exception\UndefinedMethodException' // expected exception
-            ]
-        );
-    }
-
-    public function testCreateDynamicLead()
-    {
-        $data = [
-            'id' => 'ADFAwfsdfasfklwfa',
-            'status_id' => '4239092092202390',
-            'status_label' => '4239092092202390',
-            'description' => 'Test Description',
-            'display_name' => 'Test Display',
-            'addresses' => [
-                [
-                    'city' => 'Test City',
-                    'country' => 'de'
-                ],
-            ],
-            'organization' => 'Test Organization',
-            'created_by' => 'Test Creator',
-            'url' => 'test url',
-            'tasks' => [
-                [
-                    'text' => 'Test Task Text'
-                ]
-            ],
-            'name' => 'Test Name',
-            'contacts' => [
-                [
-                    'name' => 'Test Contact',
-                    'title' => 'Test Title',
-                    'phones' => [
-                        [
-                            'phone' => '23211434332323',
-                            'type' => 'office'
-                        ]
-                    ],
-                    'emails' => [
-                        [
-                            'email' => 'testemail@mail.com',
-                            'type' => 'office'
-                        ]
-                    ],
-                    'urls' => [
-                        [
-                            'url' => 'www.test.com',
-                            'type' => 'office'
-                        ]
-                    ]
-                ]
-            ],
-            'date_created' => '01-01-2015',
-            'custom' => [
-                'custom_key' => 'custom data'
-            ],
-            'updated_by_name' => 'Test Updater',
-            'created_by_name' => 'Test Creator',
-            'opportunities' => [
-                [
-                    'date_created' => '01-01-2014',
-                    'note' => 'Test note for opportunity',
-                    'lead_name' => 'Test Name',
-                    'confidence' => 'Confident',
-                    'value_period' => Opportunity::OPPORTUNITY_FREQUENCY_ANNUAL,
-                    'created_by' => 'Creator',
-                    'date_won' => '01-01-2015',
-                    'user_name' => 'Test User',
-                    'date_updated' => '01-01-2015',
-                    'created_by_name' => 'Test User',
-                    'contact_id' => 'Contasdfsalkfjwfawljclkjas',
-                    'id' => 'oppsaflklj4kljsdl',
-                    'updated_by_name' => 'Test User',
-                    'date_lost' => '01-01-2014',
-                    'status_type' => '3230923i4902df',
-                    'status_id' => '324lsdkjflakj',
-                    'organization_id' => 'llk3j4lkjkla',
-                    'lead_id' => '32lkjsdalfkj34lkj',
-                    'status_label' => Opportunity::OPPORTUNITY_STATUS_WON,
-                    'value' => '42342'
-                ]
-            ],
-            'html_url' => 'test.com',
-            'updated_by' => 'test updater',
-            'date_updated' => '01-01-2015',
-            'organization_id' => 'sfklj23kljlsdkfj23l'
-        ];
-
         $hydratedLead = new Lead($data);
         $dynamicLead = new Lead();
 
@@ -260,5 +71,131 @@ class LeadTest extends \PHPUnit_Framework_TestCase
         $hydratedLead = json_decode(json_encode($hydratedLead));
 
         $this->assertTrue($hydratedLead == $dynamicLead);
+    }
+
+    /**
+     * @return array
+     */
+    public function testLeadProvider()
+    {
+        return array(
+            // good data set 1
+            [
+                [
+                    'name' => 'Test'
+                ],
+                true, // whether should succeed or not
+                null // expected exception
+            ],
+            // good data set 2
+            [
+                [
+                    'name' => 'Test',
+                    'id' => 'ABasflkajflkewjl312309',
+                ],
+                true, // whether should succeed or not
+                null // expected exception
+            ],
+            // bad data set 1
+            [
+                [
+                    'nane' => 'Test'
+                ],
+                false, // whether should succeed or not
+                'LooplineSystems\CloseIoApiWrapper\Library\Exception\UndefinedMethodException' // expected exception
+            ]
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function fullLeadProvider()
+    {
+        return [
+            // good data set 3
+            [
+                [
+                    'id' => 'ADFAwfsdfasfklwfa',
+                    'status_id' => '4239092092202390',
+                    'status_label' => '4239092092202390',
+                    'description' => 'Test Description',
+                    'display_name' => 'Test Display',
+                    'addresses' => [
+                        [
+                            'city' => 'Test City',
+                            'country' => 'de'
+                        ],
+                    ],
+                    'organization' => 'Test Organization',
+                    'created_by' => 'Test Creator',
+                    'url' => 'test url',
+                    'tasks' => [
+                        [
+                            'text' => 'Test Task Text'
+                        ]
+                    ],
+                    'name' => 'Test Name',
+                    'contacts' => [
+                        [
+                            'name' => 'Test Contact',
+                            'title' => 'Test Title',
+                            'phones' => [
+                                [
+                                    'phone' => '23211434332323',
+                                    'type' => 'office'
+                                ]
+                            ],
+                            'emails' => [
+                                [
+                                    'email' => 'testemail@mail.com',
+                                    'type' => 'office'
+                                ]
+                            ],
+                            'urls' => [
+                                [
+                                    'url' => 'www.test.com',
+                                    'type' => 'office'
+                                ]
+                            ]
+                        ]
+                    ],
+                    'date_created' => '01-01-2015',
+                    'custom' => [
+                        'custom_key' => 'custom data'
+                    ],
+                    'updated_by_name' => 'Test Updater',
+                    'created_by_name' => 'Test Creator',
+                    'opportunities' => [
+                        [
+                            'date_created' => '01-01-2014',
+                            'note' => 'Test note for opportunity',
+                            'lead_name' => 'Test Name',
+                            'confidence' => 'Confident',
+                            'value_period' => Opportunity::OPPORTUNITY_FREQUENCY_ANNUAL,
+                            'created_by' => 'Creator',
+                            'date_won' => '01-01-2015',
+                            'user_name' => 'Test User',
+                            'date_updated' => '01-01-2015',
+                            'created_by_name' => 'Test User',
+                            'contact_id' => 'Contasdfsalkfjwfawljclkjas',
+                            'id' => 'oppsaflklj4kljsdl',
+                            'updated_by_name' => 'Test User',
+                            'date_lost' => '01-01-2014',
+                            'status_type' => '3230923i4902df',
+                            'status_id' => '324lsdkjflakj',
+                            'organization_id' => 'llk3j4lkjkla',
+                            'lead_id' => '32lkjsdalfkj34lkj',
+                            'status_label' => Opportunity::OPPORTUNITY_STATUS_WON,
+                            'value' => '42342'
+                        ]
+                    ],
+                    'html_url' => 'test.com',
+                    'updated_by' => 'test updater',
+                    'date_updated' => '01-01-2015',
+                    'organization_id' => 'sfklj23kljlsdkfj23l'
+                ],
+            ],
+        ];
     }
 }
