@@ -37,9 +37,9 @@ $leadsApi = $closeIoApiWrapper->getLeadApi();
 
 // create lead
 $lead = new Lead();
-$lead->setName('Dynamic Test');
-$lead->setDescription('Dynamic lead test description');
-$lead->setUrl('www.dynamic-lead-test.com');
+$lead->setName('Test Company');
+$lead->setDescription('Company description');
+$lead->setUrl('www.test-company.com');
 
 // address
 $address = new Address();
@@ -50,19 +50,19 @@ $address->setAddress2('Mitte');
 
 // contacts
 $contact = new Contact();
-$contact->setName('Dynamic Testcontact');
-$contact->setTitle('Dynamic Contact Test Title');
+$contact->setName('Testy Testersson');
+$contact->setTitle('Chief Tester');
 
 // emails
 $email = new Email();
-$email->setEmail('testcontactemail@dynamic-lead-test.com');
-$email->setType('work');
+$email->setEmail('testy-testersson@test-company.com');
+$email->setType(Email::EMAIL_TYPE_OFFICE);
 $contact->addEmail($email);
 
 // phones
 $phone = new Phone();
-$phone->setPhone('01244349656');
-$phone->setType('mobile');
+$phone->setPhone('+491234567890');
+$phone->setType(Phone::PHONE_TYPE_MOBILE);
 $contact->addPhone($phone);
 
 $lead->addAddress($address);
