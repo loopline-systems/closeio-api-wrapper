@@ -28,7 +28,7 @@ Require via [Composer](https://github.com/composer/composer)<br />
 Usage
 ------------
 ```php
-// optionally pass in close.io api endpoint as init argument
+// you can optionally pass in close.io api endpoint as init argument (it defaults to 'https://app.close.io/api/v1')
 $closeIoConfig = new CloseIoConfig();
 $closeIoConfig->setApiKey('yourApiKey');
 
