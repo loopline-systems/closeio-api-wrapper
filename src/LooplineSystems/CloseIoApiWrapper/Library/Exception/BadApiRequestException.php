@@ -16,7 +16,6 @@ class BadApiRequestException extends \Exception {
      */
     public function __construct(array $allErrors)
     {
-        var_dump($allErrors);
         $output = '';
         foreach ($allErrors as $type => $errorsByType){
             if (! empty ($errorsByType)) {
