@@ -11,11 +11,5 @@ namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
 class InvalidParamException extends \Exception
 {
-    /**
-     * @param string $error
-     */
-    public function __construct($error)
-    {
-        parent::__construct($error);
-    }
+
 }

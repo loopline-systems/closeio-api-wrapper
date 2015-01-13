@@ -16,11 +16,15 @@ class BadApiRequestException extends \Exception {
      */
     public function __construct(array $allErrors)
     {
+        var_dump($allErrors);
         $output = '';
         foreach ($allErrors as $type => $errorsByType){
             if (! empty ($errorsByType)) {
                 if (is_array($errorsByType)) {
-                    $output .= $type . ' : ' .PHP_EOL . implode(PHP_EOL, $errorsByType);
+                    $output .= $type . ' : ' .PHP_EOL;
+                    foreach ($errorsByType as $key => $error){
+                        $output .= $key . ' => ' . $error . PHP_EOL;
+                    }
                 } else {
                     $output .= $type . ' : ' . $errorsByType;
                 }
