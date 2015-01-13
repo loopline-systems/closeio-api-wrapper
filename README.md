@@ -71,6 +71,22 @@ $lead->addContact($contact);
 $response = $leadsApi->addLead($lead);
 ```
 
+Adding Opportunities
+----------------------
+
+$opportunity = new Opportunity();
+$opportunity->setValue(500);
+$opportunity->setNote('My note on this opportunity');
+$opportunity->setConfidence(85);
+$opportunity->setValuePeriod(Opportunity::OPPORTUNITY_FREQUENCY_MONTHLY);
+
+// you can use the leadApi to get ID for leads
+$opportunity->setLeadId(<lead-id>);
+
+$opportunityApi = $this->apiWrapper->getOpportunityApi();
+$result = $opportunityApi->addOpportunity($opportunity);
+
+
 Info
 ------------
 Right now just a few request are implemented, because the main need was to create leads.

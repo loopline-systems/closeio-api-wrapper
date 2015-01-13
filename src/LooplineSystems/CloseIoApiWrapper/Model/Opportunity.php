@@ -16,13 +16,13 @@ use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 class Opportunity implements \JsonSerializable
 {
 
-    const OPPORTUNITY_FREQUENCY_ONE_OFF = 'One-Time';
-    const OPPORTUNITY_FREQUENCY_MONTHLY = 'Monthly';
-    const OPPORTUNITY_FREQUENCY_ANNUAL = 'Annual';
+    const OPPORTUNITY_FREQUENCY_ONE_OFF = 'one_time';
+    const OPPORTUNITY_FREQUENCY_MONTHLY = 'monthly';
+    const OPPORTUNITY_FREQUENCY_ANNUAL = 'annual';
 
-    const OPPORTUNITY_STATUS_ACTIVE = 'Active';
-    const OPPORTUNITY_STATUS_WON = 'Won';
-    const OPPORTUNITY_STATUS_LOST = 'Lost';
+    const OPPORTUNITY_STATUS_ACTIVE = 'active';
+    const OPPORTUNITY_STATUS_WON = 'won';
+    const OPPORTUNITY_STATUS_LOST = 'lost';
 
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
