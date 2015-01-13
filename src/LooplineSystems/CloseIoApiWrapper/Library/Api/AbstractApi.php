@@ -167,6 +167,7 @@ abstract class AbstractApi implements ApiInterface
     {
         $this->apiRequest->clear();
         $this->apiRequest->setData($data);
+        $this->apiRequest->setUrl($this->apiHandler->getConfig()->getUrl());
 
         $url = $this->prepareUrlForKey($urlKey, $urlReplacements);
 
