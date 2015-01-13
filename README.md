@@ -73,7 +73,7 @@ $response = $leadsApi->addLead($lead);
 
 Adding Opportunities
 ----------------------
-
+```
 $opportunity = new Opportunity();
 $opportunity->setValue(500);
 $opportunity->setNote('My note on this opportunity');
@@ -85,7 +85,7 @@ $opportunity->setLeadId(<lead-id>);
 
 $opportunityApi = $this->apiWrapper->getOpportunityApi();
 $result = $opportunityApi->addOpportunity($opportunity);
-
+```
 
 Info
 ------------
