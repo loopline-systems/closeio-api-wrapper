@@ -11,6 +11,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
@@ -81,6 +82,8 @@ class LeadApi extends AbstractApi
      */
     public function addLead(Lead $lead)
     {
+        $this->validateLeadForPost($lead);
+
         $lead = json_encode($lead);
         $apiRequest = $this->prepareRequest('add-lead', $lead);
         return $this->triggerPost($apiRequest);
@@ -133,13 +136,28 @@ class LeadApi extends AbstractApi
         }
     }
 
-
     /**
      * @param Curl $curl
      */
     public function setCurl($curl)
     {
         $this->curl = $curl;
+    }
+
+    /**
+     * @param Lead $lead
+     * @throws InvalidNewLeadPropertyException
+     * @description Checks if lead does not contain invalid properties
+     */
+    public function validateLeadForPost(Lead $lead)
+    {
+        $invalidProperties = ['id', 'organization', 'tasks', 'opportunities'];
+        foreach ($invalidProperties as $invalidProperty){
+            $getter = 'get' . ucfirst($invalidProperty);
+            if ($lead->$getter()){
+                throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
+            }
+        }
     }
 
 }
