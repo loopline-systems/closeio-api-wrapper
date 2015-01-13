@@ -14,8 +14,18 @@ class BadApiRequestException extends \Exception {
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $errors)
+    public function __construct(array $allErrors)
     {
-        parent::__construct('Api request returned an error: ' . implode('<br>' . PHP_EOL, $errors));
+        $output = '';
+        foreach ($allErrors as $type => $errorsByType){
+            if (! empty ($errorsByType)) {
+                if (is_array($errorsByType)) {
+                    $output .= $type . ' : ' .PHP_EOL . implode(PHP_EOL, $errorsByType);
+                } else {
+                    $output .= $type . ' : ' . $errorsByType;
+                }
+            }
+        }
+        parent::__construct('Api request returned errors. ' . PHP_EOL . $output);
     }
 } 
