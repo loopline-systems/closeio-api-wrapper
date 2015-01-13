@@ -36,8 +36,6 @@ class LeadTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $data
-     * @param bool $shouldSucceed
-     * @param string $expectedException
      * @dataProvider fullLeadProvider
      */
     public function testCreateDynamicLead($data)
