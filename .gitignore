@@ -2,3 +2,4 @@ config/
 !config/config.sample.yml
 vendor/
 composer.lock
+tests/LooplineSystems/CloseIoApi/Api/LiveApiTest.php
