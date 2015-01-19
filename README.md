@@ -20,7 +20,7 @@ Require via [Composer](https://github.com/composer/composer)<br />
 ```bash
 {
     "require": {
-        "loopline-systems/closeio-api-wrapper": "0.0.2"
+        "loopline-systems/closeio-api-wrapper": "0.1.0"
     }
 }
 ```
