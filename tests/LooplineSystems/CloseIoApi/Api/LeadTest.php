@@ -9,8 +9,10 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Tests;
 
+use LooplineSystems\CloseIoApiWrapper\Model\Email;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
+use LooplineSystems\CloseIoApiWrapper\Model\Phone;
 
 class LeadTest extends \PHPUnit_Framework_TestCase
 {
@@ -122,7 +124,12 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                     'addresses' => [
                         [
                             'city' => 'Test City',
-                            'country' => 'de'
+                            'country' => 'de',
+                            'zipcode' => '90210',
+                            'label' => 'office',
+                            'state' => 'Test State',
+                            'address_1' => 'Test Street',
+                            'address_2' => 'Test Building'
                         ],
                     ],
                     'organization' => 'Test Organization',
@@ -130,7 +137,20 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                     'url' => 'http://www.test-url.com',
                     'tasks' => [
                         [
-                            'text' => 'Test Task Text'
+                            'due_date' => '01-01-2016',
+                            'text' => 'Test Task Text',
+                            'assigned_to' => 'dfaslk2324',
+                            'completed' => 'false',
+                            'lead_name' => 'Test Lead',
+                            'updated_by' => 'dfaslk2324',
+                            'date_updated' => '01-01-2015',
+                            'created_by' => 'dfaslk2324',
+                            'organization_id' => 'AFSl23lkjs0',
+                            'updated_by_name' => 'Test User',
+                            'assigned_to_name' => 'Test User',
+                            'created_by_name' => 'Test User',
+                            'lead_id' => 'dsfalkj23',
+                            'date_created' => '01-01-2014'
                         ]
                     ],
                     'name' => 'Test Name',
@@ -138,17 +158,20 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                         [
                             'name' => 'Test Contact',
                             'title' => 'Test Title',
+                            'date_updated' => '01-01-2015',
+                            'created_by' => 'dasflkj32lkjs',
+                            'organization_id' => 'sdalfkj2l2jk',
                             'phones' => [
                                 [
-                                    'phone' => '23211434332323',
-                                    'type' => 'office'
+                                    'phone' => '23211434332',
+                                    'phone_formatted' => '+49 23 21 1434 332',
+                                    'type' => Phone::PHONE_TYPE_OFFICE,
                                 ]
                             ],
                             'emails' => [
                                 [
                                     'email' => 'testemail@mail.com',
-                                    'type' => 'office'
-                                ]
+                                    'type' => Email::EMAIL_TYPE_DIRECT                                ]
                             ],
                             'urls' => [
                                 [
