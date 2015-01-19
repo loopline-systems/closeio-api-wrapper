@@ -9,7 +9,7 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
-class InvalidParamException extends \Exception
+class InvalidNewLeadPropertyException extends \Exception
 {
 
 }

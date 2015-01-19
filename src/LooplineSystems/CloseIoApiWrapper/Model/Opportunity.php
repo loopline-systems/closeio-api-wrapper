@@ -9,19 +9,20 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 
 class Opportunity implements \JsonSerializable
 {
 
-    const OPPORTUNITY_FREQUENCY_ONE_OFF = 'One-Time';
-    const OPPORTUNITY_FREQUENCY_MONTHLY = 'Monthly';
-    const OPPORTUNITY_FREQUENCY_ANNUAL = 'Annual';
+    const OPPORTUNITY_FREQUENCY_ONE_OFF = 'one_time';
+    const OPPORTUNITY_FREQUENCY_MONTHLY = 'monthly';
+    const OPPORTUNITY_FREQUENCY_ANNUAL = 'annual';
 
-    const OPPORTUNITY_STATUS_ACTIVE = 'Active';
-    const OPPORTUNITY_STATUS_WON = 'Won';
-    const OPPORTUNITY_STATUS_LOST = 'Lost';
+    const OPPORTUNITY_STATUS_ACTIVE = 'active';
+    const OPPORTUNITY_STATUS_WON = 'won';
+    const OPPORTUNITY_STATUS_LOST = 'lost';
 
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
@@ -37,7 +38,7 @@ class Opportunity implements \JsonSerializable
     private $lead_name;
 
     /**
-     * @var string
+     * @var int
      */
     private $confidence;
 
@@ -155,11 +156,16 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $confidence
+     * @param int $confidence
+     * @throws InvalidParamException
      */
     public function setConfidence($confidence)
     {
-        $this->confidence = $confidence;
+        if (is_int($confidence)){
+            $this->confidence = $confidence;
+        } else {
+            throw new InvalidParamException('Opportunity confidence must be of type int');
+        }
     }
 
     /**

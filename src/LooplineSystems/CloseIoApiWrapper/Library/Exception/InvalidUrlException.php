@@ -9,7 +9,6 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
-class InvalidParamException extends \Exception
-{
+class InvalidUrlException extends \Exception {
 
-}
+} 
