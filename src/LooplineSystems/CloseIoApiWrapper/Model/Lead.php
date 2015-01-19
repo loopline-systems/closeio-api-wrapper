@@ -10,6 +10,7 @@
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidUrlException;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 
@@ -156,8 +157,7 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $id
-     * @throws InvalidParamException
+     * @param $id
      */
     public function setId($id)
     {
@@ -397,11 +397,17 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $url
+     * @param $url
+     * @throws InvalidUrlException
      */
     public function setUrl($url)
     {
-        $this->url = $url;
+        // validate url
+        if (filter_var($url, FILTER_VALIDATE_URL)){
+            $this->url = $url;
+        } else {
+            throw new InvalidUrlException('"' . $url . '" is not a valid URL');
+        }
     }
 
     /**

@@ -11,14 +11,13 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Model\Lead;
+use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 
-class LeadApi extends AbstractApi
+class OpportunityApi extends AbstractApi
 {
-    const NAME = 'LeadApi';
+    const NAME = 'OpportunityApi';
 
     /**
      * {@inheritdoc}
@@ -26,97 +25,96 @@ class LeadApi extends AbstractApi
     protected function initUrls()
     {
         $this->urls = [
-            'get-leads' => '/lead/',
-            'add-lead' => '/lead/',
-            'get-lead' => '/lead/[:id]/',
-            'update-lead' => '/lead/[:id]/',
-            'delete-lead' => '/lead/[:id]/'
+            'get-opportunities' => '/opportunity/',
+            'add-opportunity' => '/opportunity/',
+            'get-opportunity' => '/opportunity/[:id]/',
+            'update-opportunity' => '/opportunity/[:id]/',
+            'delete-opportunity' => '/opportunity/[:id]/'
         ];
     }
 
     /**
-     * @return Lead[]
+     * @return Opportunity[]
      */
-    public function getAllLeads()
+    public function getAllOpportunities()
     {
-        /** @var Lead[] $leads */
-        $leads = array();
+        /** @var Opportunity[] $opportunities */
+        $opportunities = array();
 
-        $apiRequest = $this->prepareRequest('get-leads');
+        $apiRequest = $this->prepareRequest('get-opportunities');
 
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
             $rawData = $result->getData()[CloseIoResponse::GET_ALL_RESPONSE_LEADS_KEY];
-
-            foreach ($rawData as $lead) {
-                $leads[] = new Lead($lead);
+            foreach ($rawData as $opportunity) {
+                $opportunities[] = new Opportunity($opportunity);
             }
         }
-        return $leads;
+        return $opportunities;
     }
 
     /**
      * @param $id
-     * @return Lead
+     * @return Opportunity
      * @throws ResourceNotFoundException
      */
-    public function getLead($id)
+    public function getOpportunity($id)
     {
-        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id]);
+        $apiRequest = $this->prepareRequest('get-opportunity', null, ['id' => $id]);
 
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            $lead = new Lead($result->getData());
+            $opportunity = new Opportunity($result->getData());
         } else {
             throw new ResourceNotFoundException();
         }
-        return $lead;
+        return $opportunity;
     }
 
     /**
-     * @param Lead $lead
+     * @param Opportunity $opportunity
      * @return CloseIoResponse
      */
-    public function addLead(Lead $lead)
+    public function addOpportunity(Opportunity $opportunity)
     {
-        $this->validateLeadForPost($lead);
+        $this->validateOpportunityForPost($opportunity);
 
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('add-lead', $lead);
+        $opportunity = json_encode($opportunity);
+        $apiRequest = $this->prepareRequest('add-opportunity', $opportunity);
         return $this->triggerPost($apiRequest);
     }
 
     /**
-     * @param Lead $lead
-     * @return Lead|string
+     * @param Opportunity $opportunity
+     * @return Opportunity|string
      * @throws InvalidParamException
      * @throws ResourceNotFoundException
      */
-    public function updateLead(Lead $lead)
+    public function updateOpportunity(Opportunity $opportunity)
     {
-        // check if lead has id
-        if ($lead->getId() == null) {
-            throw new InvalidParamException('When updating a lead you must provide the lead ID');
+        // check if opportunity has id
+        if ($opportunity->getId() == null) {
+            throw new InvalidParamException('When updating a opportunity you must provide the opportunity ID');
         }
-        // remove id from lead since it won't be part of the patch data
-        $id = $lead->getId();
-        $lead->setId(null);
+        // remove id from opportunity since it won't be part of the patch data
+        $id = $opportunity->getId();
+        $opportunity->setId(null);
 
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('update-lead', $lead, ['id' => $id]);
+        $opportunity = json_encode($opportunity);
+        $apiRequest = $this->prepareRequest('update-opportunity', $opportunity, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        // return Lead object if successful
+        // return Opportunity object if successful
         if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $lead = new Lead($response->getData());
+            $opportunity = new Opportunity($response->getData());
         } else {
             throw new ResourceNotFoundException();
         }
-        return $lead;
+        return $opportunity;
     }
 
     /**
@@ -124,8 +122,8 @@ class LeadApi extends AbstractApi
      * @return CloseIoResponse
      * @throws ResourceNotFoundException
      */
-    public function deleteLead($id){
-        $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
+    public function deleteOpportunity($id){
+        $apiRequest = $this->prepareRequest('delete-opportunity', null, ['id' => $id]);
 
         /** @var CloseIoResponse $result */
         $result = $this->triggerDelete($apiRequest);
@@ -137,6 +135,7 @@ class LeadApi extends AbstractApi
         }
     }
 
+
     /**
      * @param Curl $curl
      */
@@ -146,19 +145,12 @@ class LeadApi extends AbstractApi
     }
 
     /**
-     * @param Lead $lead
-     * @throws InvalidNewLeadPropertyException
-     * @description Checks if lead does not contain invalid properties
+     * @param Opportunity $opportunity
+     * @return bool
      */
-    public function validateLeadForPost(Lead $lead)
+    public function validateOpportunityForPost(Opportunity $opportunity)
     {
-        $invalidProperties = ['id', 'organization', 'tasks', 'opportunities'];
-        foreach ($invalidProperties as $invalidProperty){
-            $getter = 'get' . ucfirst($invalidProperty);
-            if ($lead->$getter()){
-                throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
-            }
-        }
+        return true;
     }
 
 }

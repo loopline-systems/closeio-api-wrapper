@@ -38,8 +38,6 @@ class LeadTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $data
-     * @param bool $shouldSucceed
-     * @param string $expectedException
      * @dataProvider fullLeadProvider
      */
     public function testCreateDynamicLead($data)
@@ -136,7 +134,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                     ],
                     'organization' => 'Test Organization',
                     'created_by' => 'Test Creator',
-                    'url' => 'test url',
+                    'url' => 'http://www.test-url.com',
                     'tasks' => [
                         [
                             'due_date' => '01-01-2016',
@@ -194,7 +192,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                             'date_created' => '01-01-2014',
                             'note' => 'Test note for opportunity',
                             'lead_name' => 'Test Name',
-                            'confidence' => 'Confident',
+                            'confidence' => 2,
                             'value_period' => Opportunity::OPPORTUNITY_FREQUENCY_ANNUAL,
                             'created_by' => 'Creator',
                             'date_won' => '01-01-2015',

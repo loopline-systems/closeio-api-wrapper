@@ -17,10 +17,11 @@ use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 class LeadsApiTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @param Lead $lead
      * @description tests adding a lead using mock curl object
      * @dataProvider leadProvider
      */
-    public function testAddLead($lead)
+    public function testAddLead(Lead $lead)
     {
         $leadsApi = $this->getLeadsApi();
 
