@@ -27,6 +27,11 @@ trait ObjectHydrateHelperTrait
     public function hydrate(array $data, array $nestedObjects = [], array $method_mapper = [])
     {
         foreach ($data as $key => $value) {
+
+            if (!$value) {
+                continue;
+            }
+
             if (!in_array($key, $nestedObjects)) {
                 // get setter method for each key in data
                 $filter = new UnderscoreToCamelCase();
