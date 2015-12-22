@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
@@ -35,14 +35,20 @@ class LeadApi extends AbstractApi
     }
 
     /**
+     * @param array $queryParams
+     *
      * @return Lead[]
      */
-    public function getAllLeads()
+    public function getAllLeads(array $queryParams = [])
     {
         /** @var Lead[] $leads */
         $leads = array();
 
-        $apiRequest = $this->prepareRequest('get-leads');
+        if (count($queryParams) > 0) {
+            $queryParams = ['query' => $this->buildQueryString($queryParams)];
+        }
+
+        $apiRequest = $this->prepareRequest('get-leads', '', [], $queryParams);
 
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
@@ -55,6 +61,23 @@ class LeadApi extends AbstractApi
             }
         }
         return $leads;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return string
+     */
+    private function buildQueryString(array $params)
+    {
+        $flattened = [];
+        foreach ($params as $key => $value) {
+            $flattened[] = $key . '=' . $value;
+        }
+
+        $queryString = implode('&', $flattened);
+
+        return $queryString;
     }
 
     /**
