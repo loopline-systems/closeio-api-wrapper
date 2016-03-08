@@ -6,7 +6,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Model;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
-class LeadStatuses implements \JsonSerializable
+class LeadStatus implements \JsonSerializable
 {
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
