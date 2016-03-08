@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
@@ -110,11 +110,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $assigned_to
+     * @param $assigned_to
+     * @return $this
      */
     public function setAssignedTo($assigned_to)
     {
         $this->assigned_to = $assigned_to;
+
+        return $this;
     }
 
     /**
@@ -126,11 +129,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $due_date
+     * @param $due_date
+     * @return $this
      */
     public function setDueDate($due_date)
     {
         $this->due_date = $due_date;
+
+        return $this;
     }
 
     /**
@@ -142,11 +148,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param boolean $is_complete
+     * @param $is_complete
+     * @return $this
      */
     public function setCompleted($is_complete)
     {
         $this->completed = $is_complete;
+
+        return $this;
     }
 
     /**
@@ -158,11 +167,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $lead_name
+     * @param $lead_name
+     * @return $this
      */
     public function setLeadName($lead_name)
     {
         $this->lead_name = $lead_name;
+
+        return $this;
     }
 
     /**
@@ -174,11 +186,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $text
+     * @param $text
+     * @return $this
      */
     public function setText($text)
     {
         $this->text = $text;
+
+        return $this;
     }
 
     /**
@@ -190,11 +205,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $assigned_to_name
+     * @param $assigned_to_name
+     * @return $this
      */
     public function setAssignedToName($assigned_to_name)
     {
         $this->assigned_to_name = $assigned_to_name;
+
+        return $this;
     }
 
     /**
@@ -206,11 +224,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $created_by
+     * @param $created_by
+     * @return $this
      */
     public function setCreatedBy($created_by)
     {
         $this->created_by = $created_by;
+
+        return $this;
     }
 
     /**
@@ -222,11 +243,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $created_by_name
+     * @param $created_by_name
+     * @return $this
      */
     public function setCreatedByName($created_by_name)
     {
         $this->created_by_name = $created_by_name;
+
+        return $this;
     }
 
     /**
@@ -238,11 +262,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $date_updated
+     * @param $date_updated
+     * @return $this
      */
     public function setDateUpdated($date_updated)
     {
         $this->date_updated = $date_updated;
+
+        return $this;
     }
 
     /**
@@ -254,11 +281,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $id
+     * @param $id
+     * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -270,11 +300,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $lead_id
+     * @param $lead_id
+     * @return $this
      */
     public function setLeadId($lead_id)
     {
         $this->lead_id = $lead_id;
+
+        return $this;
     }
 
     /**
@@ -286,11 +319,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $organization_id
+     * @param $organization_id
+     * @return $this
      */
     public function setOrganizationId($organization_id)
     {
         $this->organization_id = $organization_id;
+
+        return $this;
     }
 
     /**
@@ -302,11 +338,14 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by
+     * @param $updated_by
+     * @return $this
      */
     public function setUpdatedBy($updated_by)
     {
         $this->updated_by = $updated_by;
+
+        return $this;
     }
 
     /**
@@ -318,15 +357,18 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by_name
+     * @param $updated_by_name
+     * @return $this
      */
     public function setUpdatedByName($updated_by_name)
     {
         $this->updated_by_name = $updated_by_name;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDateCreated()
     {
@@ -334,10 +376,13 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param mixed $date_created
+     * @param $date_created
+     * @return $this
      */
     public function setDateCreated($date_created)
     {
         $this->date_created = $date_created;
+
+        return $this;
     }
 }

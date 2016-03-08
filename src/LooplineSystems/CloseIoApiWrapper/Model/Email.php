@@ -1,17 +1,17 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Email implements \JsonSerializable
@@ -54,6 +54,7 @@ class Email implements \JsonSerializable
 
     /**
      * @param $email
+     * @return $this
      * @throws InvalidParamException
      */
     public function setEmail($email)
@@ -63,6 +64,8 @@ class Email implements \JsonSerializable
         } else {
             $this->email = $email;
         }
+
+        return $this;
     }
 
     /**
@@ -74,10 +77,13 @@ class Email implements \JsonSerializable
     }
 
     /**
-     * @param string $type
+     * @param $type
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 }

@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
@@ -58,7 +58,7 @@ class Address implements \JsonSerializable
     public function __construct(array $data = null)
     {
         if ($data) {
-            $this->hydrate($data, [], array('setAddress_1' => 'setAddress1', 'setAddress_2' => 'setAddress2'));
+            $this->hydrate($data, [], ['setAddress_1' => 'setAddress1', 'setAddress_2' => 'setAddress2']);
         }
     }
 
@@ -71,11 +71,14 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $address_1
+     * @param $address_1
+     * @return $this
      */
     public function setAddress1($address_1)
     {
         $this->address_1 = $address_1;
+
+        return $this;
     }
 
     /**
@@ -87,11 +90,14 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $address_2
+     * @param $address_2
+     * @return $this
      */
     public function setAddress2($address_2)
     {
         $this->address_2 = $address_2;
+
+        return $this;
     }
 
     /**
@@ -103,11 +109,14 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $city
+     * @param $city
+     * @return $this
      */
     public function setCity($city)
     {
         $this->city = $city;
+
+        return $this;
     }
 
     /**
@@ -119,11 +128,14 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $country
+     * @param $country
+     * @return $this
      */
     public function setCountry($country)
     {
         $this->country = $country;
+
+        return $this;
     }
 
     /**
@@ -135,11 +147,14 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $label
+     * @param $label
+     * @return $this
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
+        return $this;
     }
 
     /**
@@ -151,11 +166,14 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $state
+     * @param $state
+     * @return $this
      */
     public function setState($state)
     {
         $this->state = $state;
+
+        return $this;
     }
 
     /**
@@ -167,10 +185,13 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param string $zipcode
+     * @param $zipcode
+     * @return $this
      */
     public function setZipcode($zipcode)
     {
         $this->zipcode = $zipcode;
+
+        return $this;
     }
 }

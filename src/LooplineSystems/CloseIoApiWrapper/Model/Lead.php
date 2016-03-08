@@ -1,18 +1,17 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidUrlException;
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Lead implements \JsonSerializable
 {
@@ -85,7 +84,7 @@ class Lead implements \JsonSerializable
     private $contacts;
 
     /**
-     * @var \DateTime
+     * @var string
      */
     private $date_created;
 
@@ -136,7 +135,7 @@ class Lead implements \JsonSerializable
     {
         if ($data) {
             // custom is not a class and should be set separately
-            if (isset($data['custom'])){
+            if (isset($data['custom'])) {
                 $this->setCustom($data['custom']);
                 unset($data['custom']);
             }
@@ -158,10 +157,13 @@ class Lead implements \JsonSerializable
 
     /**
      * @param $id
+     * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -174,18 +176,24 @@ class Lead implements \JsonSerializable
 
     /**
      * @param Address $address
+     * @return $this
      */
-    public function addAddress($address)
+    public function addAddress(Address $address)
     {
         $this->addresses[] = $address;
+
+        return $this;
     }
-    
+
     /**
      * @param Address[] $addresses
+     * @return $this
      */
     public function setAddresses(array $addresses)
     {
         $this->addresses = $addresses;
+
+        return $this;
     }
 
     /**
@@ -198,18 +206,24 @@ class Lead implements \JsonSerializable
 
     /**
      * @param Contact $contact
+     * @return $this
      */
     public function addContact(Contact $contact)
     {
         $this->contacts[] = $contact;
+
+        return $this;
     }
-    
+
     /**
      * @param Contact[] $contacts
+     * @return $this
      */
     public function setContacts(array $contacts)
     {
         $this->contacts = $contacts;
+
+        return $this;
     }
 
     /**
@@ -221,11 +235,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $created_by
+     * @param $created_by
+     * @return $this
      */
     public function setCreatedBy($created_by)
     {
         $this->created_by = $created_by;
+
+        return $this;
     }
 
     /**
@@ -237,15 +254,18 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param array $custom
+     * @param $custom
+     * @return $this
      */
     public function setCustom($custom)
     {
         $this->custom = $custom;
+
+        return $this;
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
     public function getDateCreated()
     {
@@ -253,11 +273,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $date_created
+     * @param $date_created
+     * @return $this
      */
     public function setDateCreated($date_created)
     {
         $this->date_created = $date_created;
+
+        return $this;
     }
 
     /**
@@ -269,11 +292,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $description
+     * @param $description
+     * @return $this
      */
     public function setDescription($description)
     {
         $this->description = $description;
+
+        return $this;
     }
 
     /**
@@ -285,11 +311,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $display_name
+     * @param $display_name
+     * @return $this
      */
     public function setDisplayName($display_name)
     {
         $this->display_name = $display_name;
+
+        return $this;
     }
 
     /**
@@ -301,11 +330,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $name
+     * @param $name
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -318,10 +350,13 @@ class Lead implements \JsonSerializable
 
     /**
      * @param Opportunity[] $opportunities
+     * @return $this
      */
-    public function setOpportunities($opportunities)
+    public function setOpportunities(array $opportunities)
     {
         $this->opportunities = $opportunities;
+
+        return $this;
     }
 
     /**
@@ -334,10 +369,13 @@ class Lead implements \JsonSerializable
 
     /**
      * @param $organization
+     * @return $this
      */
     public function setOrganization($organization)
     {
         $this->organization = $organization;
+
+        return $this;
     }
 
     /**
@@ -349,11 +387,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $status
+     * @param $status
+     * @return $this
      */
     public function setStatusId($status)
     {
         $this->status_id = $status;
+
+        return $this;
     }
 
     /**
@@ -365,11 +406,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $status_label
+     * @param $status_label
+     * @return $this
      */
     public function setStatusLabel($status_label)
     {
         $this->status_label = $status_label;
+
+        return $this;
     }
 
     /**
@@ -382,10 +426,13 @@ class Lead implements \JsonSerializable
 
     /**
      * @param Task[] $tasks
+     * @return $this
      */
     public function setTasks($tasks)
     {
         $this->tasks = $tasks;
+
+        return $this;
     }
 
     /**
@@ -398,16 +445,19 @@ class Lead implements \JsonSerializable
 
     /**
      * @param $url
+     * @return $this
      * @throws InvalidUrlException
      */
     public function setUrl($url)
     {
         // validate url
-        if (filter_var($url, FILTER_VALIDATE_URL)){
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
             $this->url = $url;
         } else {
             throw new InvalidUrlException('"' . $url . '" is not a valid URL');
         }
+
+        return $this;
     }
 
     /**
@@ -419,11 +469,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $created_by_name
+     * @param $created_by_name
+     * @return $this
      */
     public function setCreatedByName($created_by_name)
     {
         $this->created_by_name = $created_by_name;
+
+        return $this;
     }
 
     /**
@@ -435,11 +488,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $date_updated
+     * @param $date_updated
+     * @return $this
      */
     public function setDateUpdated($date_updated)
     {
         $this->date_updated = $date_updated;
+
+        return $this;
     }
 
     /**
@@ -451,11 +507,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $html_url
+     * @param $html_url
+     * @return $this
      */
     public function setHtmlUrl($html_url)
     {
         $this->html_url = $html_url;
+
+        return $this;
     }
 
     /**
@@ -467,11 +526,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $organization_id
+     * @param $organization_id
+     * @return $this
      */
     public function setOrganizationId($organization_id)
     {
         $this->organization_id = $organization_id;
+
+        return $this;
     }
 
     /**
@@ -483,11 +545,14 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by
+     * @param $updated_by
+     * @return $this
      */
     public function setUpdatedBy($updated_by)
     {
         $this->updated_by = $updated_by;
+
+        return $this;
     }
 
     /**
@@ -499,10 +564,13 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by_name
+     * @param $updated_by_name
+     * @return $this
      */
     public function setUpdatedByName($updated_by_name)
     {
         $this->updated_by_name = $updated_by_name;
+
+        return $this;
     }
 }
