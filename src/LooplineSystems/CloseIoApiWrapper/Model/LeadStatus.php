@@ -11,40 +11,83 @@ class LeadStatus implements \JsonSerializable
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
 
+    /**
+     * @var string
+     */
     private $label;
 
+    /**
+     * @var string
+     */
     private $id;
 
-    public function __construct(array $fields)
+    /**
+     * @var string
+     */
+    private $organizationId;
+
+    /**
+     * LeadStatus constructor.
+     * @param array $data
+     */
+    public function __construct(array $data)
     {
-        foreach($fields as $field=>$value)
-        {
-            if (property_exists($this, $field)) {
-                $this->$field = $value;
-            }
+        if ($data) {
+            $this->hydrate($data);
         }
     }
 
     /**
      * @param $label
+     * @return LeadStatus
      */
-    public function setStatusLabel($label)
+    public function setLabel($label)
     {
         $this->label = $label;
+        return $this;
     }
 
-    public function getStatusLabel()
+    /**
+     * @return string
+     */
+    public function getLabel()
     {
         return $this->label;
     }
 
-    public function setStatusId($id)
+    /**
+     * @param $id
+     * @return LeadStatus
+     */
+    public function setId($id)
     {
         $this->id = $id;
+        return $this;
     }
 
-    public function getStatusId()
+    /**
+     * @return string
+     */
+    public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param string $organizationId
+     * @return LeadStatus
+     */
+    public function setOrganizationId($organizationId)
+    {
+        $this->organizationId = $organizationId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrganizationId()
+    {
+        return $this->organizationId;
     }
 }

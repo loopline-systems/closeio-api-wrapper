@@ -47,12 +47,12 @@ class LeadStatusApi extends AbstractApi
      */
     public function updateStatus(LeadStatus $status)
     {
-        if ($status->getStatusId() == null) {
+        if ($status->getId() == null) {
             throw new InvalidParamException('When updating a status you must provide the statuses ID');
         }
 
-        $id = $status->getStatusId();
-        $status->setStatusId(null);
+        $id = $status->getId();
+        $status->setId(null);
 
         $status = json_encode($status);
         $apiRequest = $this->prepareRequest('update-status', $status, ['id' => $id]);
@@ -68,7 +68,7 @@ class LeadStatusApi extends AbstractApi
     }
 
     /**
-     * @return \LooplineSystems\CloseIoApiWrapper\Model\LeadStatus[]
+     * @return LeadStatus[]
      */
     public function getAllStatus()
     {
@@ -82,7 +82,6 @@ class LeadStatusApi extends AbstractApi
 
         if ($result->getReturnCode() == 200) {
             $rawData = $result->getData()[CloseIoResponse::GET_ALL_RESPONSE_LEADS_KEY];
-
             foreach ($rawData as $status) {
                 $statuses[] = new LeadStatus($status);
             }
