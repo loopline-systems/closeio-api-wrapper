@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dlima
- * Date: 3/7/16
- * Time: 2:22 PM
- */
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
