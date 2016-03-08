@@ -1,17 +1,17 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Opportunity implements \JsonSerializable
 {
@@ -58,7 +58,7 @@ class Opportunity implements \JsonSerializable
     private $note;
 
     /**
-     * @var \DateTime
+     * @var string
      */
     private $date_won;
 
@@ -157,15 +157,18 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param int $confidence
+     * @return $this
      * @throws InvalidParamException
      */
     public function setConfidence($confidence)
     {
-        if (is_int($confidence)){
+        if (is_int($confidence)) {
             $this->confidence = $confidence;
         } else {
             throw new InvalidParamException('Opportunity confidence must be of type int');
         }
+
+        return $this;
     }
 
     /**
@@ -177,11 +180,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $created_by
+     * @param $created_by
+     * @return $this
      */
     public function setCreatedBy($created_by)
     {
         $this->created_by = $created_by;
+
+        return $this;
     }
 
     /**
@@ -193,15 +199,18 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $date_created
+     * @param $date_created
+     * @return $this
      */
     public function setDateCreated($date_created)
     {
         $this->date_created = $date_created;
+
+        return $this;
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
     public function getDateWon()
     {
@@ -209,11 +218,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param \DateTime $date_won
+     * @param $date_won
+     * @return $this
      */
     public function setDateWon($date_won)
     {
         $this->date_won = $date_won;
+
+        return $this;
     }
 
     /**
@@ -225,11 +237,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $lead_name
+     * @param $lead_name
+     * @return $this
      */
     public function setLeadName($lead_name)
     {
         $this->lead_name = $lead_name;
+
+        return $this;
     }
 
     /**
@@ -241,11 +256,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $note
+     * @param $note
+     * @return $this
      */
     public function setNote($note)
     {
         $this->note = $note;
+
+        return $this;
     }
 
     /**
@@ -257,11 +275,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $user_name
+     * @param $user_name
+     * @return $this
      */
     public function setUserName($user_name)
     {
         $this->user_name = $user_name;
+
+        return $this;
     }
 
     /**
@@ -273,11 +294,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $value_period
+     * @param $value_period
+     * @return $this
      */
     public function setValuePeriod($value_period)
     {
         $this->value_period = $value_period;
+
+        return $this;
     }
 
     /**
@@ -289,11 +313,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $contact_id
+     * @param $contact_id
+     * @return $this
      */
     public function setContactId($contact_id)
     {
         $this->contact_id = $contact_id;
+
+        return $this;
     }
 
     /**
@@ -305,11 +332,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $created_by_name
+     * @param $created_by_name
+     * @return $this
      */
     public function setCreatedByName($created_by_name)
     {
         $this->created_by_name = $created_by_name;
+
+        return $this;
     }
 
     /**
@@ -321,11 +351,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $date_lost
+     * @param $date_lost
+     * @return $this
      */
     public function setDateLost($date_lost)
     {
         $this->date_lost = $date_lost;
+
+        return $this;
     }
 
     /**
@@ -337,11 +370,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $date_updated
+     * @param $date_updated
+     * @return $this
      */
     public function setDateUpdated($date_updated)
     {
         $this->date_updated = $date_updated;
+
+        return $this;
     }
 
     /**
@@ -353,11 +389,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $id
+     * @param $id
+     * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -369,11 +408,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $lead_id
+     * @param $lead_id
+     * @return $this
      */
     public function setLeadId($lead_id)
     {
         $this->lead_id = $lead_id;
+
+        return $this;
     }
 
     /**
@@ -385,11 +427,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $organization_id
+     * @param $organization_id
+     * @return $this
      */
     public function setOrganizationId($organization_id)
     {
         $this->organization_id = $organization_id;
+
+        return $this;
     }
 
     /**
@@ -401,11 +446,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $status_id
+     * @param $status_id
+     * @return $this
      */
     public function setStatusId($status_id)
     {
         $this->status_id = $status_id;
+
+        return $this;
     }
 
     /**
@@ -417,11 +465,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $status_label
+     * @param $status_label
+     * @return $this
      */
     public function setStatusLabel($status_label)
     {
         $this->status_label = $status_label;
+
+        return $this;
     }
 
     /**
@@ -433,11 +484,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $status_type
+     * @param $status_type
+     * @return $this
      */
     public function setStatusType($status_type)
     {
         $this->status_type = $status_type;
+
+        return $this;
     }
 
     /**
@@ -449,11 +503,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by
+     * @param $updated_by
+     * @return $this
      */
     public function setUpdatedBy($updated_by)
     {
         $this->updated_by = $updated_by;
+
+        return $this;
     }
 
     /**
@@ -465,11 +522,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by_name
+     * @param $updated_by_name
+     * @return $this
      */
     public function setUpdatedByName($updated_by_name)
     {
         $this->updated_by_name = $updated_by_name;
+
+        return $this;
     }
 
     /**
@@ -481,11 +541,14 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $user_id
+     * @param $user_id
+     * @return $this
      */
     public function setUserId($user_id)
     {
         $this->user_id = $user_id;
+
+        return $this;
     }
 
     /**
@@ -497,12 +560,13 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $value
+     * @param $value
+     * @return $this
      */
     public function setValue($value)
     {
         $this->value = $value;
+
+        return $this;
     }
-
-
 }
