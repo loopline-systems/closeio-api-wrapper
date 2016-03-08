@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
@@ -93,18 +93,24 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Email $email
+     * @return $this
      */
     public function addEmail(Email $email)
     {
         $this->emails[] = $email;
+
+        return $this;
     }
-    
+
     /**
      * @param Email[] $emails
+     * @return $this
      */
     public function setEmails(array $emails)
     {
         $this->emails = $emails;
+
+        return $this;
     }
 
     /**
@@ -117,10 +123,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $name
+     * @return $this
      */
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     /**
@@ -133,18 +142,24 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Phone $phone
+     * @return $this
      */
     public function addPhone(Phone $phone)
     {
         $this->phones[] = $phone;
+
+        return $this;
     }
-    
+
     /**
      * @param Phone[] $phones
+     * @return $this
      */
     public function setPhones(array $phones)
     {
         $this->phones = $phones;
+
+        return $this;
     }
 
     /**
@@ -157,10 +172,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $title
+     * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
+        return $this;
     }
 
     /**
@@ -173,10 +191,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $created_by
+     * @return $this
      */
     public function setCreatedBy($created_by)
     {
         $this->created_by = $created_by;
+
+        return $this;
     }
 
     /**
@@ -189,10 +210,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $date_created
+     * @return $this
      */
     public function setDateCreated($date_created)
     {
         $this->date_created = $date_created;
+
+        return $this;
     }
 
     /**
@@ -205,10 +229,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $date_updated
+     * @return $this
      */
     public function setDateUpdated($date_updated)
     {
         $this->date_updated = $date_updated;
+
+        return $this;
     }
 
     /**
@@ -221,10 +248,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $id
+     * @return $this
      */
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -237,10 +267,13 @@ class Contact implements \JsonSerializable
 
     /**
      * @param $organization_id
+     * @return $this
      */
     public function setOrganizationId($organization_id)
     {
         $this->organization_id = $organization_id;
+
+        return $this;
     }
 
     /**
@@ -252,11 +285,14 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param string $updated_by
+     * @param $updated_by
+     * @return $this
      */
     public function setUpdatedBy($updated_by)
     {
         $this->updated_by = $updated_by;
+
+        return $this;
     }
 
     /**
@@ -268,10 +304,13 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $urls
+     * @param Url[] $urls
+     * @return $this
      */
-    public function setUrls($urls)
+    public function setUrls(array $urls)
     {
         $this->urls = $urls;
+
+        return $this;
     }
 }

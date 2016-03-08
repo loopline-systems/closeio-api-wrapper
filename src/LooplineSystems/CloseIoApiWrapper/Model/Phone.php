@@ -9,8 +9,8 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Phone implements \JsonSerializable
 {
@@ -57,11 +57,14 @@ class Phone implements \JsonSerializable
     }
 
     /**
-     * @param string $phone
+     * @param $phone
+     * @return $this
      */
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        return $this;
     }
 
     /**
@@ -73,11 +76,14 @@ class Phone implements \JsonSerializable
     }
 
     /**
-     * @param string $type
+     * @param $type
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -89,12 +95,13 @@ class Phone implements \JsonSerializable
     }
 
     /**
-     * @param string $phone_formatted
+     * @param $phone_formatted
+     * @return $this
      */
     public function setPhoneFormatted($phone_formatted)
     {
         $this->phone_formatted = $phone_formatted;
+
+        return $this;
     }
-
-
 }

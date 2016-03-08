@@ -1,16 +1,16 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Url implements \JsonSerializable
 {
@@ -49,11 +49,14 @@ class Url implements \JsonSerializable
     }
 
     /**
-     * @param string $type
+     * @param $type
+     * @return $this
      */
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -65,10 +68,13 @@ class Url implements \JsonSerializable
     }
 
     /**
-     * @param string $url
+     * @param $url
+     * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+
+        return $this;
     }
 }
