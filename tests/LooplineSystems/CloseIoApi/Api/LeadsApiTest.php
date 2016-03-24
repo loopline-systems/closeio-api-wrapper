@@ -78,7 +78,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
         $responseBody = [
             CloseIoResponse::GET_ALL_RESPONSE_HAS_MORE_KEY => false,
             CloseIoResponse::GET_ALL_RESPONSE_TOTAL_RESULTS_KEY => '3',
-            CloseIoResponse::GET_ALL_RESPONSE_LEADS_KEY => $leadsArray
+            CloseIoResponse::GET_RESPONSE_DATA_KEY => $leadsArray
         ];
 
         $leadsApi = $this->getLeadsApi();
