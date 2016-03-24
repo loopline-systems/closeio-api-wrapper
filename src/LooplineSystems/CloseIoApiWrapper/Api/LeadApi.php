@@ -48,13 +48,53 @@ class LeadApi extends AbstractApi
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_ALL_RESPONSE_LEADS_KEY];
+            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
 
             foreach ($rawData as $lead) {
                 $leads[] = new Lead($lead);
             }
         }
         return $leads;
+    }
+
+    /**
+     * @param array $queryParams
+     *
+     * @return Lead[]
+     */
+    public function findLeads(array $queryParams)
+    {
+        /** @var Lead[] $leads */
+        $leads = array();
+        if (count($queryParams) > 0) {
+            $queryParams = ['query' => $this->buildQueryString($queryParams)];
+        }
+        $apiRequest = $this->prepareRequest('get-leads', '', [], $queryParams);
+        /** @var CloseIoResponse $result */
+        $result = $this->triggerGet($apiRequest);
+        if ($result->getReturnCode() == 200) {
+            $rawData = $result->getData()['data'];
+            foreach ($rawData as $lead) {
+                $leads[] = new Lead($lead);
+            }
+        }
+
+        return $leads;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return string
+     */
+    private function buildQueryString(array $params)
+    {
+        $flattened = [];
+        foreach ($params as $key => $value) {
+            $flattened[] = $key . '=' . $value;
+        }
+        $queryString = implode('&', $flattened);
+        return $queryString;
     }
 
     /**
