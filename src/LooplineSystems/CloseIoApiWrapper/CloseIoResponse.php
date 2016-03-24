@@ -12,7 +12,7 @@ namespace LooplineSystems\CloseIoApiWrapper;
 class CloseIoResponse
 {
 
-    const GET_ALL_RESPONSE_LEADS_KEY = 'data';
+    const GET_RESPONSE_DATA_KEY = 'data';
     const GET_ALL_RESPONSE_HAS_MORE_KEY = 'has_more';
     const GET_ALL_RESPONSE_TOTAL_RESULTS_KEY = 'total_results';
 

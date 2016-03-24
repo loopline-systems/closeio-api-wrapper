@@ -87,6 +87,17 @@ $opportunityApi = $this->apiWrapper->getOpportunityApi();
 $result = $opportunityApi->addOpportunity($opportunity);
 ```
 
+Updating custom fields
+----------------------
+```php
+$customField = new CustomField();
+$customField->setId('Custom field id')
+$customField->addChoice('Value for choices list');
+
+$customFieldApi = $this->apiWrapper->getCustomFieldApi();
+$result = $customFieldApi->updateCustomField($customField);
+```
+
 Info
 ------------
 Right now just a few request are implemented, because the main need was to create leads.

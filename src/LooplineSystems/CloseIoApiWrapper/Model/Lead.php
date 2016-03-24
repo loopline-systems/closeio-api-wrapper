@@ -33,6 +33,11 @@ class Lead implements \JsonSerializable
      */
     private $status_id;
 
+    /**
+     * @var string
+     */
+    private $status;
+
     /*
      * @var string
      */
@@ -393,6 +398,24 @@ class Lead implements \JsonSerializable
     public function setStatusId($status)
     {
         $this->status_id = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
 
         return $this;
     }
