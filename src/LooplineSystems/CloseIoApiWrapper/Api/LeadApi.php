@@ -1,20 +1,21 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
 class LeadApi extends AbstractApi
 {
@@ -30,7 +31,7 @@ class LeadApi extends AbstractApi
             'add-lead' => '/lead/',
             'get-lead' => '/lead/[:id]/',
             'update-lead' => '/lead/[:id]/',
-            'delete-lead' => '/lead/[:id]/'
+            'delete-lead' => '/lead/[:id]/',
         ];
     }
 
@@ -40,7 +41,7 @@ class LeadApi extends AbstractApi
     public function getAllLeads()
     {
         /** @var Lead[] $leads */
-        $leads = array();
+        $leads = [];
 
         $apiRequest = $this->prepareRequest('get-leads');
 
@@ -54,6 +55,7 @@ class LeadApi extends AbstractApi
                 $leads[] = new Lead($lead);
             }
         }
+
         return $leads;
     }
 
@@ -65,7 +67,7 @@ class LeadApi extends AbstractApi
     public function findLeads(array $queryParams)
     {
         /** @var Lead[] $leads */
-        $leads = array();
+        $leads = [];
         if (count($queryParams) > 0) {
             $queryParams = ['query' => $this->buildQueryString($queryParams)];
         }
@@ -94,6 +96,7 @@ class LeadApi extends AbstractApi
             $flattened[] = $key . '=' . $value;
         }
         $queryString = implode('&', $flattened);
+
         return $queryString;
     }
 
@@ -114,6 +117,7 @@ class LeadApi extends AbstractApi
         } else {
             throw new ResourceNotFoundException();
         }
+
         return $lead;
     }
 
@@ -127,6 +131,7 @@ class LeadApi extends AbstractApi
 
         $lead = json_encode($lead);
         $apiRequest = $this->prepareRequest('add-lead', $lead);
+
         return $this->triggerPost($apiRequest);
     }
 
@@ -156,6 +161,7 @@ class LeadApi extends AbstractApi
         } else {
             throw new ResourceNotFoundException();
         }
+
         return $lead;
     }
 
@@ -164,7 +170,8 @@ class LeadApi extends AbstractApi
      * @return CloseIoResponse
      * @throws ResourceNotFoundException
      */
-    public function deleteLead($id){
+    public function deleteLead($id)
+    {
         $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
 
         /** @var CloseIoResponse $result */
@@ -193,9 +200,9 @@ class LeadApi extends AbstractApi
     public function validateLeadForPost(Lead $lead)
     {
         $invalidProperties = ['id', 'organization', 'tasks', 'opportunities'];
-        foreach ($invalidProperties as $invalidProperty){
+        foreach ($invalidProperties as $invalidProperty) {
             $getter = 'get' . ucfirst($invalidProperty);
-            if ($lead->$getter()){
+            if ($lead->$getter()) {
                 throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
             }
         }

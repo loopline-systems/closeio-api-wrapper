@@ -20,6 +20,11 @@ class Task implements \JsonSerializable
     /**
      * @var string
      */
+    private $type;
+
+    /**
+     * @var string
+     */
     private $due_date;
 
     /**
@@ -99,6 +104,25 @@ class Task implements \JsonSerializable
         if ($data) {
             $this->hydrate($data, [], ['setIsComplete' => 'setCompleted']);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
     }
 
     /**
