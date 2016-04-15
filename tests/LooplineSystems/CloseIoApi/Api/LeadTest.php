@@ -13,6 +13,7 @@ use LooplineSystems\CloseIoApiWrapper\Model\Email;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 use LooplineSystems\CloseIoApiWrapper\Model\Phone;
+use LooplineSystems\CloseIoApiWrapper\Model\Task;
 
 class LeadTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,6 +46,11 @@ class LeadTest extends \PHPUnit_Framework_TestCase
         $hydratedLead = new Lead($data);
         $dynamicLead = new Lead();
 
+        $tasks = [];
+        foreach ($data['tasks'] as $task) {
+            $tasks[] = new Task($task);
+        }
+
         $dynamicLead->setId($data['id']);
         $dynamicLead->setStatusId($data['status_id']);
         $dynamicLead->setStatusLabel($data['status_label']);
@@ -54,7 +60,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
         $dynamicLead->setOrganization($data['organization']);
         $dynamicLead->setCreatedBy($data['created_by']);
         $dynamicLead->setUrl($data['url']);
-        $dynamicLead->setTasks($data['tasks']);
+        $dynamicLead->setTasks($tasks);
         $dynamicLead->setName($data['name']);
         $dynamicLead->setContacts($data['contacts']);
         $dynamicLead->setDateCreated($data['date_created']);
@@ -137,6 +143,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                     'url' => 'http://www.test-url.com',
                     'tasks' => [
                         [
+                            '_type' => 'lead',
                             'due_date' => '01-01-2016',
                             'text' => 'Test Task Text',
                             'assigned_to' => 'dfaslk2324',
