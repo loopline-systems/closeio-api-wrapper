@@ -91,10 +91,21 @@ class Task implements \JsonSerializable
      * @var string
      */
     private $lead_id;
+
     /**
      * @var string
      */
     private $date_created;
+
+    /**
+     * @var string
+     */
+    private $date;
+
+    /**
+     * @var string
+     */
+    private $view;
 
     /**
      * @param array $data
@@ -406,6 +417,44 @@ class Task implements \JsonSerializable
     public function setDateCreated($date_created)
     {
         $this->date_created = $date_created;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param string $date
+     * @return $this
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getView()
+    {
+        return $this->view;
+    }
+
+    /**
+     * @param string $view
+     * @return $this
+     */
+    public function setView($view)
+    {
+        $this->view = $view;
 
         return $this;
     }
