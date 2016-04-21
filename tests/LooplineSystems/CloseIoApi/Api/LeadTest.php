@@ -9,6 +9,8 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Tests;
 
+use LooplineSystems\CloseIoApiWrapper\Model\Address;
+use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 use LooplineSystems\CloseIoApiWrapper\Model\Email;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
@@ -51,30 +53,43 @@ class LeadTest extends \PHPUnit_Framework_TestCase
             $tasks[] = new Task($task);
         }
 
+        $opportunities = [];
+        foreach ($data['opportunities'] as $opportunity) {
+            $opportunities[] = new Opportunity($opportunity);
+        }
+
+        $addresses = [];
+        foreach ($data['addresses'] as $address) {
+            $addresses[] = new Address($address);
+        }
+
+        $contacts = [];
+        foreach ($data['contacts'] as $contact) {
+            $contacts[] = new Contact($contact);
+        }
+
+
         $dynamicLead->setId($data['id']);
         $dynamicLead->setStatusId($data['status_id']);
         $dynamicLead->setStatusLabel($data['status_label']);
         $dynamicLead->setDescription($data['description']);
         $dynamicLead->setDisplayName($data['display_name']);
-        $dynamicLead->setAddresses($data['addresses']);
+        $dynamicLead->setAddresses($addresses);
         $dynamicLead->setOrganization($data['organization']);
         $dynamicLead->setCreatedBy($data['created_by']);
         $dynamicLead->setUrl($data['url']);
         $dynamicLead->setTasks($tasks);
         $dynamicLead->setName($data['name']);
-        $dynamicLead->setContacts($data['contacts']);
+        $dynamicLead->setContacts($contacts);
         $dynamicLead->setDateCreated($data['date_created']);
         $dynamicLead->setCustom($data['custom']);
         $dynamicLead->setUpdatedByName($data['updated_by_name']);
         $dynamicLead->setCreatedByName($data['created_by_name']);
-        $dynamicLead->setOpportunities($data['opportunities']);
+        $dynamicLead->setOpportunities($opportunities);
         $dynamicLead->setHtmlUrl($data['html_url']);
         $dynamicLead->setUpdatedBy($data['updated_by']);
         $dynamicLead->setDateUpdated($data['date_updated']);
         $dynamicLead->setOrganizationId($data['organization_id']);
-
-        $dynamicLead = json_decode(json_encode($dynamicLead));
-        $hydratedLead = json_decode(json_encode($hydratedLead));
 
         $this->assertTrue($hydratedLead == $dynamicLead);
     }
@@ -215,7 +230,11 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                             'organization_id' => 'llk3j4lkjkla',
                             'lead_id' => '32lkjsdalfkj34lkj',
                             'status_label' => Opportunity::OPPORTUNITY_STATUS_WON,
-                            'value' => '42342'
+                            'value' => '42342',
+                            "value_currency" => "USD",
+                            "contact_name" => 'name',
+                            "value_formatted" => "$500",
+                            "integration_links" => [],
                         ]
                     ],
                     'html_url' => 'test.com',
