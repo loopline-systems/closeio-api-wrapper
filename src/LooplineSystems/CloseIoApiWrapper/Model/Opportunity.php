@@ -138,6 +138,26 @@ class Opportunity implements \JsonSerializable
     private $value;
 
     /**
+     * @var string
+     */
+    private $value_currency;
+
+    /**
+     * @var string
+     */
+    private $contact_name;
+
+    /**
+     * @var string
+     */
+    private $value_formatted;
+
+    /**
+     * @var array
+     */
+    private $integration_links = [];
+
+    /**
      * @param array $data
      */
     public function __construct(array $data = null)
@@ -566,6 +586,82 @@ class Opportunity implements \JsonSerializable
     public function setValue($value)
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueCurrency()
+    {
+        return $this->value_currency;
+    }
+
+    /**
+     * @param string $value_currency
+     * @return $this
+     */
+    public function setValueCurrency($value_currency)
+    {
+        $this->value_currency = $value_currency;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContactName()
+    {
+        return $this->contact_name;
+    }
+
+    /**
+     * @param string $contact_name
+     * @return $this
+     */
+    public function setContactName($contact_name)
+    {
+        $this->contact_name = $contact_name;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueFormatted()
+    {
+        return $this->value_formatted;
+    }
+
+    /**
+     * @param string $value_formatted
+     * @return $this
+     */
+    public function setValueFormatted($value_formatted)
+    {
+        $this->value_formatted = $value_formatted;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getIntegrationLinks()
+    {
+        return $this->integration_links;
+    }
+
+    /**
+     * @param array $integration_links
+     * @return $this
+     */
+    public function setIntegrationLinks($integration_links)
+    {
+        $this->integration_links = $integration_links;
 
         return $this;
     }
