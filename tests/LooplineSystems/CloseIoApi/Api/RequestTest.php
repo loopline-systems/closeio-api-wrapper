@@ -12,6 +12,8 @@ namespace LooplineSystems\CloseIoApiWrapper\Tests;
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -41,22 +43,24 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $headers = $request->getHeaders();
 
-        foreach ($headers as $header){
-            if (strpos($header, 'Accept:') !== false){
+        foreach ($headers as $header) {
+            if (strpos($header, 'Accept:') !== false) {
                 $this->assertTrue($header === 'Accept: application/json');
-            } elseif (strpos($header, 'Content-Type:') !== false){
+            } elseif (strpos($header, 'Content-Type:') !== false) {
                 $this->assertTrue($header === 'Content-Type: application/json');
             }
         }
     }
 
     /**
-     * @param $jsonString
-     * @param $expected
+     * @param mixed $data
+     * @param bool $expected
+     * @param string $expectedData
+     *
      * @dataProvider jsonStringProvider
      * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
      */
-    public function testSetData($jsonString, $expected)
+    public function testSetData($data, $expected, $expectedData = null)
     {
         $closeIoConfig = new CloseIoConfig();
         $closeIoConfig->setApiKey('testapikey');
@@ -64,11 +68,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = new CloseIoRequest($closeIoApiHandler);
 
         if ($expected === false) {
-            $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException');
-            $request->setData($jsonString);
+            $this->setExpectedException(InvalidParamException::class);
+            $request->setData($data);
         } else {
-            $request->setData($jsonString);
-            $this->assertNotEmpty($request->getData());
+            $request->setData($data);
+            $this->assertEquals($expectedData, $request->getData());
         }
     }
 
@@ -77,12 +81,19 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function jsonStringProvider()
     {
-        return array(
-            array('{"Value": "This is valid JSON."}', true),
-            array('{"Value": [], "Value Two": {"name": "This is also valid"}}', true),
-            array('{"Problem: {"name": "This time problem is missing a closing quotation mark"}}', false),
-            array(array('this is an array, not json at all!'), false),
-            array('I\'m just a string', false)
-        );
+        return [
+            [new \stdClass(), false],
+            [[], true, []],
+            [2, true, 2],
+            [2.1, true, 2.1],
+            [null, true, null],
+            [true, true, true],
+            [false, true, false],
+            ['{"Value": "This is valid JSON."}', true, ['Value' => 'This is valid JSON.']],
+            ['{"Value": [], "Value Two": {"name": "This is also valid"}}', true, ["Value" => [], 'Value Two' => ['name' => 'This is also valid']]],
+            ['{"Problem: {"name": "This time problem is missing a closing quotation mark"}}', false],
+            [['this is an array, not json at all!'], true, ['this is an array, not json at all!']],
+            ['"I\'m a json string"', true, 'I\'m a json string']
+        ];
     }
 }

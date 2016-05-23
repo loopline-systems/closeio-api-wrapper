@@ -50,26 +50,24 @@ class CloseIoRequest
     }
 
     /**
-     * @param string $data
-     * @throws InvalidParamException,JsonDecodingException
+     * @param mixed $data
+     *
+     * @throws InvalidParamException
      */
     public function setData($data)
     {
-        // check validity of json
-        if (!is_array($data) || !is_object($data)) {
-            try {
-                json_decode($data);
-            } catch (\Exception $e) {
-                throw new JsonDecodingException(JSON_ERROR_SYNTAX, null, $e->getMessage());
-            }
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new JsonDecodingException(json_last_error());
-            }
-            // no problems with JSON
-            $this->data = $data;
-        } else {
-            throw new InvalidParamException('Data must be a valid JSON string');
+        if (is_object($data)) {
+            throw new InvalidParamException('Data must not be an object');
         }
+        if (is_string($data) && $data !== '') {
+            $decoded = json_decode($data, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new InvalidParamException('Data as string must be a valid JSON string');
+            }
+            $data = $decoded;
+        }
+
+        $this->data = $data;
     }
 
     /**
