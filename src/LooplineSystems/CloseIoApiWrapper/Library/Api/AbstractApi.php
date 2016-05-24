@@ -163,7 +163,7 @@ abstract class AbstractApi implements ApiInterface
      * @return CloseIoRequest
      * @throws InvalidParamException
      */
-    protected function prepareRequest($urlKey, $data = '', array $urlReplacements = [], array $queryParams = [])
+    protected function prepareRequest($urlKey, $data = null, array $urlReplacements = [], array $queryParams = [])
     {
         $this->apiRequest->clear();
         $this->apiRequest->setData($data);

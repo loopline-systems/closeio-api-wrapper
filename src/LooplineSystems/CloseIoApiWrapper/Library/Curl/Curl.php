@@ -40,7 +40,9 @@ class Curl
         curl_setopt($curlHandler, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $request->getHeaders());
-        curl_setopt($curlHandler, CURLOPT_POSTFIELDS, $request->getData());
+        if ($request->getData() !== null) {
+            curl_setopt($curlHandler, CURLOPT_POSTFIELDS, json_encode($request->getData()));
+        }
         curl_setopt($curlHandler, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($curlHandler, CURLOPT_USERPWD, $request->getApiKey());
     }
