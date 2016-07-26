@@ -9,6 +9,7 @@
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
+use LooplineSystems\CloseIoApiWrapper\Api\ActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\CustomFieldApi;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadStatusApi;
@@ -49,6 +50,7 @@ class CloseIoApiWrapper
         $apiHandler->setApi(new OpportunityApi($apiHandler));
         $apiHandler->setApi(new LeadStatusApi($apiHandler));
         $apiHandler->setApi(new CustomFieldApi($apiHandler));
+        $apiHandler->setApi(new ActivityApi($apiHandler));
 
         return $apiHandler;
     }
@@ -87,6 +89,15 @@ class CloseIoApiWrapper
     public function getLeadStatusesApi()
     {
         return $this->apiHandler->getApi(LeadStatusApi::NAME);
+    }
+
+    /**
+     * @return ActivityApi
+     * @throws Library\Exception\ApiNotFoundException
+     */
+    public function getActivitiesApi()
+    {
+        return $this->apiHandler->getApi(ActivityApi::NAME);
     }
 
     /**
