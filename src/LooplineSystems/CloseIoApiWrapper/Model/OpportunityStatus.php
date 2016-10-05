@@ -6,10 +6,14 @@ namespace LooplineSystems\CloseIoApiWrapper\Model;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
-class LeadStatus implements \JsonSerializable
+class OpportunityStatus implements \JsonSerializable
 {
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+
+    const OPPORTUNITY_TYPE_ACTIVE = 'active';
+    const OPPORTUNITY_TYPE_WON = 'won';
+    const OPPORTUNITY_TYPE_LOST = 'lost';
 
     /**
      * @var string
@@ -24,10 +28,15 @@ class LeadStatus implements \JsonSerializable
     /**
      * @var string
      */
+    private $type;
+
+    /**
+     * @var string
+     */
     private $organizationId;
 
     /**
-     * LeadStatus constructor.
+     * OpportunityStatus constructor.
      * @param array $data
      */
     public function __construct(array $data = null)
@@ -39,7 +48,7 @@ class LeadStatus implements \JsonSerializable
 
     /**
      * @param $label
-     * @return LeadStatus
+     * @return OpportunityStatus
      */
     public function setLabel($label)
     {
@@ -57,7 +66,7 @@ class LeadStatus implements \JsonSerializable
 
     /**
      * @param $id
-     * @return LeadStatus
+     * @return OpportunityStatus
      */
     public function setId($id)
     {
@@ -74,8 +83,26 @@ class LeadStatus implements \JsonSerializable
     }
 
     /**
+     * @param $type
+     * @return OpportunityStatus
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * @param string $organizationId
-     * @return LeadStatus
+     * @return OpportunityStatus
      */
     public function setOrganizationId($organizationId)
     {
