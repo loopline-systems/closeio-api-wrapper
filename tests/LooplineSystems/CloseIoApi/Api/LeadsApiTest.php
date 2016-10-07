@@ -18,6 +18,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param Lead $lead
+     *
      * @description tests adding a lead using mock curl object
      * @dataProvider leadProvider
      */
@@ -31,7 +32,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
         $expectedResponse = new CloseIoResponse();
         $expectedResponse->setReturnCode(201);
         $expectedResponse->setRawData(json_encode($returnedLead));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(),true));
+        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
 
         $leadsApi->setCurl($this->getMockResponderCurl($expectedResponse));
 
@@ -46,6 +47,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider leadProvider
+     *
      * @param Lead $lead
      */
     public function testGetLead($lead)
@@ -71,6 +73,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider leadArrayProvider
+     *
      * @param Lead[] $leadsArray
      */
     public function testGetAllLeads($leadsArray)
@@ -94,7 +97,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
 
         $returnedLeads = $leadsApi->getAllLeads();
 
-        foreach ($returnedLeads as $key => $lead){
+        foreach ($returnedLeads as $key => $lead) {
             $this->assertTrue($lead == $leadsArray[$key]);
         }
     }
@@ -102,7 +105,9 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
      * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
+     *
      * @param Lead $lead
+     *
      * @dataProvider leadProvider
      */
     public function testUpdateLead($lead)
@@ -175,7 +180,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
     {
         // create stub
         $mockCurl = $this->getMockBuilder('Curl')
-            ->setMethods(array('getResponse'))
+            ->setMethods(['getResponse'])
             ->getMock();
 
         // configure the stub.
@@ -194,7 +199,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                (new Lead(['name'=>'Test Name', 'description' => 'Test Description']))
+                (new Lead(['name' => 'Test Name', 'description' => 'Test Description']))
             ]
         ];
     }
@@ -204,7 +209,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
      */
     public function leadArrayProvider()
     {
-        $lead = new Lead(['name'=>'Test Name', 'description' => 'Test Description']);
+        $lead = new Lead(['name' => 'Test Name', 'description' => 'Test Description']);
 
         // set up leads to be returned
         $leadOne = clone $lead;

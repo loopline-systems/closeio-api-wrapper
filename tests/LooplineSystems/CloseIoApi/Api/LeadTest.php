@@ -23,11 +23,12 @@ class LeadTest extends \PHPUnit_Framework_TestCase
      * @param $data
      * @param $shouldSucceed
      * @param $expectedException
+     *
      * @dataProvider testLeadProvider
      */
     public function testHydrateLead($data, $shouldSucceed, $expectedException)
     {
-        if ($shouldSucceed){
+        if ($shouldSucceed) {
             $lead = new Lead($data);
             $objectifiedLead = json_decode(json_encode($lead));
             $objectifiedData = json_decode(json_encode($data));
@@ -41,6 +42,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $data
+     *
      * @dataProvider fullLeadProvider
      */
     public function testCreateDynamicLead($data)
@@ -67,7 +69,6 @@ class LeadTest extends \PHPUnit_Framework_TestCase
         foreach ($data['contacts'] as $contact) {
             $contacts[] = new Contact($contact);
         }
-
 
         $dynamicLead->setId($data['id']);
         $dynamicLead->setStatusId($data['status_id']);
@@ -99,7 +100,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
      */
     public function testLeadProvider()
     {
-        return array(
+        return [
             // good data set 1
             [
                 [
@@ -125,7 +126,7 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                 false, // whether should succeed or not
                 'LooplineSystems\CloseIoApiWrapper\Library\Exception\UndefinedMethodException' // expected exception
             ]
-        );
+        ];
     }
 
     /**
@@ -193,7 +194,8 @@ class LeadTest extends \PHPUnit_Framework_TestCase
                             'emails' => [
                                 [
                                     'email' => 'testemail@mail.com',
-                                    'type' => Email::EMAIL_TYPE_DIRECT                                ]
+                                    'type' => Email::EMAIL_TYPE_DIRECT
+                                ]
                             ],
                             'urls' => [
                                 [

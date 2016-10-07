@@ -34,7 +34,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             $this->assertTrue($closeIoConfig->getApiKey() != '' && is_string($closeIoConfig->getApiKey()));
         } else if (!filter_var($url, FILTER_VALIDATE_URL)) {
             $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException');
-            $closeIoConfig = new closeIoConfig($url);
         } else {
             $closeIoConfig = new CloseIoConfig($url);
             $closeIoConfig->setApiKey($apiKey);

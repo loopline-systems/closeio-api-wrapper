@@ -121,7 +121,7 @@ class CustomFieldApiTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                new CustomField(['name'=>'Test Name'])
+                new CustomField(['name' => 'Test Name'])
             ]
         ];
     }
