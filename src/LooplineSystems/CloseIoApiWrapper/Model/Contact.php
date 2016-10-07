@@ -49,6 +49,11 @@ class Contact implements \JsonSerializable
     private $organization_id;
 
     /**
+     * @var string
+     */
+    private $lead_id;
+
+    /**
      * @var  Url[]
      */
     private $urls;
@@ -272,6 +277,25 @@ class Contact implements \JsonSerializable
     public function setOrganizationId($organization_id)
     {
         $this->organization_id = $organization_id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLeadId()
+    {
+        return $this->lead_id;
+    }
+
+    /**
+     * @param $lead_id
+     * @return $this
+     */
+    public function setLeadId($lead_id)
+    {
+        $this->lead_id = $lead_id;
 
         return $this;
     }

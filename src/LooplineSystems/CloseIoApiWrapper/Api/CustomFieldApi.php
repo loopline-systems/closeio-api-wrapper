@@ -4,6 +4,9 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
 class CustomFieldApi extends AbstractApi

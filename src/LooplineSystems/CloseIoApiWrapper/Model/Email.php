@@ -20,9 +20,9 @@ class Email implements \JsonSerializable
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
 
-    const EMAIL_TYPE_HOME = 'Home';
-    const EMAIL_TYPE_OFFICE = 'Office';
-    const EMAIL_TYPE_DIRECT = 'Direct';
+    const EMAIL_TYPE_HOME = 'home';
+    const EMAIL_TYPE_OFFICE = 'office';
+    const EMAIL_TYPE_DIRECT = 'direct';
 
     /**
      * @var  string
