@@ -17,11 +17,11 @@ class Phone implements \JsonSerializable
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
 
-    const PHONE_TYPE_HOME = 'Home';
-    const PHONE_TYPE_OFFICE = 'Office';
-    const PHONE_TYPE_MOBILE = 'Mobile';
-    const PHONE_TYPE_DIRECT = 'Direct';
-    const PHONE_TYPE_FAX = 'Fax';
+    const PHONE_TYPE_HOME = 'home';
+    const PHONE_TYPE_OFFICE = 'office';
+    const PHONE_TYPE_MOBILE = 'mobile';
+    const PHONE_TYPE_DIRECT = 'direct';
+    const PHONE_TYPE_FAX = 'fax';
 
     /**
      * @var string
