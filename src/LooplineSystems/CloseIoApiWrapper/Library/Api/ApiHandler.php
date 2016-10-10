@@ -61,4 +61,12 @@ class ApiHandler
     {
         return $this->config;
     }
+
+    /**
+     * @return ApiInterface[]
+     */
+    public function getApis()
+    {
+        return $this->apis;
+    }
 }
