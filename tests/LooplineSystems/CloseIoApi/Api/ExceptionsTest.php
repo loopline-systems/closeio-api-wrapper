@@ -15,6 +15,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @param $data
+     *
      * @throws JsonDecodingException
      * @dataProvider badJsonProvider
      */
@@ -31,6 +32,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param $data
+     *
      * @throws JsonDecodingException
      * @dataProvider badDataProvider
      */
@@ -44,7 +46,6 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
             throw $exception;
         }
     }
-
 
     public function badJsonProvider()
     {

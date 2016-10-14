@@ -43,8 +43,7 @@ trait ObjectHydrateHelperTrait
                     if (in_array($setter, array_keys($method_mapper))) {
                         $this->$method_mapper[$setter]($value);
                     } else {
-                        // trying to set a value for a non-property
-                        throw new UndefinedMethodException($setter);
+                        // value is not set - Entities should be extended if needed
                     }
                 }
             } else {

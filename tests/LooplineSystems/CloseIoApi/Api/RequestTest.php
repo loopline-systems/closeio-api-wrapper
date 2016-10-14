@@ -90,7 +90,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             [true, true, true],
             [false, true, false],
             ['{"Value": "This is valid JSON."}', true, ['Value' => 'This is valid JSON.']],
-            ['{"Value": [], "Value Two": {"name": "This is also valid"}}', true, ["Value" => [], 'Value Two' => ['name' => 'This is also valid']]],
+            [
+                '{"Value": [], "Value Two": {"name": "This is also valid"}}',
+                true,
+                ["Value" => [], 'Value Two' => ['name' => 'This is also valid']]
+            ],
             ['{"Problem: {"name": "This time problem is missing a closing quotation mark"}}', false],
             [['this is an array, not json at all!'], true, ['this is an array, not json at all!']],
             ['"I\'m a json string"', true, 'I\'m a json string']

@@ -6,11 +6,12 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Model\OpportunityStatus;
 
-class LeadStatusApi extends AbstractApi
+class OpportunityStatusApi extends AbstractApi
 {
-    const NAME = 'LeadStatusApi';
+    const NAME = 'OpportunityStatusApi';
 
     /**
      * {@inheritdoc}
@@ -18,34 +19,35 @@ class LeadStatusApi extends AbstractApi
     protected function initUrls()
     {
         $this->urls = [
-            'get-statuses' => '/status/lead/',
-            'add-status' => '/status/lead/',
-            'get-status' => '/status/lead/[:id]/',
-            'update-status' => '/status/lead/[:id]/',
-            'delete-status' => '/status/lead/[:id]/'
+            'get-statuses' => '/status/opportunity/',
+            'add-status' => '/status/opportunity/',
+            'get-status' => '/status/opportunity/[:id]/',
+            'update-status' => '/status/opportunity/[:id]/',
+            'delete-status' => '/status/opportunity/[:id]/'
         ];
     }
 
     /**
-     * @param LeadStatus $status
-     * @return LeadStatus
+     * @param OpportunityStatus $status
+     *
+     * @return OpportunityStatus
      */
-    public function addStatus(LeadStatus $status)
+    public function addStatus(OpportunityStatus $status)
     {
         $status = json_encode($status);
         $apiRequest = $this->prepareRequest('add-status', $status);
         $response = $this->triggerPost($apiRequest);
 
-        return new LeadStatus($response->getData());
+        return new OpportunityStatus($response->getData());
     }
 
     /**
-     * @param LeadStatus $status
+     * @param OpportunityStatus $status
      *
-     * @return LeadStatus
+     * @return OpportunityStatus
      * @throws InvalidParamException
      */
-    public function updateStatus(LeadStatus $status)
+    public function updateStatus(OpportunityStatus $status)
     {
         if ($status->getId() == null) {
             throw new InvalidParamException('When updating a status you must provide the statuses ID');
@@ -58,11 +60,11 @@ class LeadStatusApi extends AbstractApi
         $apiRequest = $this->prepareRequest('update-status', $status, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        return new LeadStatus($response->getData());
+        return new OpportunityStatus($response->getData());
     }
 
     /**
-     * @return LeadStatus[]
+     * @return OpportunityStatus[]
      */
     public function getAllStatus()
     {
@@ -75,7 +77,7 @@ class LeadStatusApi extends AbstractApi
         if ($result->getReturnCode() == 200) {
             $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
             foreach ($rawData as $status) {
-                $statuses[] = new LeadStatus($status);
+                $statuses[] = new OpportunityStatus($status);
             }
         }
         return $statuses;
@@ -84,7 +86,7 @@ class LeadStatusApi extends AbstractApi
     /**
      * @param string $id
      *
-     * @return LeadStatus
+     * @return OpportunityStatus
      */
     public function getStatus($id)
     {
@@ -93,7 +95,7 @@ class LeadStatusApi extends AbstractApi
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        return new LeadStatus($result->getData());
+        return new OpportunityStatus($result->getData());
     }
 
     /**

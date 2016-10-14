@@ -1,0 +1,84 @@
+#!/usr/bin/env php
+<?php
+
+use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
+use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
+use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiInterface;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$input = new ArgvInput();
+$output = new ConsoleOutput();
+$io = new Symfony\Component\Console\Style\SymfonyStyle($input, $output);
+
+$key = $input->getParameterOption(['--key', '-k'], null);
+$apiName = $input->getParameterOption(['--api', '-a'], null);
+$request = $input->getParameterOption(['--request', '-r'], null);
+$dataJson = $input->getParameterOption(['--data', '-d'], null);
+$data = null;
+
+if (!empty($dataJson)) {
+    $data = json_decode($dataJson, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        $io->error(sprintf('Invalid json string for data: "%s"', json_last_error_msg()));
+
+        exit(1);
+    }
+}
+
+
+if (empty($key)) {
+    $io->error('No api key set (-k)');
+
+    exit(1);
+}
+
+if (empty($request) || empty($request)) {
+    $io->error('No request set (-r)');
+
+    exit(1);
+}
+
+$config = new CloseIoConfig();
+$config->setApiKey($key);
+
+$wrapper = new CloseIoApiWrapper($config);
+$handler = $wrapper->getApiHandler();
+try {
+    $api = $handler->getApi($apiName);
+} catch (ApiNotFoundException $exception) {
+    $apiNames = array_map(
+        function(ApiInterface $api) {
+            return $api->getName();
+        },
+        $handler->getApis()
+    );
+    $io->error(sprintf('API "%s" not found. Available APIs are:' . PHP_EOL . '%s', $apiName, implode(PHP_EOL, $apiNames)));
+
+    exit(1);
+}
+
+$reflection = new ReflectionClass(get_class($api));
+$method = $reflection->getMethod($request);
+
+$argumentType = array_reduce(
+    $method->getParameters(),
+    function ($carry, ReflectionParameter $parameter) {
+        return $carry !== null || $parameter->getClass() === null ? $carry : $parameter->getClass()->getName();
+    }
+);
+$argument = $argumentType !== null ? new $argumentType($data) : $data;
+
+try {
+    $io->note(sprintf('Request "%s", with data "%s" will be done...', $apiName . '::' . $request, $dataJson));
+    $response = call_user_func([$api, $request], $argument);
+} catch (\Exception $exception) {
+    $io->error($exception->getMessage());
+
+    exit(1);
+}
+
+$io->success(json_encode($response, JSON_PRETTY_PRINT));

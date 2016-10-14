@@ -15,6 +15,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider jsonErrorResponseProvider
+     *
      * @param string $jsonResponse
      */
     public function testResponseErrors($jsonResponse, $expected)
@@ -33,11 +34,11 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function jsonErrorResponseProvider()
     {
-        return array(
-            array('{"error": "The request contains invalid JSON."}', true),
-            array('{"errors": [], "field-errors": {"name": "Value must be of basestring type."}}', true),
-            array('{"field-errors": {"name": "Value must be of basestring type."}}', true),
-            array('{"id": "sample_id", "name": "Test Name"}', false)
-        );
+        return [
+            ['{"error": "The request contains invalid JSON."}', true],
+            ['{"errors": [], "field-errors": {"name": "Value must be of basestring type."}}', true],
+            ['{"field-errors": {"name": "Value must be of basestring type."}}', true],
+            ['{"id": "sample_id", "name": "Test Name"}', false]
+        ];
     }
 }

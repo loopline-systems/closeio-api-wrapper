@@ -11,6 +11,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Tests;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,7 +20,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      * @param string $apiKey
      * @param bool $expected
      * @dataProvider configProvider
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
+     * @throws InvalidParamException
      */
     public function testCreateCloseIoConfig($url, $apiKey, $expected)
     {
@@ -33,8 +34,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             $this->assertNotFalse(filter_var($closeIoConfig->getUrl(), FILTER_VALIDATE_URL));
             $this->assertTrue($closeIoConfig->getApiKey() != '' && is_string($closeIoConfig->getApiKey()));
         } else if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException');
-            $closeIoConfig = new closeIoConfig($url);
+            $this->setExpectedException(InvalidParamException::class);
+            $closeIoConfig = new CloseIoConfig($url);
         } else {
             $closeIoConfig = new CloseIoConfig($url);
             $closeIoConfig->setApiKey($apiKey);
