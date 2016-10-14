@@ -29,6 +29,7 @@ class OpportunityStatusApi extends AbstractApi
 
     /**
      * @param OpportunityStatus $status
+     *
      * @return OpportunityStatus
      */
     public function addStatus(OpportunityStatus $status)
@@ -36,14 +37,15 @@ class OpportunityStatusApi extends AbstractApi
         $status = json_encode($status);
         $apiRequest = $this->prepareRequest('add-status', $status);
         $response = $this->triggerPost($apiRequest);
+
         return new OpportunityStatus($response->getData());
     }
 
     /**
      * @param OpportunityStatus $status
-     * @return OpportunityStatus|string
+     *
+     * @return OpportunityStatus
      * @throws InvalidParamException
-     * @throws ResourceNotFoundException
      */
     public function updateStatus(OpportunityStatus $status)
     {
@@ -58,13 +60,7 @@ class OpportunityStatusApi extends AbstractApi
         $apiRequest = $this->prepareRequest('update-status', $status, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        // return Opportunity object if successful
-        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $status = new OpportunityStatus($response->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-        return $status;
+        return new OpportunityStatus($response->getData());
     }
 
     /**
@@ -72,12 +68,10 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function getAllStatus()
     {
-        /** @var OpportunityStatus[] $statuses */
         $statuses = array();
 
         $apiRequest = $this->prepareRequest('get-statuses');
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -90,9 +84,9 @@ class OpportunityStatusApi extends AbstractApi
     }
 
     /**
-     * @param $id
+     * @param string $id
+     *
      * @return OpportunityStatus
-     * @throws ResourceNotFoundException
      */
     public function getStatus($id)
     {
@@ -101,29 +95,15 @@ class OpportunityStatusApi extends AbstractApi
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            $status = new OpportunityStatus($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-        return $status;
+        return new OpportunityStatus($result->getData());
     }
 
     /**
-     * @param $id
-     * @return CloseIoResponse
-     * @throws ResourceNotFoundException
+     * @param string $id
      */
     public function deleteStatus($id){
         $apiRequest = $this->prepareRequest('delete-status', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerDelete($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            return $result;
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        $this->triggerDelete($apiRequest);
     }
 }

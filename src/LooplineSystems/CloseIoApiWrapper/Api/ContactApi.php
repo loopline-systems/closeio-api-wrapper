@@ -12,8 +12,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 
 class ContactApi extends AbstractApi
@@ -39,12 +37,10 @@ class ContactApi extends AbstractApi
      */
     public function getAllContacts()
     {
-        /** @var Contact[] $contacts */
         $contacts = [];
 
         $apiRequest = $this->prepareRequest('get-contacts');
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -59,50 +55,39 @@ class ContactApi extends AbstractApi
     }
 
     /**
-     * @param $id
+     * @param string $id
+     *
      * @return Contact
-     * @throws ResourceNotFoundException
      */
     public function getContact($id)
     {
         $apiRequest = $this->prepareRequest('get-contact', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            $contact = new Contact($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $contact;
+        return new Contact($result->getData());
     }
 
     /**
      * @param Contact $contact
-     * @return CloseIoResponse
+     *
+     * @return Contact
      */
     public function addContact(Contact $contact)
     {
         $contact = json_encode($contact);
         $apiRequest = $this->prepareRequest('add-contact', $contact);
 
-        return $this->triggerPost($apiRequest);
+        return new Contact($this->triggerPost($apiRequest)->getData());
     }
 
     /**
      * @param Contact $contact
-     * @return Contact|string
-     * @throws InvalidParamException
-     * @throws ResourceNotFoundException
+     *
+     * @return Contact
      */
     public function updateContact(Contact $contact)
     {
-        // check if contact has id
-        if ($contact->getId() == null) {
-            throw new InvalidParamException('When updating a contact you must provide the contact ID');
-        }
         // remove id from contact since it won't be part of the patch data
         $id = $contact->getId();
         $contact->setId(null);
@@ -111,33 +96,17 @@ class ContactApi extends AbstractApi
         $apiRequest = $this->prepareRequest('update-contact', $contact, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        // return Contact object if successful
-        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $contact = new Contact($response->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $contact;
+        return new Contact($response->getData());
     }
 
     /**
-     * @param $id
-     * @return CloseIoResponse
-     * @throws ResourceNotFoundException
+     * @param string $id
      */
     public function deleteContact($id)
     {
         $apiRequest = $this->prepareRequest('delete-contact', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerDelete($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            return $result;
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        $this->triggerDelete($apiRequest);
     }
 
     /**

@@ -6,7 +6,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
 
 class LeadStatusApi extends AbstractApi
@@ -36,14 +35,15 @@ class LeadStatusApi extends AbstractApi
         $status = json_encode($status);
         $apiRequest = $this->prepareRequest('add-status', $status);
         $response = $this->triggerPost($apiRequest);
+
         return new LeadStatus($response->getData());
     }
 
     /**
      * @param LeadStatus $status
-     * @return LeadStatus|string
+     *
+     * @return LeadStatus
      * @throws InvalidParamException
-     * @throws ResourceNotFoundException
      */
     public function updateStatus(LeadStatus $status)
     {
@@ -58,13 +58,7 @@ class LeadStatusApi extends AbstractApi
         $apiRequest = $this->prepareRequest('update-status', $status, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        // return Lead object if successful
-        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $status = new LeadStatus($response->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-        return $status;
+        return new LeadStatus($response->getData());
     }
 
     /**
@@ -72,12 +66,10 @@ class LeadStatusApi extends AbstractApi
      */
     public function getAllStatus()
     {
-        /** @var LeadStatus[] $statuses */
         $statuses = array();
 
         $apiRequest = $this->prepareRequest('get-statuses');
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -90,9 +82,9 @@ class LeadStatusApi extends AbstractApi
     }
 
     /**
-     * @param $id
+     * @param string $id
+     *
      * @return LeadStatus
-     * @throws ResourceNotFoundException
      */
     public function getStatus($id)
     {
@@ -101,29 +93,15 @@ class LeadStatusApi extends AbstractApi
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            $status = new LeadStatus($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-        return $status;
+        return new LeadStatus($result->getData());
     }
 
     /**
-     * @param $id
-     * @return CloseIoResponse
-     * @throws ResourceNotFoundException
+     * @param string $id
      */
     public function deleteStatus($id){
         $apiRequest = $this->prepareRequest('delete-status', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerDelete($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            return $result;
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        $this->triggerDelete($apiRequest);
     }
 }

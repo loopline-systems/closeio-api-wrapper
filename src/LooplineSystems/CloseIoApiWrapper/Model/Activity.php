@@ -76,6 +76,11 @@ class Activity implements \JsonSerializable
     private $lead_id;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @param array $data
      */
     public function __construct(array $data = null)
@@ -341,6 +346,24 @@ class Activity implements \JsonSerializable
     public function setLeadId($lead_id)
     {
         $this->lead_id = $lead_id;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }

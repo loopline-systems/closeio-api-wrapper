@@ -11,6 +11,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
@@ -38,12 +39,10 @@ class OpportunityApi extends AbstractApi
      */
     public function getAllOpportunities()
     {
-        /** @var Opportunity[] $opportunities */
         $opportunities = array();
 
         $apiRequest = $this->prepareRequest('get-opportunities');
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -52,55 +51,50 @@ class OpportunityApi extends AbstractApi
                 $opportunities[] = new Opportunity($opportunity);
             }
         }
+
         return $opportunities;
     }
 
     /**
-     * @param $id
+     * @param string $id
+     *
      * @return Opportunity
-     * @throws ResourceNotFoundException
      */
     public function getOpportunity($id)
     {
         $apiRequest = $this->prepareRequest('get-opportunity', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            $opportunity = new Opportunity($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-        return $opportunity;
+        return new Opportunity($result->getData());
     }
 
     /**
      * @param Opportunity $opportunity
-     * @return CloseIoResponse
+     *
+     * @return Opportunity
      */
     public function addOpportunity(Opportunity $opportunity)
     {
-        $this->validateOpportunityForPost($opportunity);
-
         $opportunity = json_encode($opportunity);
         $apiRequest = $this->prepareRequest('add-opportunity', $opportunity);
-        return $this->triggerPost($apiRequest);
+
+        $result = $this->triggerPost($apiRequest);
+
+        return new Opportunity($result->getData());
     }
 
     /**
      * @param Opportunity $opportunity
-     * @return Opportunity|string
+     *
+     * @return Opportunity
      * @throws InvalidParamException
-     * @throws ResourceNotFoundException
      */
     public function updateOpportunity(Opportunity $opportunity)
     {
-        // check if opportunity has id
         if ($opportunity->getId() == null) {
             throw new InvalidParamException('When updating a opportunity you must provide the opportunity ID');
         }
-        // remove id from opportunity since it won't be part of the patch data
         $id = $opportunity->getId();
         $opportunity->setId(null);
 
@@ -108,13 +102,7 @@ class OpportunityApi extends AbstractApi
         $apiRequest = $this->prepareRequest('update-opportunity', $opportunity, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        // return Opportunity object if successful
-        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $opportunity = new Opportunity($response->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-        return $opportunity;
+        return new Opportunity($response->getData());
     }
 
     /**
@@ -125,14 +113,7 @@ class OpportunityApi extends AbstractApi
     public function deleteOpportunity($id){
         $apiRequest = $this->prepareRequest('delete-opportunity', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerDelete($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            return $result;
-        } else {
-            throw new ResourceNotFoundException();
-        }
+        $this->triggerDelete($apiRequest);
     }
 
 
@@ -143,14 +124,4 @@ class OpportunityApi extends AbstractApi
     {
         $this->curl = $curl;
     }
-
-    /**
-     * @param Opportunity $opportunity
-     * @return bool
-     */
-    public function validateOpportunityForPost(Opportunity $opportunity)
-    {
-        return true;
-    }
-
 }

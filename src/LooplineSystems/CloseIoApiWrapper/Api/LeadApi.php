@@ -45,7 +45,6 @@ class LeadApi extends AbstractApi
 
         $apiRequest = $this->prepareRequest('get-leads');
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -72,7 +71,7 @@ class LeadApi extends AbstractApi
             $queryParams = ['query' => $this->buildQueryString($queryParams)];
         }
         $apiRequest = $this->prepareRequest('get-leads', '', [], $queryParams);
-        /** @var CloseIoResponse $result */
+
         $result = $this->triggerGet($apiRequest);
         if ($result->getReturnCode() == 200) {
             $rawData = $result->getData()['data'];
@@ -83,6 +82,93 @@ class LeadApi extends AbstractApi
 
         return $leads;
     }
+
+    /**
+     * @param string $id
+     *
+     * @return Lead
+     */
+    public function getLead($id)
+    {
+        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id]);
+
+        $result = $this->triggerGet($apiRequest);
+
+        return new Lead($result->getData());
+    }
+
+    /**
+     * @param Lead $lead
+     *
+     * @return Lead
+     */
+    public function addLead(Lead $lead)
+    {
+        $this->validateLeadForPost($lead);
+
+        $lead = json_encode($lead);
+        $apiRequest = $this->prepareRequest('add-lead', $lead);
+
+        return new Lead($this->triggerPost($apiRequest)->getData());
+    }
+
+    /**
+     * @param Lead $lead
+     *
+     * @return Lead
+     * @throws InvalidParamException
+     */
+    public function updateLead(Lead $lead)
+    {
+        // check if lead has id
+        if ($lead->getId() == null) {
+            throw new InvalidParamException('When updating a lead you must provide the lead ID');
+        }
+        // remove id from lead since it won't be part of the patch data
+        $id = $lead->getId();
+        $lead->setId(null);
+
+        $lead = json_encode($lead);
+        $apiRequest = $this->prepareRequest('update-lead', $lead, ['id' => $id]);
+        $response = $this->triggerPut($apiRequest);
+
+        return new Lead($response->getData());
+    }
+
+    /**
+     * @param string $id
+     */
+    public function deleteLead($id)
+    {
+        $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
+
+        $this->triggerDelete($apiRequest);
+    }
+
+    /**
+     * @param Curl $curl
+     */
+    public function setCurl($curl)
+    {
+        $this->curl = $curl;
+    }
+
+    /**
+     * @param Lead $lead
+     *
+     * @throws InvalidNewLeadPropertyException
+     */
+    public function validateLeadForPost(Lead $lead)
+    {
+        $invalidProperties = ['id', 'organization', 'tasks', 'opportunities'];
+        foreach ($invalidProperties as $invalidProperty) {
+            $getter = 'get' . ucfirst($invalidProperty);
+            if ($lead->$getter()) {
+                throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
+            }
+        }
+    }
+
 
     /**
      * @param array $params
@@ -99,113 +185,4 @@ class LeadApi extends AbstractApi
 
         return $queryString;
     }
-
-    /**
-     * @param $id
-     * @return Lead
-     * @throws ResourceNotFoundException
-     */
-    public function getLead($id)
-    {
-        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id]);
-
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            $lead = new Lead($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $lead;
-    }
-
-    /**
-     * @param Lead $lead
-     * @return CloseIoResponse
-     */
-    public function addLead(Lead $lead)
-    {
-        $this->validateLeadForPost($lead);
-
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('add-lead', $lead);
-
-        return $this->triggerPost($apiRequest);
-    }
-
-    /**
-     * @param Lead $lead
-     * @return Lead|string
-     * @throws InvalidParamException
-     * @throws ResourceNotFoundException
-     */
-    public function updateLead(Lead $lead)
-    {
-        // check if lead has id
-        if ($lead->getId() == null) {
-            throw new InvalidParamException('When updating a lead you must provide the lead ID');
-        }
-        // remove id from lead since it won't be part of the patch data
-        $id = $lead->getId();
-        $lead->setId(null);
-
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('update-lead', $lead, ['id' => $id]);
-        $response = $this->triggerPut($apiRequest);
-
-        // return Lead object if successful
-        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $lead = new Lead($response->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $lead;
-    }
-
-    /**
-     * @param $id
-     * @return CloseIoResponse
-     * @throws ResourceNotFoundException
-     */
-    public function deleteLead($id)
-    {
-        $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
-
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerDelete($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            return $result;
-        } else {
-            throw new ResourceNotFoundException();
-        }
-    }
-
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
-    }
-
-    /**
-     * @param Lead $lead
-     * @throws InvalidNewLeadPropertyException
-     * @description Checks if lead does not contain invalid properties
-     */
-    public function validateLeadForPost(Lead $lead)
-    {
-        $invalidProperties = ['id', 'organization', 'tasks', 'opportunities'];
-        foreach ($invalidProperties as $invalidProperty) {
-            $getter = 'get' . ucfirst($invalidProperty);
-            if ($lead->$getter()) {
-                throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
-            }
-        }
-    }
-
 }

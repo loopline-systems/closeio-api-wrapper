@@ -36,9 +36,9 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
 
         $leadsApi->setCurl($this->getMockResponderCurl($expectedResponse));
 
-        $response = $leadsApi->addLead($lead);
+        $responseLead = $leadsApi->addLead($lead);
 
-        $createdLead = new Lead($response->getData());
+        $createdLead = $responseLead;
 
         $this->assertTrue($createdLead->getName() === $lead->getName());
         $this->assertNotEmpty($createdLead->getId());
@@ -155,8 +155,7 @@ class LeadsApiTest extends \PHPUnit_Framework_TestCase
         $mockCurl = $this->getMockResponderCurl($expectedResponse);
         $leadsApi->setCurl($mockCurl);
 
-        $response = $leadsApi->deleteLead($id);
-        $this->assertTrue($response === $expectedResponse);
+        $leadsApi->deleteLead($id);
     }
 
     /**

@@ -4,10 +4,8 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Activity;
 use LooplineSystems\CloseIoApiWrapper\Model\Call;
-use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
 class ActivityApi extends AbstractApi
 {
@@ -21,69 +19,79 @@ class ActivityApi extends AbstractApi
     {
         $this->urls = [
             'add-note' => '/activity/note/',
-            'get-note' => '/activity/note/[:id]/',
-            'add-call' => '/activity/call/'
+            'get-notes' => '/activity/note/',
+            'add-call' => '/activity/call/',
+            'get-calls' => '/activity/call/'
         ];
     }
 
     /**
      * @param Activity $activity
      *
-     * @return CloseIoResponse
+     * @return Activity
      */
     public function addNote(Activity $activity)
     {
-        $this->validateActivityForPost($activity);
-
         $activity = json_encode($activity);
         $apiRequest = $this->prepareRequest('add-note', $activity);
 
-        return $this->triggerPost($apiRequest);
+        $result = $this->triggerPost($apiRequest);
+
+        return new Activity($result->getData());
     }
 
     /**
      * @param Call $call
      *
-     * @return CloseIoResponse
+     * @return Call
      */
     public function addCall(Call $call)
     {
-        $this->validateActivityForPost($call);
-
         $call = json_encode($call);
         $apiRequest = $this->prepareRequest('add-call', $call);
 
-        return $this->triggerPost($apiRequest);
+        $result = $this->triggerPost($apiRequest);
+
+        return new Call($result->getData());
     }
 
     /**
-     * @param $id
+     * @param array $filters
      *
-     * @return Lead
-     * @throws ResourceNotFoundException
+     * @return array
      */
-    public function getNote($id)
+    public function getNotes(array $filters)
     {
-        $apiRequest = $this->prepareRequest('get-note', null, ['id' => $id]);
+        $apiRequest = $this->prepareRequest('get-notes', null, [], $filters);
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
-            return new Lead($result->getData());
+        $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
+        $notes = [];
+        foreach ($rawData as $note) {
+            $notes[] = new Activity($note);
         }
 
-        throw new ResourceNotFoundException();
+        return $notes;
     }
 
     /**
-     * @param $activity
+     * @param array $filters
      *
-     * @return bool
+     * @return array
      */
-    private function validateActivityForPost($activity)
+    public function getCalls(array $filters)
     {
-        return true;
-    }
+        $apiRequest = $this->prepareRequest('get-calls', null, [], $filters);
 
+        $result = $this->triggerGet($apiRequest);
+
+        $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
+        $calls = [];
+        foreach ($rawData as $call) {
+            $calls[] = new Activity($call);
+        }
+
+        return $calls;
+    }
 }

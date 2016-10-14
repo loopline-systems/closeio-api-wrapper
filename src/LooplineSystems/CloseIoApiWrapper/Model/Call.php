@@ -13,6 +13,11 @@ class Call implements \JsonSerializable
     /**
      * @var string
      */
+    private $id;
+
+    /**
+     * @var string
+     */
     private $lead_id;
 
     /**
@@ -56,6 +61,11 @@ class Call implements \JsonSerializable
     private $phone;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @param array $data
      */
     public function __construct(array $data = null)
@@ -63,6 +73,24 @@ class Call implements \JsonSerializable
         if ($data) {
             $this->hydrate($data, []);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -241,6 +269,24 @@ class Call implements \JsonSerializable
     public function setPhone($phone)
     {
         $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
 
         return $this;
     }

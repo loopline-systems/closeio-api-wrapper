@@ -6,7 +6,6 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
 class CustomFieldApi extends AbstractApi
@@ -39,7 +38,6 @@ class CustomFieldApi extends AbstractApi
 
         $apiRequest = $this->prepareRequest('get-customFields');
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -57,7 +55,6 @@ class CustomFieldApi extends AbstractApi
      *
      * @return CustomField
      * @throws InvalidParamException
-     * @throws ResourceNotFoundException
      */
     public function updateCustomField(CustomField $customField)
     {
@@ -71,12 +68,6 @@ class CustomFieldApi extends AbstractApi
         $apiRequest = $this->prepareRequest('update-customField', $customField, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
-        if ($response->getReturnCode() == 200 && ($response->getData() !== null)) {
-            $customField = new CustomField($response->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $customField;
+        return new CustomField($response->getData());
     }
 }
