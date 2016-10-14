@@ -18,11 +18,7 @@ Installation and Configuration
 ------------
 Require via [Composer](https://github.com/composer/composer)<br />
 ```bash
-{
-    "require": {
-        "loopline-systems/closeio-api-wrapper": "0.3.2"
-    }
-}
+composer require loopline-systems/closeio-api-wrapper
 ```
 
 Usage
@@ -129,7 +125,8 @@ Authors
 -------
 
 Michael Devery - <michaeldevery@gmail.com><br />
-Marco Roßdeutscher - <marco.rossdeutscher@gmail.com><br />
+Marco Roßdeutscher - <marco.rossdeutscher@loopline-systems.com><br />
+Marco Roßdeutscher - <marc.zahn@loopline-systems.com><br />
 
 See also the list of [contributors](https://github.com/loopline-systems/closeio-api-wrapper/contributors) who participated in this project.
 
