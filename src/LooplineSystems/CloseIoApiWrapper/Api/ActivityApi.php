@@ -11,7 +11,6 @@ use LooplineSystems\CloseIoApiWrapper\Model\NoteActivity;
 
 class ActivityApi extends AbstractApi
 {
-
     const NAME = 'ActivityApi';
 
     /**
@@ -22,10 +21,13 @@ class ActivityApi extends AbstractApi
         $this->urls = [
             'add-note' => '/activity/note/',
             'get-notes' => '/activity/note/',
+            'delete-note' => '/activity/note/[:id]/',
             'add-call' => '/activity/call/',
             'get-calls' => '/activity/call/',
+            'delete-call' => '/activity/call/[:id]/',
             'add-email' => '/activity/email/',
             'get-emails' => '/activity/email/',
+            'delete-email' => '/activity/email/[:id]/',
         ];
     }
 
@@ -132,5 +134,35 @@ class ActivityApi extends AbstractApi
         }
 
         return $calls;
+    }
+
+    /**
+     * @param string $id
+     */
+    public function deleteNote($id)
+    {
+        $apiRequest = $this->prepareRequest('delete-note', null, ['id' => $id]);
+
+        $this->triggerDelete($apiRequest);
+    }
+
+    /**
+     * @param string $id
+     */
+    public function deleteCall($id)
+    {
+        $apiRequest = $this->prepareRequest('delete-call', null, ['id' => $id]);
+
+        $this->triggerDelete($apiRequest);
+    }
+
+    /**
+     * @param string $id
+     */
+    public function deleteEmail($id)
+    {
+        $apiRequest = $this->prepareRequest('delete-email', null, ['id' => $id]);
+
+        $this->triggerDelete($apiRequest);
     }
 }
