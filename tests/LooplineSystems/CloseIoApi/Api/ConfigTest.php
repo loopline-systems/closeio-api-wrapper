@@ -9,7 +9,6 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Tests;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
@@ -34,8 +33,8 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             $this->assertNotFalse(filter_var($closeIoConfig->getUrl(), FILTER_VALIDATE_URL));
             $this->assertTrue($closeIoConfig->getApiKey() != '' && is_string($closeIoConfig->getApiKey()));
         } else if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $this->setExpectedException(InvalidParamException::class);
-            $closeIoConfig = new CloseIoConfig($url);
+            $this->expectException(InvalidParamException::class);
+            new CloseIoConfig($url);
         } else {
             $closeIoConfig = new CloseIoConfig($url);
             $closeIoConfig->setApiKey($apiKey);
@@ -44,7 +43,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return CloseIoConfig
+     * @return array
      */
     public function configProvider()
     {
