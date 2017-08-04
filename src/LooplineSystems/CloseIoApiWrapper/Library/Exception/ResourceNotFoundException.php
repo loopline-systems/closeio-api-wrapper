@@ -16,6 +16,6 @@ class ResourceNotFoundException extends \Exception
      */
     public function __construct()
     {
-        parent::__construct('Requested resource not found not found');
+        parent::__construct('Requested resource not found');
     }
 }

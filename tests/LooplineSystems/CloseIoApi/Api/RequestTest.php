@@ -13,7 +13,6 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
@@ -58,7 +57,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      * @param string $expectedData
      *
      * @dataProvider jsonStringProvider
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
+     * @throws InvalidParamException
      */
     public function testSetData($data, $expected, $expectedData = null)
     {
@@ -68,7 +67,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = new CloseIoRequest($closeIoApiHandler);
 
         if ($expected === false) {
-            $this->setExpectedException(InvalidParamException::class);
+            $this->expectException(InvalidParamException::class);
             $request->setData($data);
         } else {
             $request->setData($data);

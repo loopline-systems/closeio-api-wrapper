@@ -13,6 +13,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 
 
 class CurlTest extends \PHPUnit_Framework_TestCase
@@ -42,7 +43,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
 
         $leadApi = $closeIoApiWrapper->getLeadApi();
 
-        $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException');
+        $this->expectException(BadApiRequestException::class);
 
         $leadApi->getLead('bad-id');
     }
