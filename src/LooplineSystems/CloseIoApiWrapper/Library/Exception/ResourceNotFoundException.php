@@ -16,6 +16,7 @@ class ResourceNotFoundException extends \Exception
      */
     public function __construct()
     {
-        parent::__construct('Requested resource not found');
+        parent::__construct('404: Requested resource not found. You may also be using the wrong API key; at the time of'
+            . ' writing Close.IO gives a 404 instead of a 403 in this case.');
     }
 }
