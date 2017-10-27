@@ -21,8 +21,14 @@ class BadApiRequestException extends \Exception {
             if (! empty ($errorsByType)) {
                 if (is_array($errorsByType)) {
                     $output .= $type . ' : ' .PHP_EOL;
-                    foreach ($errorsByType as $key => $error){
-                        $output .= $key . ' => ' . $error . PHP_EOL;
+                    foreach ($errorsByType as $key => $errorOrSubErrors){
+                        if (is_array($errorOrSubErrors)) {
+                            foreach($errorOrSubErrors as $subError) {
+                                $output .= json_encode($subError) . PHP_EOL;
+                            }
+                        } else {
+                            $output .= $key . ' => ' . $errorOrSubErrors . PHP_EOL;
+                        }
                     }
                 } else {
                     $output .= $type . ' : ' . $errorsByType;
@@ -31,4 +37,4 @@ class BadApiRequestException extends \Exception {
         }
         parent::__construct('Api request returned errors. ' . PHP_EOL . $output);
     }
-} 
+}
