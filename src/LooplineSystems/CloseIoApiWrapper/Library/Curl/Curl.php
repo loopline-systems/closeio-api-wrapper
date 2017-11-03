@@ -66,7 +66,7 @@ class Curl
         $response = $this->execute($curlHandler);
 
         if ($response->hasErrors()) {
-            if ($response->getReturnCode() == 404) {
+            if ($response->getReturnCode() === 404) {
                 throw new ResourceNotFoundException();
             } else {
                 throw new BadApiRequestException($response->getErrors());
