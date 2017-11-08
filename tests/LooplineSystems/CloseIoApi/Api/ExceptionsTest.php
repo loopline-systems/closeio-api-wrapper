@@ -21,7 +21,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
      */
     public function testJsonDecodeException($data, $expectedMessage)
     {
-        $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException');
+        $this->expectException(JsonDecodingException::class);
         json_decode($data);
         if (json_last_error() !== JSON_ERROR_NONE) {
             $exception = new JsonDecodingException(json_last_error());
@@ -38,7 +38,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
      */
     public function testJsonEncodeException($data, $expectedMessage)
     {
-        $this->setExpectedException('LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException');
+        $this->expectException(JsonDecodingException::class);
         json_encode($data);
         if (json_last_error() !== JSON_ERROR_NONE) {
             $exception = new JsonDecodingException(json_last_error());

@@ -13,6 +13,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 
 class Curl
 {
@@ -65,7 +66,12 @@ class Curl
         $response = $this->execute($curlHandler);
 
         if ($response->hasErrors()) {
-            throw new BadApiRequestException($response->getErrors());
+            if ($response->getReturnCode() === 404) {
+                throw new ResourceNotFoundException();
+            } else {
+                throw new BadApiRequestException($response->getErrors());
+            }
+
         } else {
             return $response;
         }
