@@ -10,75 +10,74 @@ class Activity implements \JsonSerializable
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
 
-    /**
-     * @var string
-     */
-    private $note;
+    const ACTIVITY_TYPE_CALL = 'Call';
+    const ACTIVITY_TYPE_EMAIL = 'Email';
+    const ACTIVITY_TYPE_NOTE = 'Note';
 
     /**
      * @var string
      */
-    private $user_id;
+    protected $user_id;
 
     /**
      * @var string
      */
-    private $user_name;
+    protected $user_name;
 
     /**
      * @var string
      */
-    private $updated_by;
+    protected $updated_by;
 
     /**
      * @var string
      */
-    private $updated_by_name;
+    protected $updated_by_name;
 
     /**
      * @var string
      */
-    private $date_updated;
+    protected $date_updated;
 
     /**
      * @var string
      */
-    private $created_by;
+    protected $created_by;
 
     /**
      * @var string
      */
-    private $created_by_name;
+    protected $created_by_name;
 
     /**
      * @var string
      */
-    private $organization_id;
+    protected $organization_id;
 
     /**
      * @var string
      */
-    private $contact_id;
+    protected $contact_id;
 
     /**
      * @var string
      */
-    private $date_created;
+    protected $date_created;
 
     /**
      * @var string
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $lead_id;
+    protected $lead_id;
 
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @param array $data
@@ -88,26 +87,6 @@ class Activity implements \JsonSerializable
         if ($data) {
             $this->hydrate($data, []);
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getNote()
-    {
-        return $this->note;
-    }
-
-    /**
-     * @param string $note
-     *
-     * @return $this
-     */
-    public function setNote($note)
-    {
-        $this->note = $note;
-
-        return $this;
     }
 
     /**
@@ -360,6 +339,8 @@ class Activity implements \JsonSerializable
 
     /**
      * @param string $type
+     *
+     * @return Activity
      */
     public function setType($type)
     {
@@ -367,5 +348,4 @@ class Activity implements \JsonSerializable
 
         return $this;
     }
-
 }
