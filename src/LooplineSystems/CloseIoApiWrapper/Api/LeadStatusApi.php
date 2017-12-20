@@ -11,7 +11,10 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
 
 class LeadStatusApi extends AbstractApi
@@ -35,6 +38,11 @@ class LeadStatusApi extends AbstractApi
     /**
      * @param LeadStatus $status
      * @return LeadStatus
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addStatus(LeadStatus $status)
     {
@@ -49,7 +57,11 @@ class LeadStatusApi extends AbstractApi
      * @param LeadStatus $status
      *
      * @return LeadStatus
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateStatus(LeadStatus $status)
     {
@@ -69,6 +81,11 @@ class LeadStatusApi extends AbstractApi
 
     /**
      * @return LeadStatus[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllStatus()
     {
@@ -91,6 +108,11 @@ class LeadStatusApi extends AbstractApi
      * @param string $id
      *
      * @return LeadStatus
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getStatus($id)
     {
@@ -104,6 +126,11 @@ class LeadStatusApi extends AbstractApi
 
     /**
      * @param string $id
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function deleteStatus($id){
         $apiRequest = $this->prepareRequest('delete-status', null, ['id' => $id]);

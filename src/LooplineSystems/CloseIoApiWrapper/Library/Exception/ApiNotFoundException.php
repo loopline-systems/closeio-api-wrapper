@@ -9,7 +9,7 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
-class ApiNotFoundException extends \Exception
+class ApiNotFoundException extends \RuntimeException
 {
     /**
      * @param string $api_name

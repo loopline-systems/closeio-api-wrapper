@@ -25,6 +25,8 @@ class CloseIoConfig
 
     /**
      * @param string $url
+     *
+     * @throws InvalidParamException
      */
     public function __construct($url = 'https://app.close.io/api/v1')
     {

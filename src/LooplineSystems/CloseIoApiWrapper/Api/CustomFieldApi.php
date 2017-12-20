@@ -11,8 +11,10 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
 class CustomFieldApi extends AbstractApi
@@ -28,15 +30,12 @@ class CustomFieldApi extends AbstractApi
     }
 
     /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
-    }
-
-    /**
      * @return CustomField[]
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllCustomFields()
     {
@@ -61,7 +60,11 @@ class CustomFieldApi extends AbstractApi
      * @param CustomField $customField
      *
      * @return CustomField
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateCustomField(CustomField $customField)
     {

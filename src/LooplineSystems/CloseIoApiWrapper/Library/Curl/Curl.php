@@ -25,8 +25,11 @@ class Curl
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      * @throws UrlNotSetException
      */
     public function getResponse(CloseIoRequest $request)

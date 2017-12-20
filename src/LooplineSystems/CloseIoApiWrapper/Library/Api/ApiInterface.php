@@ -12,9 +12,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
 interface ApiInterface
 {
     /**
-     * return string
-     *
-     * @throws \Exception
+     * @return string
      */
     public function getName();
 

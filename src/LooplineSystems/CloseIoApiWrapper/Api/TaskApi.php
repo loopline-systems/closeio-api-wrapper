@@ -11,10 +11,11 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Model\Task;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
+use LooplineSystems\CloseIoApiWrapper\Model\Task;
 
 class TaskApi extends AbstractApi
 {
@@ -36,6 +37,11 @@ class TaskApi extends AbstractApi
 
     /**
      * @return Task[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllTasks()
     {
@@ -59,6 +65,11 @@ class TaskApi extends AbstractApi
      * @param string $id
      *
      * @return Task
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getTask($id)
     {
@@ -73,6 +84,11 @@ class TaskApi extends AbstractApi
      * @param Task $task
      *
      * @return Task
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addTask(Task $task)
     {
@@ -88,7 +104,11 @@ class TaskApi extends AbstractApi
      * @param Task $task
      *
      * @return Task
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateTask(Task $task)
     {
@@ -107,21 +127,19 @@ class TaskApi extends AbstractApi
 
     /**
      * @param string $id
-     * @return CloseIoResponse
+     *
+     * @return bool
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
      * @throws ResourceNotFoundException
      */
     public function deleteTask($id){
         $apiRequest = $this->prepareRequest('delete-task', null, ['id' => $id]);
 
-        $this->triggerDelete($apiRequest);
-    }
+        $result = $this->triggerDelete($apiRequest);
 
-
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
+        return $result->isSuccess();
     }
 }

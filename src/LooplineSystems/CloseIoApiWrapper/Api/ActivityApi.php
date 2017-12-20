@@ -11,7 +11,10 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\Activity;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 use LooplineSystems\CloseIoApiWrapper\Model\EmailActivity;
@@ -52,6 +55,11 @@ class ActivityApi extends AbstractApi
      * @param NoteActivity $activity
      *
      * @return Activity
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addNote(NoteActivity $activity)
     {
@@ -60,13 +68,18 @@ class ActivityApi extends AbstractApi
 
         $result = $this->triggerPost($apiRequest);
 
-        return new Activity($result->getData());
+        return new NoteActivity($result->getData());
     }
 
     /**
      * @param CallActivity $call
      *
      * @return CallActivity
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addCall(CallActivity $call)
     {
@@ -82,6 +95,11 @@ class ActivityApi extends AbstractApi
      * @param EmailActivity $email
      *
      * @return EmailActivity
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addEmail(EmailActivity $email)
     {
@@ -97,6 +115,11 @@ class ActivityApi extends AbstractApi
      * @param array $filters
      *
      * @return NoteActivity[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getNotes(array $filters)
     {
@@ -117,6 +140,11 @@ class ActivityApi extends AbstractApi
      * @param array $filters
      *
      * @return CallActivity[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getCalls(array $filters)
     {
@@ -137,6 +165,11 @@ class ActivityApi extends AbstractApi
      * @param array $filters
      *
      * @return EmailActivity[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getEmails(array $filters)
     {
