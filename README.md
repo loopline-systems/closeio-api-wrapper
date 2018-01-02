@@ -83,6 +83,36 @@ $opportunityApi = $this->apiWrapper->getOpportunityApi();
 $result = $opportunityApi->addOpportunity($opportunity);
 ```
 
+Activities
+----------
+
+```php
+$activityApi = $this->apiWrapper->getActivityApi();
+```
+
+```php
+// SMS
+$sms = new SmsActivity();
+$sms->setLocalPhone('12345');
+$sms->setRemotePhone('23456');
+$sms->setText('first sms');
+$sms->setStatus(SmsActivity::STATUS_SCHEDULED);
+
+$activityApi->addSms($sms);
+```
+
+```php
+// EMails
+$email = new EmailActivity();
+$email->setStatus(EmailActivity::STATUS_INBOX);
+$email->setSubject('RE: Support');
+$email->setSender('Support <support@nowhere.net>');
+$email->setTo('Customer <customer@nowhere.net>');
+
+$activityApi->addEmail($sms);
+
+```
+
 Updating custom fields
 ----------------------
 ```php
