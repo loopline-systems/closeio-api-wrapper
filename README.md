@@ -156,7 +156,7 @@ Authors
 
 Michael Devery - <michaeldevery@gmail.com><br />
 Marco Roßdeutscher - <marco.rossdeutscher@loopline-systems.com><br />
-Marco Roßdeutscher - <marc.zahn@loopline-systems.com><br />
+Marc Zahn - <marc.zahn@loopline-systems.com><br />
 
 See also the list of [contributors](https://github.com/loopline-systems/closeio-api-wrapper/contributors) who participated in this project.
 
