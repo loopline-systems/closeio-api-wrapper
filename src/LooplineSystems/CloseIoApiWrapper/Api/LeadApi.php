@@ -160,7 +160,7 @@ class LeadApi extends AbstractApi
      */
     public function validateLeadForPost(Lead $lead)
     {
-        $invalidProperties = ['id', 'organization', 'tasks', 'opportunities'];
+        $invalidProperties = ['id', 'tasks', 'opportunities'];
         foreach ($invalidProperties as $invalidProperty) {
             $getter = 'get' . ucfirst($invalidProperty);
             if ($lead->$getter()) {
