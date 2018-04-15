@@ -1,12 +1,12 @@
-<phpunit backupGlobals="true" bootstrap="./bootstrap.php">
+<phpunit backupGlobals="true" bootstrap="./vendor/autoload.php">
     <filter>
         <whitelist>
-            <directory>/src</directory>
+            <directory>./src</directory>
         </whitelist>
     </filter>
     <testsuites>
         <testsuite name="Close.io Api Wrapper Tests">
-            <directory>./</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
     <logging>
