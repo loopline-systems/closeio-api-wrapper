@@ -1,6 +1,6 @@
 <!-- Before reporting an issue please check that you are using the latest close.io api wrapper version! -->
 
-### Summary of a problem or a feature request
+### Summary
 
 <!-- Please describe your problem/feature request here. -->
 
