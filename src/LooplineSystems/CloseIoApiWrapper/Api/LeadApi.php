@@ -98,6 +98,30 @@ class LeadApi extends AbstractApi
     }
 
     /**
+     * Converts Lead object to JSON. Also puts custom fields in newer, preferred, non-deprecated format.
+     *
+     * @param Lead $lead
+     * @return String
+     */
+    private function encodeLead($lead)
+    {
+        // This slightly hacky encode/decode/encode is because of the requirement to put a period in the name of the
+        // parameter, e.g. 'custom.FIELD_ID'. But it's not possible to do that while $lead is still a Lead object, as
+        // PHP property names can't have periods in them.
+        $lead = json_encode($lead);
+        $lead = json_decode($lead, true);
+        if(isset($lead['custom']) && is_array($lead['custom'])) {
+            foreach ($lead['custom'] as $id => $value) {
+                $fieldName = 'custom.' . $id;
+                $lead[$fieldName] = $value;
+            }
+            unset($lead['custom']);
+        }
+        $lead = json_encode($lead);
+        return $lead;
+    }
+
+    /**
      * @param Lead $lead
      *
      * @return Lead
@@ -106,10 +130,12 @@ class LeadApi extends AbstractApi
     {
         $this->validateLeadForPost($lead);
 
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('add-lead', $lead);
+        $lead = $this->encodeLead($lead);
 
-        return new Lead($this->triggerPost($apiRequest)->getData());
+        $apiRequest = $this->prepareRequest('add-lead', $lead);
+        $response = $this->triggerPost($apiRequest);
+
+        return new Lead($response->getData());
     }
 
     /**
@@ -128,7 +154,8 @@ class LeadApi extends AbstractApi
         $id = $lead->getId();
         $lead->setId(null);
 
-        $lead = json_encode($lead);
+        $lead = $this->encodeLead($lead);
+
         $apiRequest = $this->prepareRequest('update-lead', $lead, ['id' => $id]);
         $response = $this->triggerPut($apiRequest);
 
