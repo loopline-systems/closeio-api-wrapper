@@ -25,9 +25,9 @@ class CloseIoConfigTest extends \PHPUnit_Framework_TestCase
     {
         if ($expected === true) {
             if ($url === null) {
-                $closeIoConfig = new closeIoConfig();
+                $closeIoConfig = new CloseIoConfig();
             } else {
-                $closeIoConfig = new closeIoConfig($url);
+                $closeIoConfig = new CloseIoConfig($url);
             }
             $closeIoConfig->setApiKey($apiKey);
             $this->assertNotFalse(filter_var($closeIoConfig->getUrl(), FILTER_VALIDATE_URL));
