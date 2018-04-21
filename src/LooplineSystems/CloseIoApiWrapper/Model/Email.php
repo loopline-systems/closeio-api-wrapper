@@ -53,7 +53,7 @@ class Email implements \JsonSerializable
     }
 
     /**
-     * @param $email
+     * @param string $email
      * @return $this
      * @throws InvalidParamException
      */
@@ -77,7 +77,7 @@ class Email implements \JsonSerializable
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return $this
      */
     public function setType($type)

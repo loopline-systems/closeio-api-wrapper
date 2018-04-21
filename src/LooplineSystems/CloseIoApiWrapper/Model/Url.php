@@ -49,7 +49,7 @@ class Url implements \JsonSerializable
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return $this
      */
     public function setType($type)
@@ -68,7 +68,7 @@ class Url implements \JsonSerializable
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @return $this
      */
     public function setUrl($url)

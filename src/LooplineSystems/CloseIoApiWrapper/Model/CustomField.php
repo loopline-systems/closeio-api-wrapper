@@ -174,7 +174,7 @@ class CustomField implements \JsonSerializable
     }
 
     /**
-     * @param $choice
+     * @param string $choice
      */
     public function addChoice($choice)
     {
@@ -186,7 +186,7 @@ class CustomField implements \JsonSerializable
     }
 
     /**
-     * @param $choice
+     * @param string $choice
      */
     public function removeChoice($choice)
     {

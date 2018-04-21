@@ -47,7 +47,7 @@ class OpportunityStatus implements \JsonSerializable
     }
 
     /**
-     * @param $label
+     * @param string $label
      * @return OpportunityStatus
      */
     public function setLabel($label)
@@ -65,7 +65,7 @@ class OpportunityStatus implements \JsonSerializable
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return OpportunityStatus
      */
     public function setId($id)
@@ -83,7 +83,7 @@ class OpportunityStatus implements \JsonSerializable
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return OpportunityStatus
      */
     public function setType($type)

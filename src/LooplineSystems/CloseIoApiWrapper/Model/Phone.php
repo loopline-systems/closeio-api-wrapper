@@ -57,7 +57,7 @@ class Phone implements \JsonSerializable
     }
 
     /**
-     * @param $phone
+     * @param string $phone
      * @return $this
      */
     public function setPhone($phone)
@@ -76,7 +76,7 @@ class Phone implements \JsonSerializable
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return $this
      */
     public function setType($type)
@@ -95,7 +95,7 @@ class Phone implements \JsonSerializable
     }
 
     /**
-     * @param $phone_formatted
+     * @param string $phone_formatted
      * @return $this
      */
     public function setPhoneFormatted($phone_formatted)

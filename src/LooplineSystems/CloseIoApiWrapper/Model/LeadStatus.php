@@ -38,7 +38,7 @@ class LeadStatus implements \JsonSerializable
     }
 
     /**
-     * @param $label
+     * @param string $label
      * @return LeadStatus
      */
     public function setLabel($label)
@@ -56,7 +56,7 @@ class LeadStatus implements \JsonSerializable
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return LeadStatus
      */
     public function setId($id)
