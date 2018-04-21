@@ -20,12 +20,12 @@ class CloseIoRequest
     const HEADER_MIME_TYPE = 'application/json';
 
     /**
-     * @var string
+     * @var ?string
      */
     private $data;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $method;
 
@@ -71,7 +71,7 @@ class CloseIoRequest
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getData()
     {

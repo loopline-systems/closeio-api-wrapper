@@ -15,7 +15,7 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 class CloseIoConfigTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param string $url
+     * @param ?string $url
      * @param string $apiKey
      * @param bool $expected
      * @dataProvider configProvider
