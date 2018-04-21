@@ -211,7 +211,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
     public function getDateCreated()
     {
