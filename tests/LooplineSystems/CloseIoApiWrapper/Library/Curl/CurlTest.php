@@ -7,14 +7,13 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests\Api;
+namespace Tests\LooplineSystems\CloseIoApiWrapper\Library\Curl;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-
 
 class CurlTest extends \PHPUnit_Framework_TestCase
 {
