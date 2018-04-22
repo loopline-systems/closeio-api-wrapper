@@ -7,14 +7,14 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests;
+namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
-class RequestTest extends \PHPUnit_Framework_TestCase
+class CloseIoRequestTest extends \PHPUnit_Framework_TestCase
 {
 
     /**

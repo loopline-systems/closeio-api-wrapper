@@ -7,7 +7,7 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests;
+namespace Tests\LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 

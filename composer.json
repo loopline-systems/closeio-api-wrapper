@@ -29,13 +29,13 @@
         "php-coveralls/php-coveralls": "^2.0"
     },
     "autoload": {
-        "psr-0": {
-            "LooplineSystems\\CloseIoApiWrapper\\": "src"
+        "psr-4": {
+            "LooplineSystems\\CloseIoApiWrapper\\": "src/LooplineSystems/CloseIoApiWrapper"
         }
     },
     "autoload-dev": {
-        "psr-0": {
-            "LooplineSystems\\CloseIoApiWrapper\\Tests\\": "tests"
+        "psr-4": {
+            "Tests\\LooplineSystems\\CloseIoApiWrapper\\": "tests/LooplineSystems/CloseIoApiWrapper"
         }
     }
 }

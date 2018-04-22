@@ -7,11 +7,11 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests;
+namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class CloseIoResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider jsonErrorResponseProvider

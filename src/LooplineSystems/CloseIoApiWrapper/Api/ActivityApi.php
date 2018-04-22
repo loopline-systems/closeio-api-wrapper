@@ -4,6 +4,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Model\Activity;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 use LooplineSystems\CloseIoApiWrapper\Model\EmailActivity;
