@@ -59,7 +59,7 @@ class CloseIoConfig
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @throws InvalidParamException
      */
     public function setUrl($url)

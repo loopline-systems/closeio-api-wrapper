@@ -14,7 +14,7 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 class ExceptionsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param $data
+     * @param string $data
      *
      * @throws JsonDecodingException
      * @dataProvider badJsonProvider
@@ -31,7 +31,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      * @throws JsonDecodingException
      * @dataProvider badDataProvider

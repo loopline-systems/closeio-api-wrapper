@@ -154,7 +154,7 @@ class CallActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @param $url
+     * @param string $url
      *
      * @return CallActivity
      */

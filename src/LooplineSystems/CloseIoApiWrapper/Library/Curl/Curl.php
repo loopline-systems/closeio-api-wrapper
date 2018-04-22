@@ -33,7 +33,7 @@ class Curl
     }
 
     /**
-     * @param $curlHandler
+     * @param resource $curlHandler
      * @param CloseIoRequest $request
      */
     private function finalize($curlHandler, CloseIoRequest $request)
@@ -78,7 +78,7 @@ class Curl
     }
 
     /**
-     * @param $curlHandler
+     * @param resource $curlHandler
      * @return CloseIoResponse
      */
     public function execute($curlHandler)

@@ -131,9 +131,9 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param $parameter string
-     * @param $replacement string
-     * @param $url string
+     * @param string $parameter
+     * @param string $replacement
+     * @param string $url
      * @return string
      */
     private function prepareUrlSingle($parameter, $replacement, $url)
@@ -142,7 +142,7 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param $urlKey
+     * @param string $urlKey
      * @param array $replacements
      * @return mixed|string
      */
@@ -180,7 +180,7 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return string $url
      */
     protected function getUrlForKey($key)

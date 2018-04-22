@@ -106,7 +106,7 @@ class TaskApi extends AbstractApi
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return CloseIoResponse
      * @throws ResourceNotFoundException
      */

@@ -35,13 +35,13 @@ class EmailActivity extends Activity implements \JsonSerializable
     /** @var string */
     protected $sender;
 
-    /** @var [string] */
+    /** @var mixed */
     protected $to;
 
-    /** @var [string] */
+    /** @var mixed */
     protected $bcc;
 
-    /** @var [string] */
+    /** @var mixed */
     protected $cc;
 
     /** @var string */
@@ -180,7 +180,7 @@ class EmailActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDirection()
     {
@@ -188,7 +188,7 @@ class EmailActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @param $direction
+     * @param string $direction
      * @return EmailActivity
      */
     public function setDirection($direction)
@@ -206,7 +206,7 @@ class EmailActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @param $status
+     * @param string $status
      * @return EmailActivity
      */
     public function setStatus($status)

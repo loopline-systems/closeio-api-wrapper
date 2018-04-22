@@ -127,7 +127,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return $this
      */
     public function setName($name)
@@ -176,7 +176,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $title
+     * @param string $title
      * @return $this
      */
     public function setTitle($title)
@@ -195,7 +195,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $created_by
+     * @param string $created_by
      * @return $this
      */
     public function setCreatedBy($created_by)
@@ -214,7 +214,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $date_created
+     * @param string $date_created
      * @return $this
      */
     public function setDateCreated($date_created)
@@ -233,7 +233,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $date_updated
+     * @param string $date_updated
      * @return $this
      */
     public function setDateUpdated($date_updated)
@@ -252,7 +252,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return $this
      */
     public function setId($id)
@@ -271,7 +271,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $organization_id
+     * @param string $organization_id
      * @return $this
      */
     public function setOrganizationId($organization_id)
@@ -290,7 +290,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $lead_id
+     * @param string $lead_id
      * @return $this
      */
     public function setLeadId($lead_id)
@@ -309,7 +309,7 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param $updated_by
+     * @param string $updated_by
      * @return $this
      */
     public function setUpdatedBy($updated_by)

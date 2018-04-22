@@ -33,7 +33,7 @@ class ApiHandler
     }
 
     /**
-     * @param $api
+     * @param ApiInterface $api
      */
     public function setApi(ApiInterface $api)
     {
@@ -41,7 +41,7 @@ class ApiHandler
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return AbstractApi
      * @throws ApiNotFoundException
      */
