@@ -19,8 +19,6 @@ use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\TaskApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 
-define('CLOSE_IO_APP_ROOT', realpath(__DIR__) . '/');
-
 class CloseIoApiWrapper
 {
 
