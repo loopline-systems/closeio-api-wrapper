@@ -34,12 +34,11 @@ trait ObjectHydrateHelperTrait
 
             if (!in_array($key, $nestedObjects)) {
                 // get setter method for each key in data
-                $filter = new UnderscoreToCamelCase();
-                $setter = 'set' . $filter->filter($key);
+                $setter = 'set' . Inflector::classify($key);
                 if (method_exists($this, $setter)) {
                     $this->$setter($value);
                 } else {
-                    // check if setter method exists that doesn't match Zend filter format
+                    // check if setter method exists that doesn't match inflected filter format
                     if (in_array($setter, array_keys($method_mapper))) {
                         $this->$method_mapper[$setter]($value);
                     } else {
@@ -57,8 +56,10 @@ trait ObjectHydrateHelperTrait
                             $nestedObject = $data[$currentNestedObject];
                             $NestedObjectCollection = array();
                             foreach ($nestedObject as $nestedObjectArguments) {
-                                $className = str_replace('Library', 'Model', __NAMESPACE__) . '\\' . ucwords($this::singularize($currentNestedObject));
-                                $reflection = new \ReflectionClass($className);
+                                $singluarizedName = Inflector::singularize($currentNestedObject);
+                                $className = Inflector::classify($singluarizedName);
+                                $classNameWithFQDN = str_replace('Library', 'Model', __NAMESPACE__) . '\\' . $className;
+                                $reflection = new \ReflectionClass($classNameWithFQDN);
                                 $nestedObjectClass = $reflection->newInstanceArgs(array($nestedObjectArguments));
                                 $NestedObjectCollection[] = $nestedObjectClass;
                             }
@@ -71,15 +72,5 @@ trait ObjectHydrateHelperTrait
                 }
             }
         }
-    }
-
-    /**
-     * @param string $plural
-     * @return string
-     * @description very simple function to return single form of word
-     */
-    public static function singularize($plural)
-    {
-        return Inflector::singularize($plural);
     }
 }
