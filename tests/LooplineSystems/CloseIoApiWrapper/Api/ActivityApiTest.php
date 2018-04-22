@@ -84,6 +84,7 @@ class ActivityApiTest extends \PHPUnit_Framework_TestCase
     private function getMockResponderCurl($expectedResponse)
     {
         // create stub
+        /** @var PHPUnit_Framework_MockObject_MockObject<Curl> $mockCurl */
         $mockCurl = $this->getMockBuilder('Curl')
             ->setMethods(['getResponse'])
             ->getMock();

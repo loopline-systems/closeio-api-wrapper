@@ -65,7 +65,10 @@ class CloseIoApiWrapper
      */
     public function getLeadApi()
     {
-        return $this->apiHandler->getApi(LeadApi::NAME);
+        /** @var LeadApi $api */
+        $api = $this->apiHandler->getApi(LeadApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -74,7 +77,10 @@ class CloseIoApiWrapper
      */
     public function getCustomFieldApi()
     {
-        return $this->apiHandler->getApi(CustomFieldApi::NAME);
+        /** @var CustomFieldApi $api */
+        $api = $this->apiHandler->getApi(CustomFieldApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -83,7 +89,10 @@ class CloseIoApiWrapper
      */
     public function getOpportunityApi()
     {
-        return $this->apiHandler->getApi(OpportunityApi::NAME);
+        /** @var OpportunityApi $api */
+        $api = $this->apiHandler->getApi(OpportunityApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -92,7 +101,10 @@ class CloseIoApiWrapper
      */
     public function getLeadStatusesApi()
     {
-        return $this->apiHandler->getApi(LeadStatusApi::NAME);
+        /** @var LeadStatusApi $api */
+        $api = $this->apiHandler->getApi(LeadStatusApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -101,16 +113,22 @@ class CloseIoApiWrapper
      */
     public function getOpportunityStatusesApi()
     {
-        return $this->apiHandler->getApi(OpportunityStatusApi::NAME);
+        /** @var OpportunityStatusApi $api */
+        $api = $this->apiHandler->getApi(OpportunityStatusApi::NAME);
+
+        return $api;
     }
 
     /**
-     * @return Library\Api\AbstractApi
+     * @return ContactApi
      * @throws Library\Exception\ApiNotFoundException
      */
     public function getContactApi()
     {
-        return $this->apiHandler->getApi(ContactApi::NAME);
+        /** @var ContactApi $api */
+        $api = $this->apiHandler->getApi(ContactApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -119,7 +137,10 @@ class CloseIoApiWrapper
      */
     public function getActivitiesApi()
     {
-        return $this->apiHandler->getApi(ActivityApi::NAME);
+        /** @var ActivityApi $api */
+        $api = $this->apiHandler->getApi(ActivityApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -128,7 +149,10 @@ class CloseIoApiWrapper
      */
     public function getTaskApi()
     {
-        return $this->apiHandler->getApi(TaskApi::NAME);
+        /** @var TaskApi $api */
+        $api = $this->apiHandler->getApi(TaskApi::NAME);
+
+        return $api;
     }
 
     /**
