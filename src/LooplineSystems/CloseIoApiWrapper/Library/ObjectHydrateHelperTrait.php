@@ -40,7 +40,7 @@ trait ObjectHydrateHelperTrait
                 } else {
                     // check if setter method exists that doesn't match inflected filter format
                     if (in_array($setter, array_keys($method_mapper))) {
-                        $this->$method_mapper[$setter]($value);
+                        $this->{$method_mapper[$setter]}($value);
                     } else {
                         // value is not set - Entities should be extended if needed
                     }
