@@ -259,7 +259,7 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * Set custom fields. They must alraedy exist in your Close instance.
+     * Set custom fields. They must already exist in your Close.io instance.
      * Note that if you set the fields using the unique custom field IDs rather than names (accessible through CustomFieldApi),
      * it's possible to set null values. Otherwise, setting null will give an error and it's not possible to unset values.
      *
