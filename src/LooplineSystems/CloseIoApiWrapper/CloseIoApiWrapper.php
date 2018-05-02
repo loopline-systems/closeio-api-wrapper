@@ -17,6 +17,7 @@ use LooplineSystems\CloseIoApiWrapper\Api\LeadStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\TaskApi;
+use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 
 class CloseIoApiWrapper
@@ -55,6 +56,7 @@ class CloseIoApiWrapper
         $apiHandler->setApi(new ContactApi($apiHandler));
         $apiHandler->setApi(new ActivityApi($apiHandler));
         $apiHandler->setApi(new TaskApi($apiHandler));
+        $apiHandler->setApi(new UserApi($apiHandler));
 
         return $apiHandler;
     }
@@ -161,5 +163,17 @@ class CloseIoApiWrapper
     public function getApiHandler()
     {
         return $this->apiHandler;
+    }
+
+    /**
+     * @return UserApi
+     * @throws Library\Exception\ApiNotFoundException
+     */
+    public function getUserApi()
+    {
+        /** @var UserApi $api */
+        $api = $this->apiHandler->getApi(UserApi::NAME);
+
+        return $api;
     }
 }
