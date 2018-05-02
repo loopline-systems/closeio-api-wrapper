@@ -20,7 +20,7 @@
     "require": {
         "php": ">=5.6.0",
         "ext-curl": "*",
-        "symfony/yaml": "^2.5",
+        "symfony/yaml": "~2.8|~3.0",
         "doctrine/inflector": "^1.0"
     },
     "require-dev": {
