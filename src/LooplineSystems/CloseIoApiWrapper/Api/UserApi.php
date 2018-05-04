@@ -12,7 +12,9 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\User;
 
 class UserApi extends AbstractApi
@@ -32,6 +34,9 @@ class UserApi extends AbstractApi
 
     /**
      * @return User[]
+     *
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
      */
     public function getAllUsers()
     {
@@ -46,7 +51,7 @@ class UserApi extends AbstractApi
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_ALL_RESPONSE_DATA_KEY];
+            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
             foreach ($rawData as $user) {
                 $users[] = new User($user);
             }
@@ -56,7 +61,7 @@ class UserApi extends AbstractApi
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return User
      * @throws ResourceNotFoundException
      */
@@ -67,7 +72,7 @@ class UserApi extends AbstractApi
         /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
-        if ($result->getReturnCode() == 200 && ($result->getData() !== null)) {
+        if ($result->getReturnCode() == 200 && (!empty($result->getData()))) {
             $opportunity = new User($result->getData());
         } else {
             throw new ResourceNotFoundException();
