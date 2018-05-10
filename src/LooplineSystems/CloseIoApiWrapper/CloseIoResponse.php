@@ -11,7 +11,6 @@ namespace LooplineSystems\CloseIoApiWrapper;
 
 class CloseIoResponse
 {
-
     const GET_RESPONSE_DATA_KEY = 'data';
     const GET_ALL_RESPONSE_HAS_MORE_KEY = 'has_more';
     const GET_ALL_RESPONSE_TOTAL_RESULTS_KEY = 'total_results';
@@ -129,10 +128,6 @@ class CloseIoResponse
      */
     public function hasErrors()
     {
-        $errors = $this->getErrors();
-        if (!empty($errors)) {
-            return true;
-        }
-        return false;
+        return !empty($this->getErrors());
     }
 }

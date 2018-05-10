@@ -35,6 +35,6 @@ class BadApiRequestException extends \Exception {
                 }
             }
         }
-        parent::__construct('Api request returned errors. ' . PHP_EOL . $output);
+        parent::__construct('Api request returned errors.' . PHP_EOL . $output);
     }
 }
