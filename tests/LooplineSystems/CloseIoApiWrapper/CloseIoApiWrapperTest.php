@@ -19,6 +19,7 @@ class CloseIoApiWrapperTest extends \PHPUnit_Framework_TestCase
         $config = new CloseIoConfig();
         $config->setApiKey('testkey');
         $closeIoApiWrapper = new CloseIoApiWrapper($config);
-        $this->assertTrue(get_class($closeIoApiWrapper) === 'LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper');
+
+        $this->assertInstanceOf(CloseIoApiWrapper::class, $closeIoApiWrapper);
     }
 }
