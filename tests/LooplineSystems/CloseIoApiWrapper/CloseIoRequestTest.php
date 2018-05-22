@@ -27,7 +27,7 @@ class CloseIoRequestTest extends \PHPUnit_Framework_TestCase
         $closeIoApiHandler = new ApiHandler($closeIoConfig);
         $request = new CloseIoRequest($closeIoApiHandler);
 
-        $this->assertTrue(get_class($request) === 'LooplineSystems\CloseIoApiWrapper\CloseIoRequest');
+        $this->assertInstanceOf(CloseIoRequest::class, $request);
     }
 
     /**
@@ -42,61 +42,75 @@ class CloseIoRequestTest extends \PHPUnit_Framework_TestCase
 
         $headers = $request->getHeaders();
 
-        foreach ($headers as $header) {
-            if (strpos($header, 'Accept:') !== false) {
-                $this->assertTrue($header === 'Accept: application/json');
-            } elseif (strpos($header, 'Content-Type:') !== false) {
-                $this->assertTrue($header === 'Content-Type: application/json');
-            }
-        }
+        $this->assertContains('Accept: application/json', $headers);
+        $this->assertContains('Content-Type: application/json', $headers);
     }
 
     /**
      * @param mixed $data
-     * @param bool $expected
      * @param string $expectedData
      *
-     * @dataProvider jsonStringProvider
+     * @dataProvider validJSONStringProvider
      * @throws InvalidParamException
      */
-    public function testSetData($data, $expected, $expectedData = null)
+    public function testValidJSONData($data, $expectedData)
     {
         $closeIoConfig = new CloseIoConfig();
         $closeIoConfig->setApiKey('testapikey');
         $closeIoApiHandler = new ApiHandler($closeIoConfig);
         $request = new CloseIoRequest($closeIoApiHandler);
 
-        if ($expected === false) {
-            $this->expectException(InvalidParamException::class);
-            $request->setData($data);
-        } else {
-            $request->setData($data);
-            $this->assertEquals($expectedData, $request->getData());
-        }
+        $request->setData($data);
+        $this->assertEquals($expectedData, $request->getData());
     }
 
     /**
      * @return array
      */
-    public function jsonStringProvider()
+    public function validJSONStringProvider()
+    {
+        return [
+            [[], []],
+            [2, 2],
+            [2.1, 2.1],
+            [null, null],
+            [true, true],
+            [false, false],
+            ['{"Value": "This is valid JSON."}', ['Value' => 'This is valid JSON.']],
+            [
+                '{"Value": [], "Value Two": {"name": "This is also valid"}}',
+                ["Value" => [], 'Value Two' => ['name' => 'This is also valid']]
+            ],
+            [['this is an array, not json at all!'], ['this is an array, not json at all!']],
+            ['"I\'m a json string"', 'I\'m a json string']
+        ];
+    }
+
+    /**
+     * @param mixed $data
+     *
+     * @dataProvider brokenJSONStringProvider
+     * @throws InvalidParamException
+     */
+    public function testBrokenJSONData($data)
+    {
+        $closeIoConfig = new CloseIoConfig();
+        $closeIoConfig->setApiKey('testapikey');
+        $closeIoApiHandler = new ApiHandler($closeIoConfig);
+        $request = new CloseIoRequest($closeIoApiHandler);
+
+        $this->expectException(InvalidParamException::class);
+        $request->setData($data);
+    }
+
+    /**
+     * @return array
+     */
+    public function brokenJSONStringProvider()
     {
         return [
             [new \stdClass(), false],
-            [[], true, []],
-            [2, true, 2],
-            [2.1, true, 2.1],
-            [null, true, null],
-            [true, true, true],
-            [false, true, false],
-            ['{"Value": "This is valid JSON."}', true, ['Value' => 'This is valid JSON.']],
-            [
-                '{"Value": [], "Value Two": {"name": "This is also valid"}}',
-                true,
-                ["Value" => [], 'Value Two' => ['name' => 'This is also valid']]
-            ],
-            ['{"Problem: {"name": "This time problem is missing a closing quotation mark"}}', false],
-            [['this is an array, not json at all!'], true, ['this is an array, not json at all!']],
-            ['"I\'m a json string"', true, 'I\'m a json string']
+            ['{"Problem: {"name": "This time problem is missing a closing quotation mark"}}'],
         ];
     }
 }

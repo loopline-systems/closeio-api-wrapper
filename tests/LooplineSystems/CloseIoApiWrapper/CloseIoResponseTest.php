@@ -14,19 +14,16 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 class CloseIoResponseTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider jsonErrorResponseProvider
-     *
      * @param string $jsonResponse
+     *
+     * @dataProvider jsonErrorResponseProvider
      */
-    public function testResponseErrors($jsonResponse, $expected)
+    public function testResponseErrors($jsonResponse)
     {
         $response = new CloseIoResponse();
         $response->setData(json_decode($jsonResponse, true));
-        if ($expected) {
-            $this->assertGreaterThan(0, count($response->getErrors()));
-        } else {
-            $this->assertEquals(0, count($response->getErrors()));
-        }
+
+        $this->assertGreaterThan(0, count($response->getErrors()));
     }
 
     /**
@@ -35,10 +32,32 @@ class CloseIoResponseTest extends \PHPUnit_Framework_TestCase
     public function jsonErrorResponseProvider()
     {
         return [
-            ['{"error": "The request contains invalid JSON."}', true],
-            ['{"errors": [], "field-errors": {"name": "Value must be of basestring type."}}', true],
-            ['{"field-errors": {"name": "Value must be of basestring type."}}', true],
-            ['{"id": "sample_id", "name": "Test Name"}', false]
+            ['{"error": "The request contains invalid JSON."}'],
+            ['{"errors": [], "field-errors": {"name": "Value must be of basestring type."}}'],
+            ['{"field-errors": {"name": "Value must be of basestring type."}}'],
+        ];
+    }
+
+    /**
+     * @param string $jsonResponse
+     *
+     * @dataProvider jsonResponseProvider
+     */
+    public function testResponseWithoutErrors($jsonResponse)
+    {
+        $response = new CloseIoResponse();
+        $response->setData(json_decode($jsonResponse, true));
+
+        $this->assertEquals(0, count($response->getErrors()));
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonResponseProvider()
+    {
+        return [
+            ['{"id": "sample_id", "name": "Test Name"}']
         ];
     }
 }

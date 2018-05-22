@@ -14,45 +14,57 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoConfigTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @param ?string $url
-     * @param string $apiKey
-     * @param bool $expected
-     * @dataProvider configProvider
-     * @throws InvalidParamException
-     */
-    public function testCreateCloseIoConfig($url, $apiKey, $expected)
+    public function testCreateCloseIoConfigHaveValidUrlByDefault()
     {
-        if ($expected === true) {
-            if ($url === null) {
-                $closeIoConfig = new CloseIoConfig();
-            } else {
-                $closeIoConfig = new CloseIoConfig($url);
-            }
-            $closeIoConfig->setApiKey($apiKey);
-            $this->assertNotFalse(filter_var($closeIoConfig->getUrl(), FILTER_VALIDATE_URL));
-            $this->assertTrue($closeIoConfig->getApiKey() != '' && is_string($closeIoConfig->getApiKey()));
-        } else if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            $this->expectException(InvalidParamException::class);
-            new CloseIoConfig($url);
-        } else {
-            $closeIoConfig = new CloseIoConfig($url);
-            $closeIoConfig->setApiKey($apiKey);
-            $this->assertNull($closeIoConfig->getApiKey());
-        }
+        $config = new CloseIoConfig();
+
+        $this->assertNotFalse(filter_var($config->getUrl(), FILTER_VALIDATE_URL));
+    }
+
+    /**
+     * @param string $key
+     * @param string $expected
+     *
+     * @dataProvider apiKeyProvider()
+     */
+    public function testCreateCloseIoConfigReturnApiKey($key, $expected)
+    {
+        $config = new CloseIoConfig();
+        $config->setApiKey($key);
+
+        $this->assertEquals($expected, $config->getApiKey());
+    }
+
+    public function apiKeyProvider()
+    {
+        return [
+            ['api-key', 'api-key:'],
+            ['api-key:', 'api-key:'],
+            ['other-key:', 'other-key:'],
+        ];
+    }
+
+    /**
+     * @param mixed $url
+     *
+     * @dataProvider getBadUrls
+     */
+    public function testCreateCloseIoConfigGenerateErrorWithInvaludUrl($url)
+    {
+        $this->expectException(InvalidParamException::class);
+
+        new CloseIoConfig($url);
     }
 
     /**
      * @return array
      */
-    public function configProvider()
+    public function getBadUrls()
     {
-        return array(
-            array('https://www.close.io/api/v1', 'test-api-key', true),
-            array(null, 'test-api-key', true),
-            array('https://www.close.io/api/v1', null, false),
-            array('badUrl', 'test-api-key', false),
-            array(null, null, false)
-        );
+        return [
+            [null],
+            [1],
+            ['badUrl'],
+        ];
     }
 }
