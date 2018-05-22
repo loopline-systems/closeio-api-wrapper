@@ -25,31 +25,6 @@ class Curl
 
     /**
      * @param CloseIoRequest $request
-     * @return resource
-     */
-    private function init(CloseIoRequest $request)
-    {
-        return curl_init($request->getUrl());
-    }
-
-    /**
-     * @param resource $curlHandler
-     * @param CloseIoRequest $request
-     */
-    private function finalize($curlHandler, CloseIoRequest $request)
-    {
-        curl_setopt($curlHandler, CURLOPT_CUSTOMREQUEST, $request->getMethod());
-        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $request->getHeaders());
-        if ($request->getData() !== null) {
-            curl_setopt($curlHandler, CURLOPT_POSTFIELDS, json_encode($request->getData()));
-        }
-        curl_setopt($curlHandler, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curlHandler, CURLOPT_USERPWD, $request->getApiKey());
-    }
-
-    /**
-     * @param CloseIoRequest $request
      * @return CloseIoResponse
      * @throws BadApiRequestException
      * @throws UrlNotSetException
@@ -78,10 +53,35 @@ class Curl
     }
 
     /**
+     * @param CloseIoRequest $request
+     * @return resource
+     */
+    private function init(CloseIoRequest $request)
+    {
+        return curl_init($request->getUrl());
+    }
+
+    /**
+     * @param resource $curlHandler
+     * @param CloseIoRequest $request
+     */
+    private function finalize($curlHandler, CloseIoRequest $request)
+    {
+        curl_setopt($curlHandler, CURLOPT_CUSTOMREQUEST, $request->getMethod());
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $request->getHeaders());
+        if ($request->getData() !== null) {
+            curl_setopt($curlHandler, CURLOPT_POSTFIELDS, json_encode($request->getData()));
+        }
+        curl_setopt($curlHandler, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($curlHandler, CURLOPT_USERPWD, $request->getApiKey());
+    }
+
+    /**
      * @param resource $curlHandler
      * @return CloseIoResponse
      */
-    public function execute($curlHandler)
+    private function execute($curlHandler)
     {
         $result = curl_exec($curlHandler);
 
