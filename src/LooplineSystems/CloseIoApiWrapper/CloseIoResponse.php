@@ -113,7 +113,7 @@ class CloseIoResponse
      */
     public function getErrors()
     {
-        $errors = array();
+        $errors = [];
         $data = $this->getData();
 
         if (isset($data['errors'])) $errors['errors'] = $data['errors'];

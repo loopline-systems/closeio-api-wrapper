@@ -39,7 +39,7 @@ class OpportunityApi extends AbstractApi
      */
     public function getAllOpportunities()
     {
-        $opportunities = array();
+        $opportunities = [];
 
         $apiRequest = $this->prepareRequest('get-opportunities');
 

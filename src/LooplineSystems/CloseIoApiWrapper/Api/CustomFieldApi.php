@@ -41,7 +41,7 @@ class CustomFieldApi extends AbstractApi
     public function getAllCustomFields()
     {
         /** @var CustomField[] $customFields */
-        $customFields = array();
+        $customFields = [];
 
         $apiRequest = $this->prepareRequest('get-customFields');
 

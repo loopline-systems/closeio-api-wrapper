@@ -39,7 +39,7 @@ class TaskApi extends AbstractApi
      */
     public function getAllTasks()
     {
-        $tasks = array();
+        $tasks = [];
 
         $apiRequest = $this->prepareRequest('get-tasks');
 
