@@ -1,7 +1,3 @@
-config/
-!config/config.sample.yml
 vendor/
 build/
-tests/LooplineSystems/CloseIoApi/Api/LiveApiTest.php
-tests/build/logs/
 /composer.lock
