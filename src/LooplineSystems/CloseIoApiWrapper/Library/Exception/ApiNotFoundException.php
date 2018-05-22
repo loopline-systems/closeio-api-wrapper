@@ -16,6 +16,6 @@ class ApiNotFoundException extends \Exception
      */
     public function __construct($api_name)
     {
-        parent::__construct('Api of type ' . $api_name . ' not found');
+        parent::__construct(sprintf('Api of type %s not found', $api_name));
     }
 }
