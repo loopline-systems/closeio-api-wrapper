@@ -123,21 +123,6 @@ $customFieldApi = $this->apiWrapper->getCustomFieldApi();
 $result = $customFieldApi->updateCustomField($customField);
 ```
 
-Console runner
--
-For testing purposes there is a simple console runner.
-
-```
-bin/console -a <api name> -r <request name> -k <api key> [-d payload as json]
-```
-Examples:
-```
-bin/console  -k your_api_key -r getAllLeads -a LeadApi
-
-bin/console  -k your_api_key -r addLead -a LeadApi -d '{...}'
-```
-The is output will be displayed on the console as json.
-
 Info
 ------------
 Right now just a few request are implemented, because the main need was to create leads.
