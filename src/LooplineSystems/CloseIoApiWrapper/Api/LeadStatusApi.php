@@ -72,7 +72,7 @@ class LeadStatusApi extends AbstractApi
      */
     public function getAllStatus()
     {
-        $statuses = array();
+        $statuses = [];
 
         $apiRequest = $this->prepareRequest('get-statuses');
 

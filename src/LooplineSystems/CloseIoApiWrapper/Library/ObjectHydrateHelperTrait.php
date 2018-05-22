@@ -53,13 +53,13 @@ trait ObjectHydrateHelperTrait
                         if (is_array($data[$currentNestedObject])) {
                             // rename for clarity
                             $nestedObject = $data[$currentNestedObject];
-                            $NestedObjectCollection = array();
+                            $NestedObjectCollection = [];
                             foreach ($nestedObject as $nestedObjectArguments) {
                                 $singluarizedName = Inflector::singularize($currentNestedObject);
                                 $className = Inflector::classify($singluarizedName);
                                 $classNameWithFQDN = str_replace('Library', 'Model', __NAMESPACE__) . '\\' . $className;
                                 $reflection = new \ReflectionClass($classNameWithFQDN);
-                                $nestedObjectClass = $reflection->newInstanceArgs(array($nestedObjectArguments));
+                                $nestedObjectClass = $reflection->newInstanceArgs([$nestedObjectArguments]);
                                 $NestedObjectCollection[] = $nestedObjectClass;
                             }
                             $setter = 'set' . ucwords($currentNestedObject);
