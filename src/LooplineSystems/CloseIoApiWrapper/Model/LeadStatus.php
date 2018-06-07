@@ -9,6 +9,8 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
@@ -35,6 +37,8 @@ class LeadStatus implements \JsonSerializable
     /**
      * LeadStatus constructor.
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct(array $data = null)
     {

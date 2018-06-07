@@ -10,7 +10,6 @@
 namespace LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoRequest

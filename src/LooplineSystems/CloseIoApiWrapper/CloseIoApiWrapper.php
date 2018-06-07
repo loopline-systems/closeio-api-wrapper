@@ -19,6 +19,8 @@ use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\TaskApi;
 use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoApiWrapper
 {
@@ -30,14 +32,13 @@ class CloseIoApiWrapper
 
     /**
      * @param CloseIoConfig $config
-     * @throws \Exception
      */
     public function __construct(CloseIoConfig $config)
     {
-        if ($config->getApiKey() !== '' && $config->getUrl() !== ''){
-            $this->apiHandler = $this->initApiHandler($config);
-        } else {
-            throw new \Exception('Config must contain url and api key');
+        $this->apiHandler = $this->initApiHandler($config);
+
+        if ($config->getApiKey() === '' || $config->getUrl() === ''){
+            throw new InvalidParamException('Config must contain url and api key');
         }
     }
 
@@ -63,7 +64,6 @@ class CloseIoApiWrapper
 
     /**
      * @return LeadApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getLeadApi()
     {
@@ -75,7 +75,6 @@ class CloseIoApiWrapper
 
     /**
      * @return CustomFieldApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getCustomFieldApi()
     {
@@ -87,7 +86,6 @@ class CloseIoApiWrapper
 
     /**
      * @return OpportunityApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getOpportunityApi()
     {
@@ -99,7 +97,6 @@ class CloseIoApiWrapper
 
     /**
      * @return LeadStatusApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getLeadStatusesApi()
     {
@@ -111,7 +108,6 @@ class CloseIoApiWrapper
 
     /**
      * @return OpportunityStatusApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getOpportunityStatusesApi()
     {
@@ -123,7 +119,6 @@ class CloseIoApiWrapper
 
     /**
      * @return ContactApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getContactApi()
     {
@@ -135,7 +130,6 @@ class CloseIoApiWrapper
 
     /**
      * @return ActivityApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getActivitiesApi()
     {
@@ -147,7 +141,6 @@ class CloseIoApiWrapper
 
     /**
      * @return TaskApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getTaskApi()
     {

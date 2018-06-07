@@ -159,6 +159,8 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct(array $data = null)
     {
@@ -177,7 +179,9 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param int $confidence
+     *
      * @return $this
+     *
      * @throws InvalidParamException
      */
     public function setConfidence($confidence)

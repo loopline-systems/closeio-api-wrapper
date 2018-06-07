@@ -11,8 +11,10 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\OpportunityStatus;
 
 class OpportunityStatusApi extends AbstractApi
@@ -37,6 +39,11 @@ class OpportunityStatusApi extends AbstractApi
      * @param OpportunityStatus $status
      *
      * @return OpportunityStatus
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addStatus(OpportunityStatus $status)
     {
@@ -51,7 +58,11 @@ class OpportunityStatusApi extends AbstractApi
      * @param OpportunityStatus $status
      *
      * @return OpportunityStatus
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateStatus(OpportunityStatus $status)
     {
@@ -71,6 +82,11 @@ class OpportunityStatusApi extends AbstractApi
 
     /**
      * @return OpportunityStatus[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllStatus()
     {
@@ -93,6 +109,11 @@ class OpportunityStatusApi extends AbstractApi
      * @param string $id
      *
      * @return OpportunityStatus
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getStatus($id)
     {
@@ -106,10 +127,19 @@ class OpportunityStatusApi extends AbstractApi
 
     /**
      * @param string $id
+     *
+     * @return bool
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function deleteStatus($id){
         $apiRequest = $this->prepareRequest('delete-status', null, ['id' => $id]);
 
-        $this->triggerDelete($apiRequest);
+        $result = $this->triggerDelete($apiRequest);
+
+        return $result->isSuccess();
     }
 }
