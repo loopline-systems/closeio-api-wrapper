@@ -12,7 +12,9 @@ namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 
 abstract class AbstractApi implements ApiInterface
@@ -51,9 +53,15 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * return string
-     *
-     * @throws \Exception
+     * @param Curl $curl
+     */
+    public function setCurl($curl)
+    {
+        $this->curl = $curl;
+    }
+
+    /**
+     * @return string
      */
     public function getName()
     {
@@ -61,13 +69,17 @@ abstract class AbstractApi implements ApiInterface
             return static::NAME;
         }
 
-        throw new \Exception("Please  implement a CONST NAME = '<Name>' in your concrete Api!");
+        throw new \RuntimeException("Please  implement a CONST NAME = '<Name>' in your concrete Api!");
     }
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerPut(CloseIoRequest $request)
     {
@@ -77,8 +89,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerDelete(CloseIoRequest $request)
     {
@@ -88,8 +104,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerPatch(CloseIoRequest $request)
     {
@@ -99,8 +119,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerGet(CloseIoRequest $request)
     {
@@ -110,8 +134,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerPost(CloseIoRequest $request)
     {
@@ -122,6 +150,7 @@ abstract class AbstractApi implements ApiInterface
     /**
      * @param CloseIoRequest $request
      * @param string $method
+     *
      * @return CloseIoRequest
      */
     private function finalizeRequest(CloseIoRequest $request, $method)

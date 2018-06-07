@@ -11,7 +11,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Library;
 
 use Doctrine\Common\Inflector\Inflector;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UndefinedMethodException;
 use Zend\Filter\Word\UnderscoreToCamelCase;
 
 trait ObjectHydrateHelperTrait
@@ -20,8 +19,8 @@ trait ObjectHydrateHelperTrait
      * @param array $data
      * @param array $nestedObjects
      * @param array $method_mapper
+     *
      * @throws InvalidParamException
-     * @throws UndefinedMethodException
      */
     public function hydrate(array $data, array $nestedObjects = [], array $method_mapper = [])
     {

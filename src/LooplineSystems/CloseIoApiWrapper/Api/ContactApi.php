@@ -11,7 +11,10 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 
 class ContactApi extends AbstractApi
@@ -34,6 +37,11 @@ class ContactApi extends AbstractApi
 
     /**
      * @return Contact[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllContacts()
     {
@@ -58,6 +66,11 @@ class ContactApi extends AbstractApi
      * @param string $id
      *
      * @return Contact
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getContact($id)
     {
@@ -72,6 +85,11 @@ class ContactApi extends AbstractApi
      * @param Contact $contact
      *
      * @return Contact
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addContact(Contact $contact)
     {
@@ -85,6 +103,11 @@ class ContactApi extends AbstractApi
      * @param Contact $contact
      *
      * @return Contact
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateContact(Contact $contact)
     {
@@ -101,19 +124,20 @@ class ContactApi extends AbstractApi
 
     /**
      * @param string $id
+     *
+     * @return bool
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function deleteContact($id)
     {
         $apiRequest = $this->prepareRequest('delete-contact', null, ['id' => $id]);
 
-        $this->triggerDelete($apiRequest);
-    }
+        $result = $this->triggerDelete($apiRequest);
 
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
+        return $result->isSuccess();
     }
 }

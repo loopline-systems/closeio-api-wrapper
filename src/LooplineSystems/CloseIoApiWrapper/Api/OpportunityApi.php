@@ -11,10 +11,11 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
+use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 
 class OpportunityApi extends AbstractApi
 {
@@ -36,6 +37,11 @@ class OpportunityApi extends AbstractApi
 
     /**
      * @return Opportunity[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllOpportunities()
     {
@@ -59,6 +65,11 @@ class OpportunityApi extends AbstractApi
      * @param string $id
      *
      * @return Opportunity
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getOpportunity($id)
     {
@@ -73,6 +84,11 @@ class OpportunityApi extends AbstractApi
      * @param Opportunity $opportunity
      *
      * @return Opportunity
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addOpportunity(Opportunity $opportunity)
     {
@@ -88,7 +104,11 @@ class OpportunityApi extends AbstractApi
      * @param Opportunity $opportunity
      *
      * @return Opportunity
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateOpportunity(Opportunity $opportunity)
     {
@@ -107,21 +127,19 @@ class OpportunityApi extends AbstractApi
 
     /**
      * @param string $id
-     * @return CloseIoResponse
+     *
+     * @return bool
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
      * @throws ResourceNotFoundException
      */
     public function deleteOpportunity($id){
         $apiRequest = $this->prepareRequest('delete-opportunity', null, ['id' => $id]);
 
-        $this->triggerDelete($apiRequest);
-    }
+        $response = $this->triggerDelete($apiRequest);
 
-
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
+        return $response->isSuccess();
     }
 }
