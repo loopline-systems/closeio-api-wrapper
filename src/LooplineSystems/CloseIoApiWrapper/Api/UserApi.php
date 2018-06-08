@@ -12,6 +12,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
@@ -35,19 +36,18 @@ class UserApi extends AbstractApi
     /**
      * @return User[]
      *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
      * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllUsers()
     {
         /** @var User[] $users */
         $users = array();
 
-        $query = ['_limit' => 500, '_skip' => 0];
+        $apiRequest = $this->prepareRequest('get-users');
 
-        $apiRequest = $this->prepareRequest('get-users', null, [], $query);
-
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200) {
@@ -63,13 +63,16 @@ class UserApi extends AbstractApi
     /**
      * @param string $id
      * @return User
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
      * @throws ResourceNotFoundException
+     * @throws UrlNotSetException
      */
     public function getUser($id)
     {
         $apiRequest = $this->prepareRequest('get-user', null, ['id' => $id]);
 
-        /** @var CloseIoResponse $result */
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200 && (!empty($result->getData()))) {
@@ -78,14 +81,6 @@ class UserApi extends AbstractApi
             throw new ResourceNotFoundException();
         }
         return $opportunity;
-    }
-
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
     }
 
     /**
