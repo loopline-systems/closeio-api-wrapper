@@ -28,9 +28,33 @@ class UserApi extends AbstractApi
     protected function initUrls()
     {
         $this->urls = [
+            'get-current-user' => '/me/',
             'get-users' => '/user/',
             'get-user' => '/user/[:id]',
         ];
+    }
+
+    /**
+     * @return User
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws ResourceNotFoundException
+     * @throws UrlNotSetException
+     */
+    public function getCurrentUser()
+    {
+        $apiRequest = $this->prepareRequest('get-current-user');
+
+        $result = $this->triggerGet($apiRequest);
+
+        if ($result->getReturnCode() == 200 && (!empty($result->getData()))) {
+            $user = new User($result->getData());
+        } else {
+            throw new ResourceNotFoundException();
+        }
+
+        return $user;
     }
 
     /**
@@ -76,11 +100,12 @@ class UserApi extends AbstractApi
         $result = $this->triggerGet($apiRequest);
 
         if ($result->getReturnCode() == 200 && (!empty($result->getData()))) {
-            $opportunity = new User($result->getData());
+            $user = new User($result->getData());
         } else {
             throw new ResourceNotFoundException();
         }
-        return $opportunity;
+
+        return $user;
     }
 
     /**
