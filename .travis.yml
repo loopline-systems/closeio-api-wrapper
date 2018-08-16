@@ -1,6 +1,5 @@
 language: php
 php:
-  - 5.6
   - 7.1
   - 7.2
   - master
@@ -18,14 +17,14 @@ matrix:
 
 before_script:
   - composer self-update
-  - if [ "$dependencies" = "lowest" ];  then composer update --no-interaction --prefer-lowest; fi;
+  - if [ "$dependencies" = "lowest"  ]; then composer update --no-interaction --prefer-lowest; fi;
   - if [ "$dependencies" = "highest" ]; then composer update --no-interaction; fi;
 
 script:
     - mkdir -p build/logs
     - vendor/bin/phpunit
-    - if [ "$TRAVIS_PHP_VERSION" != "5.6" ] && [ "$dependencies" = "highest" ]; then composer require --dev phpstan/phpstan; fi;
-    - if [ "$TRAVIS_PHP_VERSION" != "5.6" ] && [ "$dependencies" = "highest" ]; then php vendor/bin/phpstan analyze --level=4 src tests; fi;
+    - if [ "$dependencies" = "highest" ]; then composer require --dev phpstan/phpstan; fi;
+    - if [ "$dependencies" = "highest" ]; then php vendor/bin/phpstan analyze --level=4 src tests; fi;
 
 after_script:
     - php vendor/bin/php-coveralls -v
