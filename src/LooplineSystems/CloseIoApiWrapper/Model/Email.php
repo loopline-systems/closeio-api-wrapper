@@ -12,7 +12,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Model;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
-use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Email implements \JsonSerializable
 {
@@ -36,6 +35,8 @@ class Email implements \JsonSerializable
 
     /**
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct(array $data = null)
     {
@@ -53,7 +54,7 @@ class Email implements \JsonSerializable
     }
 
     /**
-     * @param $email
+     * @param string $email
      * @return $this
      * @throws InvalidParamException
      */
@@ -77,7 +78,7 @@ class Email implements \JsonSerializable
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return $this
      */
     public function setType($type)

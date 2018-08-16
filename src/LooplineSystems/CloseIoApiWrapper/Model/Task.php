@@ -9,6 +9,7 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 
@@ -109,6 +110,8 @@ class Task implements \JsonSerializable
 
     /**
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct($data = null)
     {
@@ -145,7 +148,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $assigned_to
+     * @param string $assigned_to
      * @return $this
      */
     public function setAssignedTo($assigned_to)
@@ -164,7 +167,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $due_date
+     * @param string $due_date
      * @return $this
      */
     public function setDueDate($due_date)
@@ -175,7 +178,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCompleted()
     {
@@ -183,7 +186,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $is_complete
+     * @param bool $is_complete
      * @return $this
      */
     public function setCompleted($is_complete)
@@ -202,7 +205,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $lead_name
+     * @param string $lead_name
      * @return $this
      */
     public function setLeadName($lead_name)
@@ -221,7 +224,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $text
+     * @param string $text
      * @return $this
      */
     public function setText($text)
@@ -240,7 +243,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $assigned_to_name
+     * @param string $assigned_to_name
      * @return $this
      */
     public function setAssignedToName($assigned_to_name)
@@ -259,7 +262,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $created_by
+     * @param string $created_by
      * @return $this
      */
     public function setCreatedBy($created_by)
@@ -278,7 +281,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $created_by_name
+     * @param string $created_by_name
      * @return $this
      */
     public function setCreatedByName($created_by_name)
@@ -297,7 +300,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $date_updated
+     * @param string $date_updated
      * @return $this
      */
     public function setDateUpdated($date_updated)
@@ -316,7 +319,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return $this
      */
     public function setId($id)
@@ -335,7 +338,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $lead_id
+     * @param string $lead_id
      * @return $this
      */
     public function setLeadId($lead_id)
@@ -354,7 +357,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $organization_id
+     * @param string $organization_id
      * @return $this
      */
     public function setOrganizationId($organization_id)
@@ -373,7 +376,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $updated_by
+     * @param string $updated_by
      * @return $this
      */
     public function setUpdatedBy($updated_by)
@@ -392,7 +395,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $updated_by_name
+     * @param string $updated_by_name
      * @return $this
      */
     public function setUpdatedByName($updated_by_name)
@@ -411,7 +414,7 @@ class Task implements \JsonSerializable
     }
 
     /**
-     * @param $date_created
+     * @param string $date_created
      * @return $this
      */
     public function setDateCreated($date_created)

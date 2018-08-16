@@ -1,18 +1,20 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 
 abstract class AbstractApi implements ApiInterface
@@ -51,9 +53,15 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * return string
-     *
-     * @throws \Exception
+     * @param Curl $curl
+     */
+    public function setCurl($curl)
+    {
+        $this->curl = $curl;
+    }
+
+    /**
+     * @return string
      */
     public function getName()
     {
@@ -61,13 +69,17 @@ abstract class AbstractApi implements ApiInterface
             return static::NAME;
         }
 
-        throw new \Exception("Please  implement a CONST NAME = '<Name>' in your concrete Api!");
+        throw new \RuntimeException("Please  implement a CONST NAME = '<Name>' in your concrete Api!");
     }
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerPut(CloseIoRequest $request)
     {
@@ -77,8 +89,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerDelete(CloseIoRequest $request)
     {
@@ -88,8 +104,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerPatch(CloseIoRequest $request)
     {
@@ -99,8 +119,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerGet(CloseIoRequest $request)
     {
@@ -110,8 +134,12 @@ abstract class AbstractApi implements ApiInterface
 
     /**
      * @param CloseIoRequest $request
+     *
      * @return CloseIoResponse
+     *
      * @throws UrlNotSetException
+     * @throws BadApiRequestException
+     * @throws ResourceNotFoundException
      */
     protected function triggerPost(CloseIoRequest $request)
     {
@@ -122,6 +150,7 @@ abstract class AbstractApi implements ApiInterface
     /**
      * @param CloseIoRequest $request
      * @param string $method
+     *
      * @return CloseIoRequest
      */
     private function finalizeRequest(CloseIoRequest $request, $method)
@@ -131,9 +160,9 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param $parameter string
-     * @param $replacement string
-     * @param $url string
+     * @param string $parameter
+     * @param string $replacement
+     * @param string $url
      * @return string
      */
     private function prepareUrlSingle($parameter, $replacement, $url)
@@ -142,7 +171,7 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param $urlKey
+     * @param string $urlKey
      * @param array $replacements
      * @return mixed|string
      */
@@ -180,7 +209,7 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param $key
+     * @param string $key
      * @return string $url
      */
     protected function getUrlForKey($key)

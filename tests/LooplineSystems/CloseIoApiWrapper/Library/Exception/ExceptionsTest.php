@@ -7,14 +7,14 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests;
+namespace Tests\LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 
 class ExceptionsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @param $data
+     * @param string $data
      *
      * @throws JsonDecodingException
      * @dataProvider badJsonProvider
@@ -31,7 +31,7 @@ class ExceptionsTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      *
      * @throws JsonDecodingException
      * @dataProvider badDataProvider

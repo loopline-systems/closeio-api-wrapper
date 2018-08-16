@@ -7,7 +7,7 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests;
+namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;

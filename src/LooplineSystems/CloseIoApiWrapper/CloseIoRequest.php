@@ -1,16 +1,15 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoRequest
@@ -20,12 +19,12 @@ class CloseIoRequest
     const HEADER_MIME_TYPE = 'application/json';
 
     /**
-     * @var string
+     * @var ?string
      */
     private $data;
 
     /**
-     * @var string
+     * @var ?string
      */
     private $method;
 
@@ -71,7 +70,7 @@ class CloseIoRequest
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getData()
     {

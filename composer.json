@@ -20,19 +20,20 @@
     "require": {
         "php": ">=5.6.0",
         "ext-curl": "*",
-        "symfony/yaml": "^2.5",
-        "zendframework/zend-filter": "^2.3.3",
         "doctrine/inflector": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.0.0",
-        "codeclimate/php-test-reporter": "^0.1.2",
-        "symfony/console": "^3.1"
+        "phpunit/phpunit": "^5.7.10",
+        "php-coveralls/php-coveralls": "^2.0"
     },
     "autoload": {
-        "psr-0": {
-            "LooplineSystems\\CloseIoApiWrapper\\": "src",
-            "LooplineSystems\\CloseIoApiWrapper\\Tests\\": "test"
+        "psr-4": {
+            "LooplineSystems\\CloseIoApiWrapper\\": "src/LooplineSystems/CloseIoApiWrapper"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\LooplineSystems\\CloseIoApiWrapper\\": "tests/LooplineSystems/CloseIoApiWrapper"
         }
     }
 }

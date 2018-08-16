@@ -9,12 +9,12 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Url implements \JsonSerializable
 {
-
     const URL_TYPE_URL = 'url';
 
     use ObjectHydrateHelperTrait;
@@ -32,6 +32,8 @@ class Url implements \JsonSerializable
 
     /**
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct(array $data = null)
     {
@@ -49,7 +51,7 @@ class Url implements \JsonSerializable
     }
 
     /**
-     * @param $type
+     * @param string $type
      * @return $this
      */
     public function setType($type)
@@ -68,7 +70,7 @@ class Url implements \JsonSerializable
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @return $this
      */
     public function setUrl($url)

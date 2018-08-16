@@ -1,11 +1,20 @@
 <?php
+/**
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
 
 class LeadStatusApi extends AbstractApi
@@ -29,6 +38,11 @@ class LeadStatusApi extends AbstractApi
     /**
      * @param LeadStatus $status
      * @return LeadStatus
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addStatus(LeadStatus $status)
     {
@@ -43,7 +57,11 @@ class LeadStatusApi extends AbstractApi
      * @param LeadStatus $status
      *
      * @return LeadStatus
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateStatus(LeadStatus $status)
     {
@@ -63,10 +81,15 @@ class LeadStatusApi extends AbstractApi
 
     /**
      * @return LeadStatus[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllStatus()
     {
-        $statuses = array();
+        $statuses = [];
 
         $apiRequest = $this->prepareRequest('get-statuses');
 
@@ -85,6 +108,11 @@ class LeadStatusApi extends AbstractApi
      * @param string $id
      *
      * @return LeadStatus
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getStatus($id)
     {
@@ -98,6 +126,11 @@ class LeadStatusApi extends AbstractApi
 
     /**
      * @param string $id
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function deleteStatus($id){
         $apiRequest = $this->prepareRequest('delete-status', null, ['id' => $id]);

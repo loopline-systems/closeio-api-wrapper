@@ -6,7 +6,6 @@ PHP Wrapper to use the Close.io API
 [![License](https://img.shields.io/packagist/l/loopline-systems/closeio-api-wrapper.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](http://img.shields.io/travis/loopline-systems/closeio-api-wrapper.svg)](https://travis-ci.org/loopline-systems/closeio-api-wrapper)
 [![Coverage Status](https://img.shields.io/coveralls/loopline-systems/closeio-api-wrapper.svg)](https://coveralls.io/r/loopline-systems/closeio-api-wrapper?branch=master)
-[![Code Climate](https://codeclimate.com/github/loopline-systems/closeio-api-wrapper/badges/gpa.svg)](https://codeclimate.com/github/loopline-systems/closeio-api-wrapper)
 
 [![Packagist](http://img.shields.io/packagist/v/loopline-systems/closeio-api-wrapper.svg)](https://packagist.org/packages/loopline-systems/closeio-api-wrapper)
 [![Packagist](http://img.shields.io/packagist/dt/loopline-systems/closeio-api-wrapper.svg)](https://packagist.org/packages/loopline-systems/closeio-api-wrapper)
@@ -83,6 +82,36 @@ $opportunityApi = $this->apiWrapper->getOpportunityApi();
 $result = $opportunityApi->addOpportunity($opportunity);
 ```
 
+Activities
+----------
+
+```php
+$activityApi = $this->apiWrapper->getActivityApi();
+```
+
+```php
+// SMS
+$sms = new SmsActivity();
+$sms->setLocalPhone('12345');
+$sms->setRemotePhone('23456');
+$sms->setText('first sms');
+$sms->setStatus(SmsActivity::STATUS_SCHEDULED);
+
+$activityApi->addSms($sms);
+```
+
+```php
+// EMails
+$email = new EmailActivity();
+$email->setStatus(EmailActivity::STATUS_INBOX);
+$email->setSubject('RE: Support');
+$email->setSender('Support <support@nowhere.net>');
+$email->setTo('Customer <customer@nowhere.net>');
+
+$activityApi->addEmail($sms);
+
+```
+
 Updating custom fields
 ----------------------
 ```php
@@ -93,21 +122,6 @@ $customField->addChoice('Value for choices list');
 $customFieldApi = $this->apiWrapper->getCustomFieldApi();
 $result = $customFieldApi->updateCustomField($customField);
 ```
-
-Console runner
--
-For testing purposes there is a simple console runner.
-
-```
-bin/console -a <api name> -r <request name> -k <api key> [-d payload as json]
-```
-Examples:
-```
-bin/console  -k your_api_key -r getAllLeads -a LeadApi
-
-bin/console  -k your_api_key -r addLead -a LeadApi -d '{...}'
-```
-The is output will be displayed on the console as json.
 
 Info
 ------------
@@ -126,7 +140,7 @@ Authors
 
 Michael Devery - <michaeldevery@gmail.com><br />
 Marco Roßdeutscher - <marco.rossdeutscher@loopline-systems.com><br />
-Marco Roßdeutscher - <marc.zahn@loopline-systems.com><br />
+Marc Zahn - <marc.zahn@loopline-systems.com><br />
 
 See also the list of [contributors](https://github.com/loopline-systems/closeio-api-wrapper/contributors) who participated in this project.
 

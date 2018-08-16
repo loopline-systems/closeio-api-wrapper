@@ -7,7 +7,7 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Tests;
+namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
@@ -19,16 +19,11 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      * @param string $apiKey
      * @param bool $expected
      * @dataProvider configProvider
-     * @throws InvalidParamException
      */
     public function testCreateCloseIoConfig($url, $apiKey, $expected)
     {
-        if ($expected === true) {
-            if ($url === null) {
-                $closeIoConfig = new closeIoConfig();
-            } else {
-                $closeIoConfig = new closeIoConfig($url);
-            }
+        if (true === $expected) {
+            $closeIoConfig = new CloseIoConfig($url);
             $closeIoConfig->setApiKey($apiKey);
             $this->assertNotFalse(filter_var($closeIoConfig->getUrl(), FILTER_VALIDATE_URL));
             $this->assertTrue($closeIoConfig->getApiKey() != '' && is_string($closeIoConfig->getApiKey()));
@@ -49,7 +44,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array('https://www.close.io/api/v1', 'test-api-key', true),
-            array(null, 'test-api-key', true),
             array('https://www.close.io/api/v1', null, false),
             array('badUrl', 'test-api-key', false),
             array(null, null, false)

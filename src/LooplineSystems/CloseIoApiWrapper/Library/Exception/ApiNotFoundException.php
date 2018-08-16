@@ -9,13 +9,13 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
-class ApiNotFoundException extends \Exception
+class ApiNotFoundException extends \RuntimeException
 {
     /**
      * @param string $api_name
      */
     public function __construct($api_name)
     {
-        parent::__construct('Api of type ' . $api_name . ' not found');
+        parent::__construct(sprintf('Api of type %s not found', $api_name));
     }
 }

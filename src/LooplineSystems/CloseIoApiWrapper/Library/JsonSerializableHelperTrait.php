@@ -12,7 +12,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Library;
 
 trait JsonSerializableHelperTrait
 {
-
     /**
      * @return array
      */

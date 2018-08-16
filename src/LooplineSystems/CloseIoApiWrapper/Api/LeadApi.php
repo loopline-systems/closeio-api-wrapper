@@ -11,10 +11,11 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
 class LeadApi extends AbstractApi
@@ -37,6 +38,11 @@ class LeadApi extends AbstractApi
 
     /**
      * @return Lead[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getAllLeads()
     {
@@ -62,6 +68,11 @@ class LeadApi extends AbstractApi
      * @param array $queryParams
      *
      * @return Lead[]
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function findLeads(array $queryParams)
     {
@@ -87,6 +98,11 @@ class LeadApi extends AbstractApi
      * @param string $id
      *
      * @return Lead
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function getLead($id)
     {
@@ -101,6 +117,12 @@ class LeadApi extends AbstractApi
      * @param Lead $lead
      *
      * @return Lead
+     *
+     * @throws BadApiRequestException
+     * @throws InvalidNewLeadPropertyException
+     * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function addLead(Lead $lead)
     {
@@ -116,7 +138,11 @@ class LeadApi extends AbstractApi
      * @param Lead $lead
      *
      * @return Lead
+     *
+     * @throws BadApiRequestException
      * @throws InvalidParamException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function updateLead(Lead $lead)
     {
@@ -137,20 +163,17 @@ class LeadApi extends AbstractApi
 
     /**
      * @param string $id
+     *
+     * @throws InvalidParamException
+     * @throws BadApiRequestException
+     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException
      */
     public function deleteLead($id)
     {
         $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
 
         $this->triggerDelete($apiRequest);
-    }
-
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
     }
 
     /**

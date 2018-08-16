@@ -1,14 +1,17 @@
 <?php
+/**
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
-/**
- * Class EmailActivity
- * @package LooplineSystems\CloseIoApiWrapper\Model
- */
 class EmailActivity extends Activity implements \JsonSerializable
 {
     use ObjectHydrateHelperTrait;
@@ -35,13 +38,13 @@ class EmailActivity extends Activity implements \JsonSerializable
     /** @var string */
     protected $sender;
 
-    /** @var [string] */
+    /** @var mixed */
     protected $to;
 
-    /** @var [string] */
+    /** @var mixed */
     protected $bcc;
 
-    /** @var [string] */
+    /** @var mixed */
     protected $cc;
 
     /** @var string */
@@ -180,7 +183,7 @@ class EmailActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getDirection()
     {
@@ -188,7 +191,7 @@ class EmailActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @param $direction
+     * @param string $direction
      * @return EmailActivity
      */
     public function setDirection($direction)
@@ -206,7 +209,7 @@ class EmailActivity extends Activity implements \JsonSerializable
     }
 
     /**
-     * @param $status
+     * @param string $status
      * @return EmailActivity
      */
     public function setStatus($status)

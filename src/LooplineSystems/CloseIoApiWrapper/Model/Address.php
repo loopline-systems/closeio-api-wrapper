@@ -9,6 +9,7 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
@@ -54,6 +55,8 @@ class Address implements \JsonSerializable
 
     /**
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct(array $data = null)
     {
@@ -71,7 +74,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $address_1
+     * @param string $address_1
      * @return $this
      */
     public function setAddress1($address_1)
@@ -90,7 +93,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $address_2
+     * @param string $address_2
      * @return $this
      */
     public function setAddress2($address_2)
@@ -109,7 +112,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $city
+     * @param string $city
      * @return $this
      */
     public function setCity($city)
@@ -128,7 +131,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $country
+     * @param string $country
      * @return $this
      */
     public function setCountry($country)
@@ -147,7 +150,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $label
+     * @param string $label
      * @return $this
      */
     public function setLabel($label)
@@ -166,7 +169,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $state
+     * @param string $state
      * @return $this
      */
     public function setState($state)
@@ -185,7 +188,7 @@ class Address implements \JsonSerializable
     }
 
     /**
-     * @param $zipcode
+     * @param string $zipcode
      * @return $this
      */
     public function setZipcode($zipcode)

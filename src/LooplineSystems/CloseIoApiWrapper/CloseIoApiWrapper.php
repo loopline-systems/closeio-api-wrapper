@@ -1,11 +1,11 @@
 <?php
 /**
-* Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
-*
-* @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
-* @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
-* @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
-*/
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ *
+ * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
+ * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
+ */
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
@@ -17,9 +17,10 @@ use LooplineSystems\CloseIoApiWrapper\Api\LeadStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\TaskApi;
+use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
-
-define('CLOSE_IO_APP_ROOT', realpath(__DIR__) . '/');
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoApiWrapper
 {
@@ -31,14 +32,13 @@ class CloseIoApiWrapper
 
     /**
      * @param CloseIoConfig $config
-     * @throws \Exception
      */
     public function __construct(CloseIoConfig $config)
     {
-        if ($config->getApiKey() !== '' && $config->getUrl() !== ''){
-            $this->apiHandler = $this->initApiHandler($config);
-        } else {
-            throw new \Exception('Config must contain url and api key');
+        $this->apiHandler = $this->initApiHandler($config);
+
+        if ($config->getApiKey() === '' || $config->getUrl() === ''){
+            throw new InvalidParamException('Config must contain url and api key');
         }
     }
 
@@ -57,80 +57,97 @@ class CloseIoApiWrapper
         $apiHandler->setApi(new ContactApi($apiHandler));
         $apiHandler->setApi(new ActivityApi($apiHandler));
         $apiHandler->setApi(new TaskApi($apiHandler));
+        $apiHandler->setApi(new UserApi($apiHandler));
 
         return $apiHandler;
     }
 
     /**
      * @return LeadApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getLeadApi()
     {
-        return $this->apiHandler->getApi(LeadApi::NAME);
+        /** @var LeadApi $api */
+        $api = $this->apiHandler->getApi(LeadApi::NAME);
+
+        return $api;
     }
 
     /**
      * @return CustomFieldApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getCustomFieldApi()
     {
-        return $this->apiHandler->getApi(CustomFieldApi::NAME);
+        /** @var CustomFieldApi $api */
+        $api = $this->apiHandler->getApi(CustomFieldApi::NAME);
+
+        return $api;
     }
 
     /**
      * @return OpportunityApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getOpportunityApi()
     {
-        return $this->apiHandler->getApi(OpportunityApi::NAME);
+        /** @var OpportunityApi $api */
+        $api = $this->apiHandler->getApi(OpportunityApi::NAME);
+
+        return $api;
     }
 
     /**
      * @return LeadStatusApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getLeadStatusesApi()
     {
-        return $this->apiHandler->getApi(LeadStatusApi::NAME);
+        /** @var LeadStatusApi $api */
+        $api = $this->apiHandler->getApi(LeadStatusApi::NAME);
+
+        return $api;
     }
 
     /**
      * @return OpportunityStatusApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getOpportunityStatusesApi()
     {
-        return $this->apiHandler->getApi(OpportunityStatusApi::NAME);
+        /** @var OpportunityStatusApi $api */
+        $api = $this->apiHandler->getApi(OpportunityStatusApi::NAME);
+
+        return $api;
     }
 
     /**
-     * @return Library\Api\AbstractApi
-     * @throws Library\Exception\ApiNotFoundException
+     * @return ContactApi
      */
     public function getContactApi()
     {
-        return $this->apiHandler->getApi(ContactApi::NAME);
+        /** @var ContactApi $api */
+        $api = $this->apiHandler->getApi(ContactApi::NAME);
+
+        return $api;
     }
 
     /**
      * @return ActivityApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getActivitiesApi()
     {
-        return $this->apiHandler->getApi(ActivityApi::NAME);
+        /** @var ActivityApi $api */
+        $api = $this->apiHandler->getApi(ActivityApi::NAME);
+
+        return $api;
     }
 
     /**
      * @return TaskApi
-     * @throws Library\Exception\ApiNotFoundException
      */
     public function getTaskApi()
     {
-        return $this->apiHandler->getApi(TaskApi::NAME);
+        /** @var TaskApi $api */
+        $api = $this->apiHandler->getApi(TaskApi::NAME);
+
+        return $api;
     }
 
     /**
@@ -139,5 +156,17 @@ class CloseIoApiWrapper
     public function getApiHandler()
     {
         return $this->apiHandler;
+    }
+
+    /**
+     * @return UserApi
+     * @throws Library\Exception\ApiNotFoundException
+     */
+    public function getUserApi()
+    {
+        /** @var UserApi $api */
+        $api = $this->apiHandler->getApi(UserApi::NAME);
+
+        return $api;
     }
 }

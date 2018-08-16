@@ -159,6 +159,8 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param array $data
+     *
+     * @throws InvalidParamException
      */
     public function __construct(array $data = null)
     {
@@ -168,7 +170,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getConfidence()
     {
@@ -177,7 +179,9 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param int $confidence
+     *
      * @return $this
+     *
      * @throws InvalidParamException
      */
     public function setConfidence($confidence)
@@ -200,7 +204,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $created_by
+     * @param string $created_by
      * @return $this
      */
     public function setCreatedBy($created_by)
@@ -211,7 +215,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @return \DateTime
+     * @return string
      */
     public function getDateCreated()
     {
@@ -219,7 +223,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $date_created
+     * @param string $date_created
      * @return $this
      */
     public function setDateCreated($date_created)
@@ -238,7 +242,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $date_won
+     * @param string $date_won
      * @return $this
      */
     public function setDateWon($date_won)
@@ -257,7 +261,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $lead_name
+     * @param string $lead_name
      * @return $this
      */
     public function setLeadName($lead_name)
@@ -276,7 +280,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $note
+     * @param string $note
      * @return $this
      */
     public function setNote($note)
@@ -295,7 +299,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $user_name
+     * @param string $user_name
      * @return $this
      */
     public function setUserName($user_name)
@@ -314,7 +318,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $value_period
+     * @param string $value_period
      * @return $this
      */
     public function setValuePeriod($value_period)
@@ -333,7 +337,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $contact_id
+     * @param string $contact_id
      * @return $this
      */
     public function setContactId($contact_id)
@@ -352,7 +356,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $created_by_name
+     * @param string $created_by_name
      * @return $this
      */
     public function setCreatedByName($created_by_name)
@@ -371,7 +375,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $date_lost
+     * @param string $date_lost
      * @return $this
      */
     public function setDateLost($date_lost)
@@ -390,7 +394,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $date_updated
+     * @param string $date_updated
      * @return $this
      */
     public function setDateUpdated($date_updated)
@@ -409,7 +413,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $id
+     * @param string $id
      * @return $this
      */
     public function setId($id)
@@ -428,7 +432,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $lead_id
+     * @param string $lead_id
      * @return $this
      */
     public function setLeadId($lead_id)
@@ -447,7 +451,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $organization_id
+     * @param string $organization_id
      * @return $this
      */
     public function setOrganizationId($organization_id)
@@ -466,7 +470,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $status_id
+     * @param string $status_id
      * @return $this
      */
     public function setStatusId($status_id)
@@ -485,7 +489,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $status_label
+     * @param string $status_label
      * @return $this
      */
     public function setStatusLabel($status_label)
@@ -504,7 +508,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $status_type
+     * @param string $status_type
      * @return $this
      */
     public function setStatusType($status_type)
@@ -523,7 +527,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $updated_by
+     * @param string $updated_by
      * @return $this
      */
     public function setUpdatedBy($updated_by)
@@ -542,7 +546,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $updated_by_name
+     * @param string $updated_by_name
      * @return $this
      */
     public function setUpdatedByName($updated_by_name)
@@ -561,7 +565,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $user_id
+     * @param string $user_id
      * @return $this
      */
     public function setUserId($user_id)
@@ -580,7 +584,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param $value
+     * @param string $value
      * @return $this
      */
     public function setValue($value)
