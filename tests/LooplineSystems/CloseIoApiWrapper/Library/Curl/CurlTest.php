@@ -15,7 +15,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 
-class CurlTest extends \PHPUnit_Framework_TestCase
+class CurlTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetResponse()
     {

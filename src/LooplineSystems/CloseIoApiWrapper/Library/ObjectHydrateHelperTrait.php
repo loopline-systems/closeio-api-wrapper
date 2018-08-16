@@ -11,7 +11,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Library;
 
 use Doctrine\Common\Inflector\Inflector;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use Zend\Filter\Word\UnderscoreToCamelCase;
 
 trait ObjectHydrateHelperTrait
 {

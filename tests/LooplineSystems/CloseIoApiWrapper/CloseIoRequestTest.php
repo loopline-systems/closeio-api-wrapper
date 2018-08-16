@@ -14,7 +14,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
-class CloseIoRequestTest extends \PHPUnit_Framework_TestCase
+class CloseIoRequestTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

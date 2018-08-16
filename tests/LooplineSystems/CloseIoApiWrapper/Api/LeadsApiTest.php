@@ -14,7 +14,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
-class LeadsApiTest extends \PHPUnit_Framework_TestCase
+class LeadsApiTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param Lead $lead

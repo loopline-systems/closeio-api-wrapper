@@ -12,7 +12,7 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
-class CloseIoConfigTest extends \PHPUnit_Framework_TestCase
+class CloseIoConfigTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateCloseIoConfigHaveValidUrlByDefault()
     {

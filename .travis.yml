@@ -23,7 +23,6 @@ before_script:
 script:
     - mkdir -p build/logs
     - vendor/bin/phpunit
-    - if [ "$dependencies" = "highest" ]; then composer require --dev phpstan/phpstan; fi;
     - if [ "$dependencies" = "highest" ]; then php vendor/bin/phpstan analyze --level=4 src tests; fi;
 
 after_script:

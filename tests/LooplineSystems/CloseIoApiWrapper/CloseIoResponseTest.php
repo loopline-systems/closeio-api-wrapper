@@ -11,7 +11,7 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 
-class CloseIoResponseTest extends \PHPUnit_Framework_TestCase
+class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param string $jsonResponse
