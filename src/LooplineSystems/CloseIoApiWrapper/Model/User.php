@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
 * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
 *
