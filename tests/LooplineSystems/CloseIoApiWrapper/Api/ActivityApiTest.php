@@ -16,7 +16,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Model\SmsActivity;
 
-class ActivityApiTest extends \PHPUnit_Framework_TestCase
+class ActivityApiTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @description tests updating a sms activity using mock curl object

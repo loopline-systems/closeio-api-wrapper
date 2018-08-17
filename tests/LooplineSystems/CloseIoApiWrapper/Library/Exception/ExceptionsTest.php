@@ -11,7 +11,7 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Library\Exception;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\JsonDecodingException;
 
-class ExceptionsTest extends \PHPUnit_Framework_TestCase
+class ExceptionsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @param string $data

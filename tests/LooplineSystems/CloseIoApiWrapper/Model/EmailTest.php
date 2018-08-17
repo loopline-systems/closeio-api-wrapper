@@ -12,7 +12,7 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Model;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Model\Email;
 
-class EmailTest extends \PHPUnit_Framework_TestCase
+class EmailTest extends \PHPUnit\Framework\TestCase
 {
     public function testInstantiateWithoutData()
     {

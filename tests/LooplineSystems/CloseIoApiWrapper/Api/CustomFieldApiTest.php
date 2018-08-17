@@ -15,7 +15,7 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
-class CustomFieldApiTest extends \PHPUnit_Framework_TestCase
+class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider customFieldArrayProvider

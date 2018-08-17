@@ -11,7 +11,7 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Model\Phone;
 
-class PhoneTest extends \PHPUnit_Framework_TestCase
+class PhoneTest extends \PHPUnit\Framework\TestCase
 {
     public function testInstantiateWithoutData()
     {

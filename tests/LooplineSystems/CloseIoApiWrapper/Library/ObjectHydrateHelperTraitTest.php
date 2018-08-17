@@ -11,7 +11,7 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Library;
 
 use Tests\LooplineSystems\CloseIoApiWrapper\Library\Fake\ObjectHydrateHelperDemo;
 
-class ObjectHydrateHelperTraitTest extends \PHPUnit_Framework_TestCase
+class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectHydrateHelperDemo

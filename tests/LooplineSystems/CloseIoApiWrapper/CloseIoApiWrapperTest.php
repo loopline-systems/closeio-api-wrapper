@@ -21,7 +21,7 @@ use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 
-class CloseIoApiWrapperTest extends \PHPUnit_Framework_TestCase
+class CloseIoApiWrapperTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateCloseIoWrapper()
     {
