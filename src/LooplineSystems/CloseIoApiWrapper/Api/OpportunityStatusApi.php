@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -11,15 +14,17 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\OpportunityStatus;
 
 class OpportunityStatusApi extends AbstractApi
 {
-    const NAME = 'OpportunityStatusApi';
+    /**
+     * The maximum number of items that are requested by default
+     */
+    private const MAX_ITEMS_PER_REQUEST = 50;
+
+    const NAME = 'OpportunityStatus';
 
     /**
      * {@inheritdoc}
@@ -36,110 +41,183 @@ class OpportunityStatusApi extends AbstractApi
     }
 
     /**
-     * @param OpportunityStatus $status
+     * Gets up to the specified number of opportunity statuses that match the
+     * given criteria.
      *
-     * @return OpportunityStatus
+     * @param int      $offset The offset from which start getting the items
+     * @param int      $limit  The maximum number of items to get
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
-     * @throws InvalidParamException
-     * @throws BadApiRequestException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
-     */
-    public function addStatus(OpportunityStatus $status)
-    {
-        $status = json_encode($status);
-        $apiRequest = $this->prepareRequest('add-status', $status);
-        $response = $this->triggerPost($apiRequest);
-
-        return new OpportunityStatus($response->getData());
-    }
-
-    /**
-     * @param OpportunityStatus $status
-     *
-     * @return OpportunityStatus
-     *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
-     */
-    public function updateStatus(OpportunityStatus $status)
-    {
-        if ($status->getId() == null) {
-            throw new InvalidParamException('When updating a status you must provide the statuses ID');
-        }
-
-        $id = $status->getId();
-        $status->setId(null);
-
-        $status = json_encode($status);
-        $apiRequest = $this->prepareRequest('update-status', $status, ['id' => $id]);
-        $response = $this->triggerPut($apiRequest);
-
-        return new OpportunityStatus($response->getData());
-    }
-
-    /**
      * @return OpportunityStatus[]
-     *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
      */
-    public function getAllStatus()
+    public function getAll(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
     {
-        $statuses = [];
+        /** @var OpportunityStatus[] $leadStatuses */
+        $leadStatuses = [];
+        $result = $this->triggerGet(
+            $this->prepareRequest('get-statuses', null, [], [
+                '_skip' => $offset,
+                '_limit' => $limit,
+                '_fields' => $fields,
+            ])
+        );
 
-        $apiRequest = $this->prepareRequest('get-statuses');
+        if (200 === $result->getReturnCode()) {
+            $responseData = $result->getData();
 
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
-            foreach ($rawData as $status) {
-                $statuses[] = new OpportunityStatus($status);
+            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $leadStatus) {
+                $leadStatuses[] = new OpportunityStatus($leadStatus);
             }
         }
-        return $statuses;
+
+        return $leadStatuses;
     }
 
     /**
-     * @param string $id
+     * Gets the information about the opportunity status that matches the given
+     * ID.
+     *
+     * @param string $id The ID of the opportunityStatus
      *
      * @return OpportunityStatus
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If an opportunity status with the given
+     *                                   ID doesn't exists
      */
-    public function getStatus($id)
+    public function get(string $id): OpportunityStatus
     {
-        $apiRequest = $this->prepareRequest('get-status', null, ['id' => $id]);
-
-        /** @var CloseIoResponse $result */
-        $result = $this->triggerGet($apiRequest);
+        $result = $this->triggerGet($this->prepareRequest('get-status', null, ['id' => $id]));
 
         return new OpportunityStatus($result->getData());
     }
 
     /**
-     * @param string $id
+     * Creates a new opportunity status using the given information.
      *
-     * @return bool
+     * @param OpportunityStatus $opportunityStatus The opportunity status to create
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @return OpportunityStatus
      */
-    public function deleteStatus($id){
-        $apiRequest = $this->prepareRequest('delete-status', null, ['id' => $id]);
+    public function create(OpportunityStatus $opportunityStatus): OpportunityStatus
+    {
+        $apiRequest = $this->prepareRequest('add-status', json_encode($opportunityStatus));
 
-        $result = $this->triggerDelete($apiRequest);
+        return new OpportunityStatus($this->triggerPost($apiRequest)->getData());
+    }
 
-        return $result->isSuccess();
+    /**
+     * Updates the given opportunity status.
+     *
+     * @param OpportunityStatus $opportunityStatus The opportunity status to update
+     *
+     * @return OpportunityStatus
+     *
+     * @throws ResourceNotFoundException If an opportunity status with the given
+     *                                   ID doesn't exists
+     */
+    public function update(OpportunityStatus $opportunityStatus): OpportunityStatus
+    {
+        $id = $opportunityStatus->getId();
+
+        $opportunityStatus->setId(null);
+
+        $response = $this->triggerPut($this->prepareRequest('update-status', json_encode($opportunityStatus), ['id' => $id]));
+
+        return new OpportunityStatus($response->getData());
+    }
+
+    /**
+     * Deletes the given opportunity status.
+     *
+     * @param string $opportunityStatusId The ID of the opportunity status to delete
+     *
+     * @throws ResourceNotFoundException If an opportunity status with the given
+     *                                   ID doesn't exists
+     */
+    public function delete(string $opportunityStatusId): void
+    {
+        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $opportunityStatusId]));
+    }
+
+    /**
+     * Creates a new opportunity status using the given information.
+     *
+     * @param OpportunityStatus $opportunityStatus The opportunity status to create
+     *
+     * @return OpportunityStatus
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
+     */
+    public function addStatus(OpportunityStatus $opportunityStatus): OpportunityStatus
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->create($opportunityStatus);
+    }
+
+    /**
+     * Updates the given opportunity status.
+     *
+     * @param OpportunityStatus $opportunityStatus The opportunity status to update
+     *
+     * @return OpportunityStatus
+     *
+     * @throws ResourceNotFoundException If an opportunity status with the given
+     *                                   ID doesn't exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
+     */
+    public function updateStatus(OpportunityStatus $opportunityStatus): OpportunityStatus
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->update($opportunityStatus);
+    }
+
+    /**
+     * Gets all the opportunity statuses.
+     *
+     * @return OpportunityStatus[]
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use getAll() instead
+     */
+    public function getAllStatus(): array
+    {
+        return $this->getAll();
+    }
+
+    /**
+     * Gets the information about the opportunity status that matches the given
+     * ID.
+     *
+     * @param string $opportunityStatusId The ID of the opportunityStatus
+     *
+     * @return OpportunityStatus
+     *
+     * @throws ResourceNotFoundException If an opportunity status with the given
+     *                                   ID doesn't exists
+     */
+    public function getStatus($opportunityStatusId): OpportunityStatus
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->get($opportunityStatusId);
+    }
+
+    /**
+     * Deletes the given opportunity status.
+     *
+     * @param string $opportunityStatusId The ID of the opportunity status to delete
+     *
+     * @throws ResourceNotFoundException If an opportunity status with the given
+     *                                   ID doesn't exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
+     */
+    public function deleteStatus(string $opportunityStatusId): void
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        $this->delete($opportunityStatusId);
     }
 }

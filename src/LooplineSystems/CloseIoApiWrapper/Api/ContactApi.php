@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -11,14 +14,16 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 
 class ContactApi extends AbstractApi
 {
+    /**
+     * The maximum number of items that are requested by default
+     */
+    private const MAX_ITEMS_PER_REQUEST = 50;
+
     const NAME = 'ContactApi';
 
     /**
@@ -36,25 +41,30 @@ class ContactApi extends AbstractApi
     }
 
     /**
-     * @return Contact[]
+     * Gets up to the specified number of contacts that matches the given criteria.
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @param int   $offset The offset from which start getting the items
+     * @param int   $limit  The maximum number of items to get
+     * @param string[] $fields The subset of fields to get (defaults to all)
+     *
+     * @return Contact[]
      */
-    public function getAllContacts()
+    public function getAll(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
     {
+        /** @var Contact[] $contacts */
         $contacts = [];
+        $result = $this->triggerGet(
+            $this->prepareRequest('get-contacts', null, [], [
+                '_skip' => $offset,
+                '_limit' => $limit,
+                '_fields' => $fields,
+            ])
+        );
 
-        $apiRequest = $this->prepareRequest('get-contacts');
+        if (200 === $result->getReturnCode()) {
+            $responseData = $result->getData();
 
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
-
-            foreach ($rawData as $contact) {
+            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $contact) {
                 $contacts[] = new Contact($contact);
             }
         }
@@ -63,81 +73,152 @@ class ContactApi extends AbstractApi
     }
 
     /**
-     * @param string $id
+     * Gets the information about the contact that matches the given ID.
+     *
+     * @param string $id The ID of the contact
      *
      * @return Contact
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a contact with the given ID doesn't
+     *                                   exists
      */
-    public function getContact($id)
+    public function get(string $id): Contact
     {
-        $apiRequest = $this->prepareRequest('get-contact', null, ['id' => $id]);
-
-        $result = $this->triggerGet($apiRequest);
+        $result = $this->triggerGet($this->prepareRequest('get-contact', null, ['id' => $id]));
 
         return new Contact($result->getData());
     }
 
     /**
-     * @param Contact $contact
+     * Creates a new contact using the given information.
+     *
+     * @param Contact $contact The information of the contact to create
      *
      * @return Contact
-     *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
      */
-    public function addContact(Contact $contact)
+    public function create(Contact $contact): Contact
     {
-        $contact = json_encode($contact);
-        $apiRequest = $this->prepareRequest('add-contact', $contact);
+        $apiRequest = $this->prepareRequest('add-contact', json_encode($contact));
 
         return new Contact($this->triggerPost($apiRequest)->getData());
     }
 
     /**
-     * @param Contact $contact
+     * Updates the given contact.
+     *
+     * @param Contact $contact The contact to update
      *
      * @return Contact
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a contact with the given ID doesn't
+     *                                   exists
      */
-    public function updateContact(Contact $contact)
+    public function update(Contact $contact): Contact
     {
-        // remove id from contact since it won't be part of the patch data
         $id = $contact->getId();
+
         $contact->setId(null);
 
-        $contact = json_encode($contact);
-        $apiRequest = $this->prepareRequest('update-contact', $contact, ['id' => $id]);
-        $response = $this->triggerPut($apiRequest);
+        $response = $this->triggerPut($this->prepareRequest('update-contact', json_encode($contact), ['id' => $id]));
 
         return new Contact($response->getData());
     }
 
     /**
-     * @param string $id
+     * Deletes the given contact.
      *
-     * @return bool
+     * @param string $contactId The ID of the contact to delete
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a contact with the given ID doesn't
+     *                                   exists
      */
-    public function deleteContact($id)
+    public function delete(string $contactId): void
     {
-        $apiRequest = $this->prepareRequest('delete-contact', null, ['id' => $id]);
+        $this->triggerDelete($this->prepareRequest('delete-contact', null, ['id' => $contactId]));
+    }
 
-        $result = $this->triggerDelete($apiRequest);
+    /**
+     * Gets all the contacts.
+     *
+     * @return Contact[]
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use getAll() instead
+     */
+    public function getAllContacts(): array
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use getAll() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        return $result->isSuccess();
+        return $this->getAll();
+    }
+
+    /**
+     * Gets the information about the contact that matches the given ID.
+     *
+     * @param string $contactId The ID of the contact
+     *
+     * @return Contact
+     *
+     * @throws ResourceNotFoundException If a contact with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
+     */
+    public function getContact($contactId): Contact
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->get($contactId);
+    }
+
+    /**
+     * Creates a new contact using the given information.
+     *
+     * @param Contact $contact The information of the contact to create
+     *
+     * @return Contact
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
+     */
+    public function addContact(Contact $contact): Contact
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->create($contact);
+    }
+
+    /**
+     * Updates the given contact.
+     *
+     * @param Contact $contact The contact to update
+     *
+     * @return Contact
+     *
+     * @throws ResourceNotFoundException If a contact with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
+     */
+    public function updateContact(Contact $contact): Contact
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->update($contact);
+    }
+
+    /**
+     * Deletes the given contact.
+     *
+     * @param string $contactId The ID of the contact to delete
+     *
+     * @throws ResourceNotFoundException If a contact with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
+     */
+    public function deleteContact($contactId): void
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        $this->delete($contactId);
     }
 }

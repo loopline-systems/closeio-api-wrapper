@@ -61,7 +61,7 @@ class ActivityApiTest extends \PHPUnit\Framework\TestCase
         $mockCurl = $this->getMockResponderCurl($expectedResponse);
         $activityApi->setCurl($mockCurl);
 
-        $this->assertTrue($activityApi->deleteSms($id), 'should return true on delete');
+        $activityApi->deleteSms($id);
     }
 
     /**

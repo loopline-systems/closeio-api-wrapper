@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -11,14 +14,16 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\Task;
 
 class TaskApi extends AbstractApi
 {
+    /**
+     * The maximum number of items that are requested by default
+     */
+    private const MAX_ITEMS_PER_REQUEST = 50;
+
     const NAME = 'TaskApi';
 
     /**
@@ -36,24 +41,30 @@ class TaskApi extends AbstractApi
     }
 
     /**
-     * @return Task[]
+     * Gets up to the specified number of tasks that matches the given criteria.
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @param int   $offset The offset from which start getting the items
+     * @param int   $limit  The maximum number of items to get
+     * @param string[] $fields The subset of fields to get (defaults to all)
+     *
+     * @return Task[]
      */
-    public function getAllTasks()
+    public function getAll(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
     {
+        /** @var Task[] $tasks */
         $tasks = [];
+        $result = $this->triggerGet(
+            $this->prepareRequest('get-tasks', null, [], [
+                '_skip' => $offset,
+                '_limit' => $limit,
+                '_fields' => $fields,
+            ])
+        );
 
-        $apiRequest = $this->prepareRequest('get-tasks');
+        if (200 === $result->getReturnCode()) {
+            $responseData = $result->getData();
 
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
-            foreach ($rawData as $task) {
+            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $task) {
                 $tasks[] = new Task($task);
             }
         }
@@ -62,84 +73,150 @@ class TaskApi extends AbstractApi
     }
 
     /**
-     * @param string $id
+     * Gets the information about the task that matches the given ID.
+     *
+     * @param string $id The ID of the task
      *
      * @return Task
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a task with the given ID doesn't
+     *                                   exists
      */
-    public function getTask($id)
+    public function get(string $id): Task
     {
-        $apiRequest = $this->prepareRequest('get-task', null, ['id' => $id]);
-
-        $result = $this->triggerGet($apiRequest);
+        $result = $this->triggerGet($this->prepareRequest('get-task', null, ['id' => $id]));
 
         return new Task($result->getData());
     }
 
     /**
-     * @param Task $task
+     * Creates a new task using the given information.
+     *
+     * @param Task $task The information of the task to create
      *
      * @return Task
-     *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
      */
-    public function addTask(Task $task)
+    public function create(Task $task): Task
     {
-        $task = json_encode($task);
-        $apiRequest = $this->prepareRequest('add-task', $task);
+        $apiRequest = $this->prepareRequest('add-task', json_encode($task));
 
-        $result = $this->triggerPost($apiRequest);
-
-        return new Task($result->getData());
+        return new Task($this->triggerPost($apiRequest)->getData());
     }
 
     /**
-     * @param Task $task
+     * Updates the given task.
+     *
+     * @param Task $task The task to update
      *
      * @return Task
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a task with the given ID doesn't
+     *                                   exists
      */
-    public function updateTask(Task $task)
+    public function update(Task $task): Task
     {
-        if ($task->getId() == null) {
-            throw new InvalidParamException('When updating a task you must provide the task ID');
-        }
         $id = $task->getId();
+
         $task->setId(null);
 
-        $task = json_encode($task);
-        $apiRequest = $this->prepareRequest('update-task', $task, ['id' => $id]);
-        $response = $this->triggerPut($apiRequest);
+        $response = $this->triggerPut($this->prepareRequest('update-task', json_encode($task), ['id' => $id]));
 
         return new Task($response->getData());
     }
 
     /**
-     * @param string $id
+     * Deletes the given task.
      *
-     * @return bool
+     * @param string $taskId The ID of the task to delete
      *
-     * @throws InvalidParamException
-     * @throws BadApiRequestException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a task with the given ID doesn't
+     *                                   exists
      */
-    public function deleteTask($id){
-        $apiRequest = $this->prepareRequest('delete-task', null, ['id' => $id]);
+    public function delete(string $taskId): void
+    {
+        $this->triggerDelete($this->prepareRequest('delete-task', null, ['id' => $taskId]));
+    }
 
-        $result = $this->triggerDelete($apiRequest);
+    /**
+     * Gets up to the specified number of tasks that matches the given criteria.
+     *
+     * @return Task[]
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use getAll() instead
+     */
+    public function getAllTasks(): array
+    {
+        return $this->getAll();
+    }
 
-        return $result->isSuccess();
+    /**
+     * Gets the information about the task that matches the given ID.
+     *
+     * @param string $id The ID of the task
+     *
+     * @return Task
+     *
+     * @throws ResourceNotFoundException If a task with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
+     */
+    public function getTask($id): Task
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->get($id);
+    }
+
+    /**
+     * Creates a new task using the given information.
+     *
+     * @param Task $task The information of the task to create
+     *
+     * @return Task
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
+     */
+    public function addTask(Task $task): Task
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->create($task);
+    }
+
+    /**
+     * Updates the given task.
+     *
+     * @param Task $task The task to update
+     *
+     * @return Task
+     *
+     * @throws ResourceNotFoundException If a task with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
+     */
+    public function updateTask(Task $task): Task
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->update($task);
+    }
+
+    /**
+     * Deletes the given task.
+     *
+     * @param string $taskId The ID of the task to delete
+     *
+     * @throws ResourceNotFoundException If a task with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
+     */
+    public function deleteTask($taskId): void
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        $this->delete($taskId);
     }
 }
