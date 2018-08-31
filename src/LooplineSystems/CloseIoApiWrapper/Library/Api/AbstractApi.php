@@ -194,9 +194,15 @@ abstract class AbstractApi implements ApiInterface
      */
     protected function prepareRequest($urlKey, $data = null, array $urlReplacements = [], array $queryParams = [])
     {
+        $baseUrl = $this->apiHandler->getConfig()->getBaseUrl();
+
+        if ('/' === substr($baseUrl, -1)) {
+            $baseUrl = substr($baseUrl, 0, -1);
+        }
+
         $this->apiRequest->clear();
         $this->apiRequest->setData($data);
-        $this->apiRequest->setUrl($this->apiHandler->getConfig()->getUrl());
+        $this->apiRequest->setUrl($baseUrl);
 
         $url = $this->prepareUrlForKey($urlKey, $urlReplacements);
 

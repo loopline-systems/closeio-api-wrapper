@@ -44,7 +44,7 @@ class CloseIoRequest
     public function __construct(ApiHandler $apiHandler)
     {
         $config = $apiHandler->getConfig();
-        $this->url = $config->getUrl();
+        $this->url = $config->getBaseUrl();
         $this->apiKey = $config->getApiKey();
     }
 

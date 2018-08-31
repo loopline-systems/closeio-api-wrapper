@@ -10,8 +10,8 @@
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
 class LeadsApiTest extends \PHPUnit\Framework\TestCase
@@ -149,7 +149,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
         // init expected response
         $expectedResponse = new CloseIoResponse();
         $expectedResponse->setReturnCode('200');
-        $expectedResponse->setCurlInfoRaw(['url' => $leadsApi->getApiHandler()->getConfig()->getUrl() . $id]);
+        $expectedResponse->setCurlInfoRaw(['url' => $leadsApi->getApiHandler()->getConfig()->getBaseUrl() . $id]);
 
         // create stub
         $mockCurl = $this->getMockResponderCurl($expectedResponse);
@@ -164,9 +164,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
     private function getLeadsApi()
     {
         // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+        $closeIoApiWrapper = new CloseIoApiWrapper(new Configuration(['api_key' => 'foo']));
 
         return $closeIoApiWrapper->getLeadApi();
     }

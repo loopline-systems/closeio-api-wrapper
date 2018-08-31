@@ -11,16 +11,14 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Library\Curl;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 
 class CurlTest extends \PHPUnit\Framework\TestCase
 {
     public function testGetResponse()
     {
-        $config = new CloseIoConfig();
-        $config->setApiKey('testkey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($config);
+        $closeIoApiWrapper = new CloseIoApiWrapper(new Configuration(['api_key' => 'foo']));
 
         $curl = new Curl();
 

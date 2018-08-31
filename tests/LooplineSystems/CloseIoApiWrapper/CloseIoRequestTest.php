@@ -10,7 +10,7 @@
 namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
@@ -22,9 +22,7 @@ class CloseIoRequestTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreate()
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
+        $closeIoApiHandler = new ApiHandler(new Configuration(['api_key' => 'foo']));
         $request = new CloseIoRequest($closeIoApiHandler);
 
         $this->assertInstanceOf(CloseIoRequest::class, $request);
@@ -35,9 +33,7 @@ class CloseIoRequestTest extends \PHPUnit\Framework\TestCase
      */
     public function testHeadersAreJson()
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
+        $closeIoApiHandler = new ApiHandler(new Configuration(['api_key' => 'foo']));
         $request = new CloseIoRequest($closeIoApiHandler);
 
         $headers = $request->getHeaders();
@@ -55,9 +51,7 @@ class CloseIoRequestTest extends \PHPUnit\Framework\TestCase
      */
     public function testValidJSONData($data, $expectedData)
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
+        $closeIoApiHandler = new ApiHandler(new Configuration(['api_key' => 'foo']));
         $request = new CloseIoRequest($closeIoApiHandler);
 
         $request->setData($data);
@@ -94,9 +88,7 @@ class CloseIoRequestTest extends \PHPUnit\Framework\TestCase
      */
     public function testBrokenJSONData($data)
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
+        $closeIoApiHandler = new ApiHandler(new Configuration(['api_key' => 'foo']));
         $request = new CloseIoRequest($closeIoApiHandler);
 
         $this->expectException(InvalidParamException::class);

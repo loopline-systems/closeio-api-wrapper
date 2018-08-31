@@ -11,8 +11,8 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Api\CustomFieldApi;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
 class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
@@ -87,9 +87,7 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
     private function getCustomFieldApi()
     {
         // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+        $closeIoApiWrapper = new CloseIoApiWrapper(new Configuration(['api_key' => 'foo']));
 
         return $closeIoApiWrapper->getCustomFieldApi();
     }

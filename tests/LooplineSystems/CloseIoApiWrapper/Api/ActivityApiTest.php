@@ -9,12 +9,12 @@
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\Api\ActivityApi;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
 use LooplineSystems\CloseIoApiWrapper\Model\SmsActivity;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class ActivityApiTest extends \PHPUnit\Framework\TestCase
 {
@@ -25,10 +25,7 @@ class ActivityApiTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp()
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-
-        $this->closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+        $this->closeIoApiWrapper = new CloseIoApiWrapper(new Configuration());
     }
 
     /**
@@ -74,13 +71,13 @@ class ActivityApiTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|Curl
+     * @return MockObject|Curl
      * @description Need to be careful of the order, if method() comes after expects() it will return null
      */
     private function getMockResponderCurl($expectedResponse)
     {
         // create stub
-        /** @var PHPUnit_Framework_MockObject_MockObject<Curl> $mockCurl */
+        /** @var MockObject|Curl $mockCurl */
         $mockCurl = $this->getMockBuilder('Curl')
             ->setMethods(['getResponse'])
             ->getMock();

@@ -34,22 +34,18 @@ class CloseIoApiWrapper
     private $apiHandler;
 
     /**
-     * @param CloseIoConfig $config
+     * @param Configuration $config
      */
-    public function __construct(CloseIoConfig $config)
+    public function __construct(Configuration $config)
     {
         $this->apiHandler = $this->initApiHandler($config);
-
-        if ($config->getApiKey() === '' || $config->getUrl() === ''){
-            throw new InvalidParamException('Config must contain url and api key');
-        }
     }
 
     /**
-     * @param CloseIoConfig $config
+     * @param Configuration $config
      * @return ApiHandler
      */
-    protected function initApiHandler(CloseIoConfig $config)
+    protected function initApiHandler(Configuration $config)
     {
         $apiHandler = new ApiHandler($config);
         $apiHandler->setApi(new LeadApi($apiHandler));
