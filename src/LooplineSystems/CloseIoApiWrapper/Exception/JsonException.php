@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -7,17 +10,13 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
+namespace LooplineSystems\CloseIoApiWrapper\Exception;
 
-interface ApiInterface
+/**
+ * This exception is thrown when encoding/decoding of a JSON fails.
+ *
+ * @author Stefano Arlandini <sarlandini@alice.it>
+ */
+class JsonException extends CloseIoException
 {
-    /**
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * @return ApiHandler
-     */
-    public function getApiHandler();
 }

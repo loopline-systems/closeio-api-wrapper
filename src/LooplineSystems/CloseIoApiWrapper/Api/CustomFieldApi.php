@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
@@ -24,8 +23,6 @@ class CustomFieldApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'CustomFieldApi';
 
     protected function initUrls()
     {
@@ -52,18 +49,16 @@ class CustomFieldApi extends AbstractApi
     {
         /** @var CustomField[] $customFields */
         $customFields = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-custom-fields', null, [], [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ])
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-custom-fields'), [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]);
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $customField) {
+            foreach ($responseData['data'] as $customField) {
                 $customFields[] = new CustomField($customField);
             }
         }
@@ -84,9 +79,13 @@ class CustomFieldApi extends AbstractApi
      */
     public function get(string $id, array $fields = []): CustomField
     {
-        $apiRequest = $this->prepareRequest('get-custom-field', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-custom-field', ['id' => $id]), ['_fields' => $fields]);
 
-        return new CustomField($this->triggerGet($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new CustomField($response->getDecodedBody());
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -95,12 +94,19 @@ class CustomFieldApi extends AbstractApi
      * @param CustomField $customField The information of the custom field to create
      *
      * @return CustomField
+     *
+     * @throws BadApiRequestException If the request contained invalid data
      */
     public function create(CustomField $customField): CustomField
     {
-        $apiRequest = $this->prepareRequest('create-custom-field', json_encode($customField));
+        $response = $this->client->post($this->prepareUrlForKey('create-custom-field'), $customField->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new CustomField($this->triggerPost($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new CustomField($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -120,9 +126,14 @@ class CustomFieldApi extends AbstractApi
 
         $customField->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-custom-field', json_encode($customField), ['id' => $id]));
+        $response = $this->client->put($this->prepareUrlForKey('update-custom-field', ['id' => $id]), $customField->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new CustomField($response->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new CustomField($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -136,7 +147,7 @@ class CustomFieldApi extends AbstractApi
 
         $customField->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-custom-field', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-custom-field', ['id' => $id]));
     }
 
     /**

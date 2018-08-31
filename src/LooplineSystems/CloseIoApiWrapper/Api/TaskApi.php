@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
@@ -24,8 +23,6 @@ class TaskApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'TaskApi';
 
     /**
      * {@inheritdoc}
@@ -54,18 +51,16 @@ class TaskApi extends AbstractApi
     {
         /** @var Task[] $tasks */
         $tasks = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-tasks', null, [], [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ])
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-tasks'), [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]);
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $task) {
+            foreach ($responseData['data'] as $task) {
                 $tasks[] = new Task($task);
             }
         }
@@ -86,13 +81,13 @@ class TaskApi extends AbstractApi
      */
     public function get(string $id, array $fields = []): Task
     {
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-task', null, ['id' => $id], [
-                '_fields' => $fields,
-            ])
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-task', ['id' => $id]), ['_fields' => $fields]);
 
-        return new Task($result->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new Task($response->getDecodedBody());
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -106,9 +101,14 @@ class TaskApi extends AbstractApi
      */
     public function create(Task $task): Task
     {
-        $apiRequest = $this->prepareRequest('add-task', json_encode($task));
+        $response = $this->client->post($this->prepareUrlForKey('add-task'), $task->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Task($this->triggerPost($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new Task($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -118,9 +118,7 @@ class TaskApi extends AbstractApi
      *
      * @return Task
      *
-     * @throws ResourceNotFoundException If a task with the given ID doesn't
-     *                                   exists
-     * @throws BadApiRequestException    If the request contained invalid data
+     * @throws BadApiRequestException If the request contained invalid data
      */
     public function update(Task $task): Task
     {
@@ -128,9 +126,14 @@ class TaskApi extends AbstractApi
 
         $task->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-task', json_encode($task), ['id' => $id]));
+        $response = $this->client->put($this->prepareUrlForKey('update-task', ['id' => $id]), $task->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Task($response->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new Task($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -144,7 +147,7 @@ class TaskApi extends AbstractApi
 
         $task->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-task', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-task', ['id' => $id]));
     }
 
     /**
@@ -227,6 +230,6 @@ class TaskApi extends AbstractApi
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-task', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-task', ['id' => $id]));
     }
 }

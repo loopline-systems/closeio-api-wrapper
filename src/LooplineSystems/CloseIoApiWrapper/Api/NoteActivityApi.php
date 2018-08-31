@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
@@ -24,8 +23,6 @@ class NoteActivityApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'NoteActivityApi';
 
     /**
      * {@inheritdoc}
@@ -56,18 +53,16 @@ class NoteActivityApi extends AbstractApi
     {
         /** @var NoteActivity[] $activities */
         $activities = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-notes', null, [], array_merge($filters, [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ]))
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-notes'), array_merge($filters, [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]));
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $activity) {
+            foreach ($responseData['data'] as $activity) {
                 $activities[] = new NoteActivity($activity);
             }
         }
@@ -88,9 +83,13 @@ class NoteActivityApi extends AbstractApi
      */
     public function get(string $id, array $fields = []): NoteActivity
     {
-        $apiRequest = $this->prepareRequest('get-note', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-note', ['id' => $id]), ['_fields' => $fields]);
 
-        return new NoteActivity($this->triggerGet($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new NoteActivity($response->getDecodedBody());
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -104,9 +103,14 @@ class NoteActivityApi extends AbstractApi
      */
     public function create(NoteActivity $activity): NoteActivity
     {
-        $apiRequest = $this->prepareRequest('add-note', json_encode($activity));
+        $response = $this->client->post($this->prepareUrlForKey('add-note'), $activity->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new NoteActivity($this->triggerPost($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new NoteActivity($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -116,9 +120,7 @@ class NoteActivityApi extends AbstractApi
      *
      * @return NoteActivity
      *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
-     * @throws BadApiRequestException    If the request contained invalid data
+     * @throws BadApiRequestException If the request contained invalid data
      */
     public function update(NoteActivity $activity): NoteActivity
     {
@@ -126,18 +128,20 @@ class NoteActivityApi extends AbstractApi
 
         $activity->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-note', json_encode($activity), ['id' => $id]));
+        $response = $this->client->put($this->prepareUrlForKey('update-note', ['id' => $id]), $activity->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new NoteActivity($response->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new NoteActivity($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
      * Deletes the given note activity.
      *
      * @param NoteActivity $activity The note activity to delete
-     *sms
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
      */
     public function delete(NoteActivity $activity): void
     {
@@ -145,6 +149,6 @@ class NoteActivityApi extends AbstractApi
 
         $activity->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-note', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-note', ['id' => $id]));
     }
 }

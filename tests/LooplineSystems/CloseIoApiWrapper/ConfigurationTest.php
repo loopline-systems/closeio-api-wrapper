@@ -14,43 +14,30 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\Configuration;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
 class ConfigurationTest extends TestCase
 {
-    /**
-     * @dataProvider optionsDataProvider
-     */
-    public function testGetters(string $option, string $value, string $getterMethod): void
+    public function testGetters(): void
     {
-        $options = array_merge(['api_key' => 'foo'], [$option => $value]);
+        $configuration = new Configuration('foo', 'http://www.example.com/');
 
-        $configuration = new Configuration($options);
-
-        $this->assertEquals($value, $configuration->$getterMethod());
-    }
-
-    public function optionsDataProvider(): array
-    {
-        return [
-            ['base_url', 'http://www.example.com/', 'getBaseUrl'],
-            ['api_key', 'foo', 'getApiKey'],
-        ];
+        $this->assertEquals('http://www.example.com/', $configuration->getBaseUrl());
+        $this->assertEquals('foo', $configuration->getApiKey());
     }
 
     /**
      * @dataProvider serverOptionIsValidatedCorrectly
      */
-    public function testServerOptionIsValidatedCorrectly(string $value, bool $isValid)
+    public function testServerOptionIsValidatedCorrectly(string $baseUrl, bool $isValid)
     {
         if ($isValid) {
             $this->expectNotToPerformAssertions();
         } else {
-            $this->expectException(InvalidOptionsException::class);
-            $this->expectExceptionMessageRegExp('/^The option ".*" with value ".*" is invalid\.$/');
+            $this->expectException(\InvalidArgumentException::class);
+            $this->expectExceptionMessage('The $baseUrl argument must be an absolute URL.');
         }
 
-        new Configuration(['base_url' => $value, 'api_key' => 'foo']);
+        new Configuration('foo', $baseUrl);
     }
 
     public function serverOptionIsValidatedCorrectly(): array

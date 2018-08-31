@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\OpportunityStatus;
 
@@ -23,8 +23,6 @@ class OpportunityStatusApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'OpportunityStatus';
 
     /**
      * {@inheritdoc}
@@ -52,25 +50,23 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function list(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
     {
-        /** @var OpportunityStatus[] $leadStatuses */
-        $leadStatuses = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-statuses', null, [], [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ])
-        );
+        /** @var OpportunityStatus[] $opportunityStatuses */
+        $opportunityStatuses = [];
+        $response = $this->client->get($this->prepareUrlForKey('get-statuses'), [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]);
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $leadStatus) {
-                $leadStatuses[] = new OpportunityStatus($leadStatus);
+            foreach ($responseData['data'] as $opportunityStatus) {
+                $opportunityStatuses[] = new OpportunityStatus($opportunityStatus);
             }
         }
 
-        return $leadStatuses;
+        return $opportunityStatuses;
     }
 
     /**
@@ -87,9 +83,13 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function get(string $id, array $fields = []): OpportunityStatus
     {
-        $apiRequest = $this->prepareRequest('get-status', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-status', ['id' => $id]), ['_fields' => $fields]);
 
-        return new OpportunityStatus($this->triggerGet($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new OpportunityStatus($response->getDecodedBody());
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -98,12 +98,19 @@ class OpportunityStatusApi extends AbstractApi
      * @param OpportunityStatus $opportunityStatus The opportunity status to create
      *
      * @return OpportunityStatus
+     *
+     * @throws BadApiRequestException
      */
     public function create(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
-        $apiRequest = $this->prepareRequest('add-status', json_encode($opportunityStatus));
+        $response = $this->client->post($this->prepareUrlForKey('add-status'), $opportunityStatus->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new OpportunityStatus($this->triggerPost($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new OpportunityStatus($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -122,9 +129,14 @@ class OpportunityStatusApi extends AbstractApi
 
         $opportunityStatus->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-status', json_encode($opportunityStatus), ['id' => $id]));
+        $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), $opportunityStatus->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new OpportunityStatus($response->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new OpportunityStatus($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -138,7 +150,7 @@ class OpportunityStatusApi extends AbstractApi
 
         $opportunityStatus->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-status', ['id' => $id]));
     }
 
     /**
@@ -219,6 +231,6 @@ class OpportunityStatusApi extends AbstractApi
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-status', ['id' => $id]));
     }
 }

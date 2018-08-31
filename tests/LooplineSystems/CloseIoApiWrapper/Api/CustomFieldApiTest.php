@@ -9,14 +9,36 @@
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
+use Http\Discovery\MessageFactoryDiscovery;
+use Http\Mock\Client as HttpClientMock;
 use LooplineSystems\CloseIoApiWrapper\Api\CustomFieldApi;
+use LooplineSystems\CloseIoApiWrapper\Client;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
 class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var HttpClientMock
+     */
+    protected $httpClient;
+
+    /**
+     * @var CustomFieldApi
+     */
+    protected $customFieldApi;
+
+    protected function setUp()
+    {
+        $this->httpClient = new HttpClientMock();
+
+        $client = new Client(new Configuration('foo'), $this->httpClient);
+        $closeIoApiWrapper = new CloseIoApiWrapper($client);
+
+        $this->customFieldApi = $closeIoApiWrapper->getCustomFieldApi();
+    }
+
     /**
      * @dataProvider customFieldArrayProvider
      *
@@ -25,26 +47,16 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
     public function testGetCustomFields($customFieldArray)
     {
         $responseBody = [
-            CloseIoResponse::GET_ALL_RESPONSE_HAS_MORE_KEY => false,
-            CloseIoResponse::GET_ALL_RESPONSE_TOTAL_RESULTS_KEY => '3',
-            CloseIoResponse::GET_RESPONSE_DATA_KEY => $customFieldArray
+            'has_more' => false,
+            'data' => $customFieldArray
         ];
 
-        $customFieldApi = $this->getCustomFieldApi();
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], json_encode($responseBody)));
 
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode(200);
-        $expectedResponse->setRawData(json_encode($responseBody));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
-
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $customFieldApi->setCurl($mockCurl);
-
-        $returnedcustomFields = $customFieldApi->getAllCustomFields();
+        $returnedcustomFields = $this->customFieldApi->getAllCustomFields();
 
         foreach ($returnedcustomFields as $key => $customField) {
-            $this->assertTrue($customField == $customFieldArray[$key]);
+            $this->assertEquals($customFieldArray[$key], $customField);
         }
     }
 
@@ -56,60 +68,19 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
      */
     public function testUpdateCustomField($customField)
     {
-        $customFieldApi = $this->getCustomFieldApi();
-
         $customField->setId('TestId');
         $originalCustomField = clone $customField;
 
         $returnedCustomField = $customField;
         $returnedCustomField->setName('Test Name');
 
-        // init expected response
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode('200');
-        $expectedResponse->setRawData(json_encode($returnedCustomField));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], json_encode($returnedCustomField)));
 
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $customFieldApi->setCurl($mockCurl);
+        $response = $this->customFieldApi->updateCustomField($customField);
 
-        /* @var CustomField $response */
-        $response = $customFieldApi->updateCustomField($customField);
-
+        $this->assertNotSame($originalCustomField, $response);
         $this->assertEquals($customField->getName(), $response->getName());
         $this->assertEquals($originalCustomField->getId(), $response->getId());
-    }
-
-    /**
-     * @return CustomFieldApi
-     */
-    private function getCustomFieldApi()
-    {
-        // init wrapper
-        $closeIoApiWrapper = new CloseIoApiWrapper(new Configuration(['api_key' => 'foo']));
-
-        return $closeIoApiWrapper->getCustomFieldApi();
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     * @description Need to be careful of the order, if method() comes after expects() it will return null
-     */
-    private function getMockResponderCurl($expectedResponse)
-    {
-        // create stub
-        $mockCurl = $this->getMockBuilder('Curl')
-            ->setMethods(['getResponse'])
-            ->getMock();
-
-        // configure the stub.
-        $mockCurl->method('getResponse')->willReturn($expectedResponse);
-
-        $mockCurl->expects($this->once())
-            ->method('getResponse');
-
-        return $mockCurl;
     }
 
     /**

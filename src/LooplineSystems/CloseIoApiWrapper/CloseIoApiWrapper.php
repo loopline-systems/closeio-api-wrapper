@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -22,198 +25,192 @@ use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
 use LooplineSystems\CloseIoApiWrapper\Api\SmsActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\TaskApi;
 use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoApiWrapper
 {
+    /**
+     * @var LeadApi
+     */
+    private $leadApi;
 
     /**
-     * @var ApiHandler
+     * @var OpportunityApi
      */
-    private $apiHandler;
+    private $opportunityApi;
 
     /**
-     * @param Configuration $config
+     * @var LeadStatusApi
      */
-    public function __construct(Configuration $config)
+    private $leadStatusesApi;
+
+    /**
+     * @var OpportunityStatusApi
+     */
+    private $opportunityStatusesApi;
+
+    /**
+     * @var CustomFieldApi
+     */
+    private $customFieldApi;
+
+    /**
+     * @var ContactApi
+     */
+    private $contactApi;
+
+    /**
+     * @var ActivityApi
+     */
+    private $activitiesApi;
+
+    /**
+     * @var CallActivityApi
+     */
+    private $callActivitiesApi;
+
+    /**
+     * @var SmsActivityApi
+     */
+    private $smsActivitiesApi;
+
+    /**
+     * @var EmailActivityApi
+     */
+    private $emailActivitiesApi;
+
+    /**
+     * @var NoteActivityApi
+     */
+    private $noteActivitiesApi;
+
+    /**
+     * @var TaskApi
+     */
+    private $taskApi;
+
+    /**
+     * @var UserApi
+     */
+    private $userApi;
+
+    public function __construct(Client $client)
     {
-        $this->apiHandler = $this->initApiHandler($config);
-    }
-
-    /**
-     * @param Configuration $config
-     * @return ApiHandler
-     */
-    protected function initApiHandler(Configuration $config)
-    {
-        $apiHandler = new ApiHandler($config);
-        $apiHandler->setApi(new LeadApi($apiHandler));
-        $apiHandler->setApi(new OpportunityApi($apiHandler));
-        $apiHandler->setApi(new LeadStatusApi($apiHandler));
-        $apiHandler->setApi(new OpportunityStatusApi($apiHandler));
-        $apiHandler->setApi(new CustomFieldApi($apiHandler));
-        $apiHandler->setApi(new ContactApi($apiHandler));
-        $apiHandler->setApi(new ActivityApi($apiHandler));
-        $apiHandler->setApi(new CallActivityApi($apiHandler));
-        $apiHandler->setApi(new SmsActivityApi($apiHandler));
-        $apiHandler->setApi(new EmailActivityApi($apiHandler));
-        $apiHandler->setApi(new NoteActivityApi($apiHandler));
-        $apiHandler->setApi(new TaskApi($apiHandler));
-        $apiHandler->setApi(new UserApi($apiHandler));
-
-        return $apiHandler;
+        $this->leadApi = new LeadApi($client);
+        $this->opportunityApi = new OpportunityApi($client);
+        $this->leadStatusesApi = new LeadStatusApi($client);
+        $this->opportunityStatusesApi = new OpportunityStatusApi($client);
+        $this->customFieldApi = new CustomFieldApi($client);
+        $this->contactApi = new ContactApi($client);
+        $this->activitiesApi = new ActivityApi($client, $this);
+        $this->callActivitiesApi = new CallActivityApi($client);
+        $this->smsActivitiesApi = new SmsActivityApi($client);
+        $this->emailActivitiesApi = new EmailActivityApi($client);
+        $this->noteActivitiesApi = new NoteActivityApi($client);
+        $this->taskApi = new TaskApi($client);
+        $this->userApi = new UserApi($client);
     }
 
     /**
      * @return LeadApi
      */
-    public function getLeadApi()
+    public function getLeadApi(): LeadApi
     {
-        /** @var LeadApi $api */
-        $api = $this->apiHandler->getApi(LeadApi::NAME);
-
-        return $api;
+        return $this->leadApi;
     }
 
     /**
      * @return CustomFieldApi
      */
-    public function getCustomFieldApi()
+    public function getCustomFieldApi(): CustomFieldApi
     {
-        /** @var CustomFieldApi $api */
-        $api = $this->apiHandler->getApi(CustomFieldApi::NAME);
-
-        return $api;
+        return $this->customFieldApi;
     }
 
     /**
      * @return OpportunityApi
      */
-    public function getOpportunityApi()
+    public function getOpportunityApi(): OpportunityApi
     {
-        /** @var OpportunityApi $api */
-        $api = $this->apiHandler->getApi(OpportunityApi::NAME);
-
-        return $api;
+        return $this->opportunityApi;
     }
 
     /**
      * @return LeadStatusApi
      */
-    public function getLeadStatusesApi()
+    public function getLeadStatusesApi(): LeadStatusApi
     {
-        /** @var LeadStatusApi $api */
-        $api = $this->apiHandler->getApi(LeadStatusApi::NAME);
-
-        return $api;
+        return $this->leadStatusesApi;
     }
 
     /**
      * @return OpportunityStatusApi
      */
-    public function getOpportunityStatusesApi()
+    public function getOpportunityStatusesApi(): OpportunityStatusApi
     {
-        /** @var OpportunityStatusApi $api */
-        $api = $this->apiHandler->getApi(OpportunityStatusApi::NAME);
-
-        return $api;
+        return $this->opportunityStatusesApi;
     }
 
     /**
      * @return ContactApi
      */
-    public function getContactApi()
+    public function getContactApi(): ContactApi
     {
-        /** @var ContactApi $api */
-        $api = $this->apiHandler->getApi(ContactApi::NAME);
-
-        return $api;
+        return $this->contactApi;
     }
 
     /**
      * @return ActivityApi
      */
-    public function getActivitiesApi()
+    public function getActivitiesApi(): ActivityApi
     {
-        /** @var ActivityApi $api */
-        $api = $this->apiHandler->getApi(ActivityApi::NAME);
-
-        return $api;
+        return $this->activitiesApi;
     }
 
     /**
      * @return CallActivityApi
      */
-    public function getCallActivitiesApi()
+    public function getCallActivitiesApi(): CallActivityApi
     {
-        /** @var CallActivityApi $api */
-        $api = $this->apiHandler->getApi(CallActivityApi::NAME);
-
-        return $api;
+        return $this->callActivitiesApi;
     }
 
     /**
      * @return SmsActivityApi
      */
-    public function getSmsActivitiesApi()
+    public function getSmsActivitiesApi(): SmsActivityApi
     {
-        /** @var SmsActivityApi $api */
-        $api = $this->apiHandler->getApi(SmsActivityApi::NAME);
-
-        return $api;
+        return $this->smsActivitiesApi;
     }
 
     /**
      * @return EmailActivityApi
      */
-    public function getEmailActivitiesApi()
+    public function getEmailActivitiesApi(): EmailActivityApi
     {
-        /** @var EmailActivityApi $api */
-        $api = $this->apiHandler->getApi(EmailActivityApi::NAME);
-
-        return $api;
+        return $this->emailActivitiesApi;
     }
 
     /**
      * @return NoteActivityApi
      */
-    public function getNoteActivitiesApi()
+    public function getNoteActivitiesApi(): NoteActivityApi
     {
-        /** @var NoteActivityApi $api */
-        $api = $this->apiHandler->getApi(NoteActivityApi::NAME);
-
-        return $api;
+        return $this->noteActivitiesApi;
     }
 
     /**
      * @return TaskApi
      */
-    public function getTaskApi()
+    public function getTaskApi(): TaskApi
     {
-        /** @var TaskApi $api */
-        $api = $this->apiHandler->getApi(TaskApi::NAME);
-
-        return $api;
-    }
-
-    /**
-     * @return ApiHandler
-     */
-    public function getApiHandler()
-    {
-        return $this->apiHandler;
+        return $this->taskApi;
     }
 
     /**
      * @return UserApi
-     * @throws Library\Exception\ApiNotFoundException
      */
-    public function getUserApi()
+    public function getUserApi(): UserApi
     {
-        /** @var UserApi $api */
-        $api = $this->apiHandler->getApi(UserApi::NAME);
-
-        return $api;
+        return $this->userApi;
     }
 }

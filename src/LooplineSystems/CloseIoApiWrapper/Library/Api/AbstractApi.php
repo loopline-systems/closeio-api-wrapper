@@ -9,154 +9,25 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
+use LooplineSystems\CloseIoApiWrapper\ClientInterface;
 
-abstract class AbstractApi implements ApiInterface
+abstract class AbstractApi
 {
-    const NAME = null;
-
     /**
      * @var array
      */
     protected $urls;
 
     /**
-     * @var Curl
+     * @var ClientInterface
      */
-    protected $curl;
+    protected $client;
 
-    /**
-     * @var CloseIoRequest
-     */
-    protected $apiRequest;
-
-    /**
-     * @var ApiHandler
-     */
-    private $apiHandler;
-
-    /**
-     * @param ApiHandler $apiHandler
-     */
-    public function __construct(ApiHandler $apiHandler)
+    public function __construct(ClientInterface $client)
     {
-        $this->curl = new Curl();
+        $this->client = $client;
+
         $this->initUrls();
-        $this->apiRequest = new CloseIoRequest($apiHandler);
-        $this->apiHandler = $apiHandler;
-    }
-
-    /**
-     * @param Curl $curl
-     */
-    public function setCurl($curl)
-    {
-        $this->curl = $curl;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        if (static::NAME !== null) {
-            return static::NAME;
-        }
-
-        throw new \RuntimeException("Please  implement a CONST NAME = '<Name>' in your concrete Api!");
-    }
-
-    /**
-     * @param CloseIoRequest $request
-     *
-     * @return CloseIoResponse
-     *
-     * @throws UrlNotSetException
-     * @throws BadApiRequestException
-     * @throws ResourceNotFoundException
-     */
-    protected function triggerPut(CloseIoRequest $request)
-    {
-        $finalRequest = $this->finalizeRequest($request, Curl::METHOD_PUT);
-        return $this->curl->getResponse($finalRequest);
-    }
-
-    /**
-     * @param CloseIoRequest $request
-     *
-     * @return CloseIoResponse
-     *
-     * @throws UrlNotSetException
-     * @throws BadApiRequestException
-     * @throws ResourceNotFoundException
-     */
-    protected function triggerDelete(CloseIoRequest $request)
-    {
-        $finalRequest = $this->finalizeRequest($request, Curl::METHOD_DELETE);
-        return $this->curl->getResponse($finalRequest);
-    }
-
-    /**
-     * @param CloseIoRequest $request
-     *
-     * @return CloseIoResponse
-     *
-     * @throws UrlNotSetException
-     * @throws BadApiRequestException
-     * @throws ResourceNotFoundException
-     */
-    protected function triggerPatch(CloseIoRequest $request)
-    {
-        $finalRequest = $this->finalizeRequest($request, Curl::METHOD_PATCH);
-        return $this->curl->getResponse($finalRequest);
-    }
-
-    /**
-     * @param CloseIoRequest $request
-     *
-     * @return CloseIoResponse
-     *
-     * @throws UrlNotSetException
-     * @throws BadApiRequestException
-     * @throws ResourceNotFoundException
-     */
-    protected function triggerGet(CloseIoRequest $request)
-    {
-        $finalRequest = $this->finalizeRequest($request, Curl::METHOD_GET);
-        return $this->curl->getResponse($finalRequest);
-    }
-
-    /**
-     * @param CloseIoRequest $request
-     *
-     * @return CloseIoResponse
-     *
-     * @throws UrlNotSetException
-     * @throws BadApiRequestException
-     * @throws ResourceNotFoundException
-     */
-    protected function triggerPost(CloseIoRequest $request)
-    {
-        $finalRequest = $this->finalizeRequest($request, Curl::METHOD_POST);
-        return $this->curl->getResponse($finalRequest);
-    }
-
-    /**
-     * @param CloseIoRequest $request
-     * @param string $method
-     *
-     * @return CloseIoRequest
-     */
-    private function finalizeRequest(CloseIoRequest $request, $method)
-    {
-        $request->setMethod($method);
-        return $request;
     }
 
     /**
@@ -175,7 +46,7 @@ abstract class AbstractApi implements ApiInterface
      * @param array $replacements
      * @return mixed|string
      */
-    private function prepareUrlForKey($urlKey, array $replacements = [])
+    protected function prepareUrlForKey($urlKey, array $replacements = [])
     {
         $url = $this->getUrlForKey($urlKey);
         foreach ($replacements as $parameter => $value) {
@@ -185,75 +56,12 @@ abstract class AbstractApi implements ApiInterface
     }
 
     /**
-     * @param string $urlKey
-     * @param string $data
-     * @param array $urlReplacements
-     * @param array $queryParams
-     * @return CloseIoRequest
-     * @throws InvalidParamException
-     */
-    protected function prepareRequest($urlKey, $data = null, array $urlReplacements = [], array $queryParams = [])
-    {
-        $baseUrl = $this->apiHandler->getConfig()->getBaseUrl();
-
-        if ('/' === substr($baseUrl, -1)) {
-            $baseUrl = substr($baseUrl, 0, -1);
-        }
-
-        $this->apiRequest->clear();
-        $this->apiRequest->setData($data);
-        $this->apiRequest->setUrl($baseUrl);
-
-        $url = $this->prepareUrlForKey($urlKey, $urlReplacements);
-
-        if (!empty($queryParams)) {
-            if (empty($queryParams['_fields'])) {
-                unset($queryParams['_fields']);
-            }
-
-            if (isset($queryParams['_fields']) && is_array($queryParams['_fields'])) {
-                $queryParams['_fields'] = array_unique(array_merge($queryParams['_fields'], ['id']));
-                $queryParams['_fields'] = implode(',', $queryParams['_fields']);
-            }
-
-            $url .= '?' . http_build_query($queryParams);
-        }
-
-        $this->apiRequest->setUrl($this->getUrlPrefix() . $url);
-        return $this->apiRequest;
-    }
-
-    /**
      * @param string $key
      * @return string $url
      */
     protected function getUrlForKey($key)
     {
         return isset($this->urls[$key]) ? $this->urls[$key] : null;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getUrlPrefix()
-    {
-        return $this->apiRequest->getUrl();
-    }
-
-    /**
-     * @return ApiHandler
-     */
-    public function getApiHandler()
-    {
-        return $this->apiHandler;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getApiKey()
-    {
-        return $this->apiRequest->getApiKey();
     }
 
     /**

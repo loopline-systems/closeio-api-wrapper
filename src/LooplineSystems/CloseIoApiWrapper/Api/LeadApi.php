@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
@@ -26,8 +25,6 @@ class LeadApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'LeadApi';
 
     /**
      * {@inheritdoc}
@@ -58,16 +55,16 @@ class LeadApi extends AbstractApi
     {
         /** @var Lead[] $leads */
         $leads = [];
-        $result = $this->triggerGet($this->prepareRequest('get-leads', null, [], array_merge($filters, [
+        $response = $this->client->get($this->prepareUrlForKey('get-leads'), array_merge($filters, [
             '_skip' => $offset,
             '_limit' => $limit,
             '_fields' => $fields,
-        ])));
+        ]));
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $lead) {
+            foreach ($responseData['data'] as $lead) {
                 $leads[] = new Lead($lead);
             }
         }
@@ -88,9 +85,13 @@ class LeadApi extends AbstractApi
      */
     public function get(string $id, array $fields = []): Lead
     {
-        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-lead', ['id' => $id]), ['_fields' => $fields]);
 
-        return new Lead($this->triggerGet($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new Lead($response->getDecodedBody());
+        }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
@@ -107,9 +108,14 @@ class LeadApi extends AbstractApi
     {
         $this->validateLeadForPost($lead);
 
-        $apiRequest = $this->prepareRequest('add-lead', json_encode($lead));
+        $response = $this->client->post($this->prepareUrlForKey('add-lead'), $lead->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Lead($this->triggerPost($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new Lead($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -129,9 +135,14 @@ class LeadApi extends AbstractApi
 
         $lead->setId(null);
 
-        $apiRequest = $this->prepareRequest('update-lead', json_encode($lead), ['id' => $id]);
+        $response = $this->client->put($this->prepareUrlForKey('update-lead', ['id' => $id]), $lead->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Lead($this->triggerPut($apiRequest)->getData());
+        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+            return new Lead($responseData);
+        }
+
+        throw new BadApiRequestException($responseData['error']);
     }
 
     /**
@@ -148,7 +159,7 @@ class LeadApi extends AbstractApi
 
         $lead->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-lead', ['id' => $id]));
     }
 
     /**
@@ -166,12 +177,12 @@ class LeadApi extends AbstractApi
             throw new InvalidParamException('You need to specify two already existing leads in order to merge them');
         }
 
-        $result = $this->triggerPost($this->prepareRequest('merge-leads', json_encode([
+        $result = $this->client->post($this->prepareUrlForKey('merge-leads'), [
             'destination' => $destination->getId(),
             'source' => $source->getId(),
-        ])));
+        ]);
 
-        if (!$result->isSuccess()) {
+        if ($result->isError()) {
             throw new ResourceNotFoundException();
         }
     }
@@ -274,7 +285,7 @@ class LeadApi extends AbstractApi
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-lead', ['id' => $id]));
     }
 
     /**

@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -9,55 +12,68 @@
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
+use Fig\Http\Message\RequestMethodInterface;
+use Fig\Http\Message\StatusCodeInterface;
+use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 
 class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @param string $jsonResponse
-     *
-     * @dataProvider jsonErrorResponseProvider
-     */
-    public function testResponseErrors($jsonResponse)
+    public function testGetters(): void
     {
-        $response = new CloseIoResponse();
-        $response->setData(json_decode($jsonResponse, true));
+        $request = new CloseIoRequest('GET', '/foo/');
+        $response = new CloseIoResponse($request, 200, '{"foo":"bar"}', ['bar' => 'foo']);
 
-        $this->assertGreaterThan(0, count($response->getErrors()));
+        $this->assertSame($request, $response->getRequest());
+        $this->assertEquals(200, $response->getHttpStatusCode());
+        $this->assertEquals('{"foo":"bar"}', $response->getBody());
+        $this->assertEquals(['foo' => 'bar'], $response->getDecodedBody());
+        $this->assertEquals(['bar' => 'foo'], $response->getHeaders());
     }
 
     /**
-     * @return array
+     * @dataProvider getDecodedBodyDataProvider
      */
-    public function jsonErrorResponseProvider()
+    public function testGetDecodedBody(string $body, array $expectedDecodedBody): void
+    {
+        $response = new CloseIoResponse(new CloseIoRequest('GET', '/foo/'), 200, $body);
+
+        $this->assertEquals($expectedDecodedBody, $response->getDecodedBody());
+    }
+
+    public function getDecodedBodyDataProvider(): array
     {
         return [
-            ['{"error": "The request contains invalid JSON."}'],
-            ['{"errors": [], "field-errors": {"name": "Value must be of basestring type."}}'],
-            ['{"field-errors": {"name": "Value must be of basestring type."}}'],
+            ['{"foo":"bar"}', ['foo' => 'bar']],
+            ['false', []],
         ];
     }
 
     /**
-     * @param string $jsonResponse
-     *
-     * @dataProvider jsonResponseProvider
+     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\JsonException
      */
-    public function testResponseWithoutErrors($jsonResponse)
+    public function testResponseThrowsExceptionIfDecodedBodyContainsInvalidJson(): void
     {
-        $response = new CloseIoResponse();
-        $response->setData(json_decode($jsonResponse, true));
-
-        $this->assertEquals(0, count($response->getErrors()));
+        new CloseIoResponse(new CloseIoRequest('GET', '/foo/'), 200, 'foo');
     }
 
     /**
-     * @return array
+     * @dataProvider isErrorDataProvider
      */
-    public function jsonResponseProvider()
+    public function testIsError(string $responseBody, bool $isError): void
+    {
+        $response = new CloseIoResponse(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo'), StatusCodeInterface::STATUS_OK, $responseBody);
+
+        $this->assertSame($isError, $response->isError());
+    }
+
+    public function isErrorDataProvider(): array
     {
         return [
-            ['{"id": "sample_id", "name": "Test Name"}']
+            ['{"error":"foo"}', true],
+            ['{"errors":["foo"]}', true],
+            ['{"field-errors":["foo"]}', true],
+            ['{}', false]
         ];
     }
 }
