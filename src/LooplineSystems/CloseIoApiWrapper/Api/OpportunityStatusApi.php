@@ -22,7 +22,7 @@ class OpportunityStatusApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'OpportunityStatus';
 
@@ -77,18 +77,19 @@ class OpportunityStatusApi extends AbstractApi
      * Gets the information about the opportunity status that matches the given
      * ID.
      *
-     * @param string $id The ID of the opportunityStatus
+     * @param string   $id     The ID of the opportunityStatus
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return OpportunityStatus
      *
      * @throws ResourceNotFoundException If an opportunity status with the given
      *                                   ID doesn't exists
      */
-    public function get(string $id): OpportunityStatus
+    public function get(string $id, array $fields = []): OpportunityStatus
     {
-        $result = $this->triggerGet($this->prepareRequest('get-status', null, ['id' => $id]));
+        $apiRequest = $this->prepareRequest('get-status', null, ['id' => $id], ['_fields' => $fields]);
 
-        return new OpportunityStatus($result->getData());
+        return new OpportunityStatus($this->triggerGet($apiRequest)->getData());
     }
 
     /**
@@ -129,14 +130,15 @@ class OpportunityStatusApi extends AbstractApi
     /**
      * Deletes the given opportunity status.
      *
-     * @param string $opportunityStatusId The ID of the opportunity status to delete
-     *
-     * @throws ResourceNotFoundException If an opportunity status with the given
-     *                                   ID doesn't exists
+     * @param OpportunityStatus $opportunityStatus The opportunity status to delete
      */
-    public function delete(string $opportunityStatusId): void
+    public function delete(OpportunityStatus $opportunityStatus): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $opportunityStatusId]));
+        $id = $opportunityStatus->getId();
+
+        $opportunityStatus->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
     }
 
     /**
@@ -183,6 +185,8 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function getAllStatus(): array
     {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use getAll() instead.', __METHOD__), E_USER_DEPRECATED);
+
         return $this->getAll();
     }
 
@@ -207,17 +211,14 @@ class OpportunityStatusApi extends AbstractApi
     /**
      * Deletes the given opportunity status.
      *
-     * @param string $opportunityStatusId The ID of the opportunity status to delete
-     *
-     * @throws ResourceNotFoundException If an opportunity status with the given
-     *                                   ID doesn't exists
+     * @param string $id The ID of the opportunity status to delete
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
-    public function deleteStatus(string $opportunityStatusId): void
+    public function deleteStatus(string $id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->delete($opportunityStatusId);
+        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
     }
 }

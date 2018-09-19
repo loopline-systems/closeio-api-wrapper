@@ -14,6 +14,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
@@ -22,7 +23,7 @@ class CustomFieldApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'CustomFieldApi';
 
@@ -30,7 +31,7 @@ class CustomFieldApi extends AbstractApi
     {
         $this->urls = [
             'get-custom-fields' => '/custom_fields/lead/',
-            'get-custom-field' => '/custom_fields/lead/[:id]',
+            'get-custom-field' => '/custom_fields/lead/[:id]/',
             'create-custom-field' => '/custom_fields/lead/',
             'update-custom-field' => '/custom_fields/lead/[:id]/',
             'delete-custom-field' => '/custom_fields/lead/[:id]/',
@@ -41,8 +42,8 @@ class CustomFieldApi extends AbstractApi
      * Gets up to the specified number of custom fields that match the given
      * criteria.
      *
-     * @param int   $offset The offset from which start getting the items
-     * @param int   $limit  The maximum number of items to get
+     * @param int      $offset The offset from which start getting the items
+     * @param int      $limit  The maximum number of items to get
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return CustomField[]
@@ -73,18 +74,19 @@ class CustomFieldApi extends AbstractApi
     /**
      * Gets the information about the custom field that matches the given ID.
      *
-     * @param string $id The ID of the custom field
+     * @param string   $id     The ID of the custom field
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return CustomField
      *
      * @throws ResourceNotFoundException If a custom field with the given ID
      *                                   doesn't exists
      */
-    public function get(string $id): CustomField
+    public function get(string $id, array $fields = []): CustomField
     {
-        $result = $this->triggerGet($this->prepareRequest('get-custom-field', null, ['id' => $id]));
+        $apiRequest = $this->prepareRequest('get-custom-field', null, ['id' => $id], ['_fields' => $fields]);
 
-        return new CustomField($result->getData());
+        return new CustomField($this->triggerGet($apiRequest)->getData());
     }
 
     /**
@@ -110,6 +112,7 @@ class CustomFieldApi extends AbstractApi
      *
      * @throws ResourceNotFoundException If a custom field with the given ID
      *                                   doesn't exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(CustomField $customField): CustomField
     {
@@ -125,14 +128,15 @@ class CustomFieldApi extends AbstractApi
     /**
      * Deletes the given custom field.
      *
-     * @param string $contactId The ID of the custom field to delete
-     *
-     * @throws ResourceNotFoundException If a custom field with the given ID
-     *                                   doesn't exists
+     * @param CustomField $customField The custom field to delete
      */
-    public function delete(string $contactId): void
+    public function delete(CustomField $customField): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-custom-field', null, ['id' => $contactId]));
+        $id = $customField->getId();
+
+        $customField->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-custom-field', null, ['id' => $id]));
     }
 
     /**

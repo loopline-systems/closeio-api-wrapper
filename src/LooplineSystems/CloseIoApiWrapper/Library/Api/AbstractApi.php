@@ -206,6 +206,7 @@ abstract class AbstractApi implements ApiInterface
             }
 
             if (isset($queryParams['_fields']) && is_array($queryParams['_fields'])) {
+                $queryParams['_fields'] = array_unique(array_merge($queryParams['_fields'], ['id']));
                 $queryParams['_fields'] = implode(',', $queryParams['_fields']);
             }
 

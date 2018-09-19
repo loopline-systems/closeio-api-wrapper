@@ -22,7 +22,7 @@ class UserApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    public const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'UserApi';
 

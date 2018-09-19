@@ -22,7 +22,7 @@ class ContactApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    public const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'ContactApi';
 
@@ -127,14 +127,15 @@ class ContactApi extends AbstractApi
     /**
      * Deletes the given contact.
      *
-     * @param string $contactId The ID of the contact to delete
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
+     * @param Contact $contact The contact to delete
      */
-    public function delete(string $contactId): void
+    public function delete(Contact $contact): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-contact', null, ['id' => $contactId]));
+        $id = $contact->getId();
+
+        $contact->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-contact', null, ['id' => $id]));
     }
 
     /**
@@ -208,17 +209,14 @@ class ContactApi extends AbstractApi
     /**
      * Deletes the given contact.
      *
-     * @param string $contactId The ID of the contact to delete
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
+     * @param string $id The ID of the contact to delete
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
-    public function deleteContact($contactId): void
+    public function deleteContact(string $id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->delete($contactId);
+        $this->triggerDelete($this->prepareRequest('delete-contact', null, ['id' => $id]));
     }
 }

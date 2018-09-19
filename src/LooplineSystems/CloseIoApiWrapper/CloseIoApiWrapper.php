@@ -10,16 +10,19 @@
 namespace LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\Api\ActivityApi;
+use LooplineSystems\CloseIoApiWrapper\Api\CallActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\ContactApi;
 use LooplineSystems\CloseIoApiWrapper\Api\CustomFieldApi;
+use LooplineSystems\CloseIoApiWrapper\Api\EmailActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadStatusApi;
+use LooplineSystems\CloseIoApiWrapper\Api\NoteActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
+use LooplineSystems\CloseIoApiWrapper\Api\SmsActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\TaskApi;
 use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 class CloseIoApiWrapper
@@ -56,6 +59,10 @@ class CloseIoApiWrapper
         $apiHandler->setApi(new CustomFieldApi($apiHandler));
         $apiHandler->setApi(new ContactApi($apiHandler));
         $apiHandler->setApi(new ActivityApi($apiHandler));
+        $apiHandler->setApi(new CallActivityApi($apiHandler));
+        $apiHandler->setApi(new SmsActivityApi($apiHandler));
+        $apiHandler->setApi(new EmailActivityApi($apiHandler));
+        $apiHandler->setApi(new NoteActivityApi($apiHandler));
         $apiHandler->setApi(new TaskApi($apiHandler));
         $apiHandler->setApi(new UserApi($apiHandler));
 
@@ -135,6 +142,50 @@ class CloseIoApiWrapper
     {
         /** @var ActivityApi $api */
         $api = $this->apiHandler->getApi(ActivityApi::NAME);
+
+        return $api;
+    }
+
+    /**
+     * @return CallActivityApi
+     */
+    public function getCallActivitiesApi()
+    {
+        /** @var CallActivityApi $api */
+        $api = $this->apiHandler->getApi(CallActivityApi::NAME);
+
+        return $api;
+    }
+
+    /**
+     * @return SmsActivityApi
+     */
+    public function getSmsActivitiesApi()
+    {
+        /** @var SmsActivityApi $api */
+        $api = $this->apiHandler->getApi(SmsActivityApi::NAME);
+
+        return $api;
+    }
+
+    /**
+     * @return EmailActivityApi
+     */
+    public function getEmailActivitiesApi()
+    {
+        /** @var EmailActivityApi $api */
+        $api = $this->apiHandler->getApi(EmailActivityApi::NAME);
+
+        return $api;
+    }
+
+    /**
+     * @return NoteActivityApi
+     */
+    public function getNoteActivitiesApi()
+    {
+        /** @var NoteActivityApi $api */
+        $api = $this->apiHandler->getApi(NoteActivityApi::NAME);
 
         return $api;
     }

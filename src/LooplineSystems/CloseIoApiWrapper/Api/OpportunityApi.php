@@ -14,6 +14,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 
@@ -22,7 +23,7 @@ class OpportunityApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'OpportunityApi';
 
@@ -81,18 +82,19 @@ class OpportunityApi extends AbstractApi
     /**
      * Gets the information about the opportunity that matches the given ID.
      *
-     * @param string $id The ID of the opportunity
+     * @param string   $id     The ID of the opportunity
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Opportunity
      *
      * @throws ResourceNotFoundException If a opportunity with the given ID
      *                                   doesn't exists
      */
-    public function get(string $id): Opportunity
+    public function get(string $id, array $fields = []): Opportunity
     {
-        $result = $this->triggerGet($this->prepareRequest('get-opportunity', null, ['id' => $id]));
+        $apiRequest = $this->prepareRequest('get-opportunity', null, ['id' => $id], ['_fields' => $fields]);
 
-        return new Opportunity($result->getData());
+        return new Opportunity($this->triggerGet($apiRequest)->getData());
     }
 
     /**
@@ -102,6 +104,8 @@ class OpportunityApi extends AbstractApi
      *                                 create
      *
      * @return Opportunity
+     *
+     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function create(Opportunity $opportunity): Opportunity
     {
@@ -119,6 +123,7 @@ class OpportunityApi extends AbstractApi
      *
      * @throws ResourceNotFoundException If a opportunity with the given ID
      *                                   doesn't exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(Opportunity $opportunity): Opportunity
     {
@@ -134,14 +139,19 @@ class OpportunityApi extends AbstractApi
     /**
      * Deletes the given opportunity.
      *
-     * @param string $opportunityId The ID of the opportunity to delete
+     * @param Opportunity $opportunity The opportunity to delete
      *
-     * @throws ResourceNotFoundException If a opportunity with the given ID
+     * @throws ResourceNotFoundException If the opportunity with the given ID
      *                                   doesn't exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
-    public function delete(string $opportunityId): void
+    public function delete(Opportunity $opportunity): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-opportunity', null, ['id' => $opportunityId]));
+        $id = $opportunity->getId();
+
+        $opportunity->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-opportunity', null, ['id' => $id]));
     }
 
     /**
@@ -225,7 +235,7 @@ class OpportunityApi extends AbstractApi
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->delete($opportunityId);
+        $this->triggerDelete($this->prepareRequest('delete-opportunity', null, ['id' => $opportunityId]));
     }
 
     /**

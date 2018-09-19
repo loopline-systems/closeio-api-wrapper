@@ -14,6 +14,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Task;
 
@@ -22,7 +23,7 @@ class TaskApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    public const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'TaskApi';
 
@@ -75,16 +76,21 @@ class TaskApi extends AbstractApi
     /**
      * Gets the information about the task that matches the given ID.
      *
-     * @param string $id The ID of the task
+     * @param string   $id     The ID of the task
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Task
      *
      * @throws ResourceNotFoundException If a task with the given ID doesn't
      *                                   exists
      */
-    public function get(string $id): Task
+    public function get(string $id, array $fields = []): Task
     {
-        $result = $this->triggerGet($this->prepareRequest('get-task', null, ['id' => $id]));
+        $result = $this->triggerGet(
+            $this->prepareRequest('get-task', null, ['id' => $id], [
+                '_fields' => $fields,
+            ])
+        );
 
         return new Task($result->getData());
     }
@@ -95,6 +101,8 @@ class TaskApi extends AbstractApi
      * @param Task $task The information of the task to create
      *
      * @return Task
+     *
+     * @throws BadApiRequestException
      */
     public function create(Task $task): Task
     {
@@ -112,6 +120,7 @@ class TaskApi extends AbstractApi
      *
      * @throws ResourceNotFoundException If a task with the given ID doesn't
      *                                   exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(Task $task): Task
     {
@@ -127,14 +136,15 @@ class TaskApi extends AbstractApi
     /**
      * Deletes the given task.
      *
-     * @param string $taskId The ID of the task to delete
-     *
-     * @throws ResourceNotFoundException If a task with the given ID doesn't
-     *                                   exists
+     * @param Task $task The task to delete
      */
-    public function delete(string $taskId): void
+    public function delete(Task $task): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-task', null, ['id' => $taskId]));
+        $id = $task->getId();
+
+        $task->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-task', null, ['id' => $id]));
     }
 
     /**
@@ -206,17 +216,17 @@ class TaskApi extends AbstractApi
     /**
      * Deletes the given task.
      *
-     * @param string $taskId The ID of the task to delete
+     * @param string $id The ID of the task to delete
      *
      * @throws ResourceNotFoundException If a task with the given ID doesn't
      *                                   exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
-    public function deleteTask($taskId): void
+    public function deleteTask($id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->delete($taskId);
+        $this->triggerDelete($this->prepareRequest('delete-task', null, ['id' => $id]));
     }
 }

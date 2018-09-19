@@ -13,7 +13,6 @@ use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
 use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 
 class CurlTest extends \PHPUnit\Framework\TestCase
 {
@@ -32,19 +31,6 @@ class CurlTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($response->getReturnCode(), '200');
         $this->assertNotEmpty($response->getRawData());
         $this->assertFalse($response->hasErrors());
-    }
-
-    public function testBadRequest()
-    {
-        $config = new CloseIoConfig();
-        $config->setApiKey('testkey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($config);
-
-        $leadApi = $closeIoApiWrapper->getLeadApi();
-
-        $this->expectException(BadApiRequestException::class);
-
-        $leadApi->getLead('bad-id');
     }
 
     public function testInterface()

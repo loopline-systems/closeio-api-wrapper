@@ -14,6 +14,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
@@ -24,7 +25,7 @@ class LeadApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'LeadApi';
 
@@ -77,18 +78,19 @@ class LeadApi extends AbstractApi
     /**
      * Gets the information about the lead that matches the given ID.
      *
-     * @param string $id The ID of the lead
+     * @param string   $id     The ID of the lead
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Lead
      *
      * @throws ResourceNotFoundException If a lead with the given ID doesn't
      *                                   exists
      */
-    public function get(string $id): Lead
+    public function get(string $id, array $fields = []): Lead
     {
-        $result = $this->triggerGet($this->prepareRequest('get-lead', null, ['id' => $id]));
+        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id], ['_fields' => $fields]);
 
-        return new Lead($result->getData());
+        return new Lead($this->triggerGet($apiRequest)->getData());
     }
 
     /**
@@ -97,6 +99,9 @@ class LeadApi extends AbstractApi
      * @param Lead $lead The information of the lead to create
      *
      * @return Lead
+     *
+     * @throws InvalidNewLeadPropertyException
+     * @throws BadApiRequestException          If the request contained invalid data
      */
     public function create(Lead $lead): Lead
     {
@@ -116,6 +121,7 @@ class LeadApi extends AbstractApi
      *
      * @throws ResourceNotFoundException If a lead with the given ID doesn't
      *                                   exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(Lead $lead): Lead
     {
@@ -123,22 +129,26 @@ class LeadApi extends AbstractApi
 
         $lead->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-lead', json_encode($lead), ['id' => $id]));
+        $apiRequest = $this->prepareRequest('update-lead', json_encode($lead), ['id' => $id]);
 
-        return new Lead($response->getData());
+        return new Lead($this->triggerPut($apiRequest)->getData());
     }
 
     /**
      * Deletes the given lead.
      *
-     * @param string $leadId The ID of the lead to delete
+     * @param Lead $lead The lead to delete
      *
      * @throws ResourceNotFoundException If a lead with the given ID doesn't
      *                                   exists
      */
-    public function delete(string $leadId): void
+    public function delete(Lead $lead): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $leadId]));
+        $id = $lead->getId();
+
+        $lead->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
     }
 
     /**
@@ -260,11 +270,11 @@ class LeadApi extends AbstractApi
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
-    public function deleteLead($id): void
+    public function deleteLead(string $id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->delete($id);
+        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
     }
 
     /**
@@ -281,21 +291,5 @@ class LeadApi extends AbstractApi
                 throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
             }
         }
-    }
-
-    /**
-     * @param array $params
-     *
-     * @return string
-     */
-    private function buildQueryString(array $params)
-    {
-        $flattened = [];
-        foreach ($params as $key => $value) {
-            $flattened[] = $key . '=' . $value;
-        }
-        $queryString = implode('&', $flattened);
-
-        return $queryString;
     }
 }

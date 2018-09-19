@@ -14,6 +14,7 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
+use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
 
@@ -22,7 +23,7 @@ class LeadStatusApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    private const MAX_ITEMS_PER_REQUEST = 50;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'LeadStatusApi';
 
@@ -44,8 +45,8 @@ class LeadStatusApi extends AbstractApi
      * Gets up to the specified number of lead statuses that match the given
      * criteria.
      *
-     * @param int   $offset The offset from which start getting the items
-     * @param int   $limit  The maximum number of items to get
+     * @param int      $offset The offset from which start getting the items
+     * @param int      $limit  The maximum number of items to get
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return LeadStatus[]
@@ -76,24 +77,25 @@ class LeadStatusApi extends AbstractApi
     /**
      * Gets the information about the lead status that matches the given ID.
      *
-     * @param string $leadStatusId The ID of the leadStatus
+     * @param string   $id     The ID of the lead status
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a leadStatus with the given ID doesn't
+     * @throws ResourceNotFoundException If a lead status with the given ID doesn't
      *                                   exists
      */
-    public function get(string $leadStatusId): LeadStatus
+    public function get(string $id, array $fields = []): LeadStatus
     {
-        $result = $this->triggerGet($this->prepareRequest('get-status', null, ['id' => $leadStatusId]));
+        $apiRequest = $this->prepareRequest('get-status', null, ['id' => $id], ['_fields' => $fields]);
 
-        return new LeadStatus($result->getData());
+        return new LeadStatus($this->triggerGet($apiRequest)->getData());
     }
 
     /**
      * Creates a new lead status using the given information.
      *
-     * @param LeadStatus $leadStatus The information of the leadStatus to create
+     * @param LeadStatus $leadStatus The information of the lead status to create
      *
      * @return LeadStatus
      */
@@ -107,12 +109,13 @@ class LeadStatusApi extends AbstractApi
     /**
      * Updates the given lead status.
      *
-     * @param LeadStatus $leadStatus The leadStatus to update
+     * @param LeadStatus $leadStatus The lead status to update
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a leadStatus with the given ID doesn't
+     * @throws ResourceNotFoundException If a lead status with the given ID doesn't
      *                                   exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(LeadStatus $leadStatus): LeadStatus
     {
@@ -128,20 +131,21 @@ class LeadStatusApi extends AbstractApi
     /**
      * Deletes the given lead status.
      *
-     * @param string $leadStatusId The ID of the leadStatus to delete
-     *
-     * @throws ResourceNotFoundException If a leadStatus with the given ID doesn't
-     *                                   exists
+     * @param LeadStatus $leadStatus The lead status to delete
      */
-    public function delete(string $leadStatusId): void
+    public function delete(LeadStatus $leadStatus): void
     {
-        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $leadStatusId]));
+        $id = $leadStatus->getId();
+
+        $leadStatus->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
     }
 
     /**
      * Creates a new lead status using the given information.
      *
-     * @param LeadStatus $leadStatus The information of the leadStatus to create
+     * @param LeadStatus $leadStatus The information of the lead status to create
      *
      * @return LeadStatus
      *
@@ -157,12 +161,12 @@ class LeadStatusApi extends AbstractApi
     /**
      * Updates the given lead status.
      *
-     * @param LeadStatus $leadStatus The leadStatus to update
+     * @param LeadStatus $leadStatus The lead status to update
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a leadStatus with the given ID doesn't
-     *                                   exists
+     * @throws ResourceNotFoundException If a lead status with the given ID
+     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
@@ -190,12 +194,12 @@ class LeadStatusApi extends AbstractApi
     /**
      * Gets the information about the lead status that matches the given ID.
      *
-     * @param string $leadStatusId The ID of the leadStatus
+     * @param string $leadStatusId The ID of the lead status
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a leadStatus with the given ID doesn't
-     *                                   exists
+     * @throws ResourceNotFoundException If a lead status with the given ID
+     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
@@ -209,17 +213,17 @@ class LeadStatusApi extends AbstractApi
     /**
      * Deletes the given lead status.
      *
-     * @param string $leadStatusId The ID of the leadStatus to delete
+     * @param string $id The ID of the lead status to delete
      *
-     * @throws ResourceNotFoundException If a leadStatus with the given ID doesn't
-     *                                   exists
+     * @throws ResourceNotFoundException If a lead status with the given ID
+     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
-    public function deleteStatus(string $leadStatusId): void
+    public function deleteStatus(string $id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->delete($leadStatusId);
+        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
     }
 }
