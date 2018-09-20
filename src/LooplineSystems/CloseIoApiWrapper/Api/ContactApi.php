@@ -22,7 +22,7 @@ class ContactApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    public const MAX_ITEMS_PER_REQUEST = 100;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'ContactApi';
 
@@ -49,7 +49,7 @@ class ContactApi extends AbstractApi
      *
      * @return Contact[]
      */
-    public function getAll(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
+    public function list(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
     {
         /** @var Contact[] $contacts */
         $contacts = [];
@@ -143,13 +143,13 @@ class ContactApi extends AbstractApi
      *
      * @return Contact[]
      *
-     * @deprecated since version 0.8, to be removed in 0.9. Use getAll() instead
+     * @deprecated since version 0.8, to be removed in 0.9. Use list() instead
      */
     public function getAllContacts(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use getAll() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        return $this->getAll();
+        return $this->list();
     }
 
     /**

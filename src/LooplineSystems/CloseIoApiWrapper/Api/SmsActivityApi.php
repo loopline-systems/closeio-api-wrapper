@@ -23,7 +23,7 @@ class SmsActivityApi extends AbstractApi
     /**
      * The maximum number of items that are requested by default
      */
-    public const MAX_ITEMS_PER_REQUEST = 100;
+    private const MAX_ITEMS_PER_REQUEST = 100;
 
     const NAME = 'SmsActivityApi';
 
@@ -52,7 +52,7 @@ class SmsActivityApi extends AbstractApi
      *
      * @return SmsActivity[]
      */
-    public function getAll(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $filters = [], array $fields = []): array
+    public function list(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $filters = [], array $fields = []): array
     {
         /** @var SmsActivity[] $activities */
         $activities = [];
