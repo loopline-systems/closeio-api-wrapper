@@ -56,6 +56,9 @@
         ],
         "phpcs": [
             "vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan analyse src tests --level=4"
         ]
     },
     "config": {

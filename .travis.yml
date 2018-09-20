@@ -1,29 +1,43 @@
 language: php
+
+sudo: false
+
 php:
   - 7.1
   - 7.2
-  - master
+  - nightly
 
 env:
   - dependencies=lowest
   - dependencies=highest
 
 matrix:
-  allow_failures:
-    - php: master
-      env: dependencies=lowest
-    - php: master
-      env: dependencies=highest
+    fast_finish: true
+    allow_failures:
+        - php: nightly
 
-before_script:
-  - composer self-update
-  - if [ "$dependencies" = "lowest"  ]; then composer update --no-interaction --prefer-lowest; fi;
-  - if [ "$dependencies" = "highest" ]; then composer update --no-interaction; fi;
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+stages:
+    - Code style & static analysis
+    - test
+
+jobs:
+    include:
+        - stage: Code style & static analysis
+          name: PHP CS Fixer
+          script: composer phpcs
+        - script: composer phpstan
+          name: PHPStan
+
+install:
+    - if [ "$dependencies" = "lowest"  ]; then composer update --no-interaction --prefer-lowest --prefer-dist; fi;
+    - if [ "$dependencies" = "highest" ]; then composer update --no-interaction --prefer-dist; fi;
 
 script:
-    - mkdir -p build/logs
-    - vendor/bin/phpunit
-    - if [ "$dependencies" = "highest" ]; then php vendor/bin/phpstan analyze --level=4 src tests; fi;
+    - composer tests
 
-after_script:
+after_success:
     - php vendor/bin/php-coveralls -v
