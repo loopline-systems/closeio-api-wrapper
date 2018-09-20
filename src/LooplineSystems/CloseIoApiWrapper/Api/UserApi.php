@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -11,15 +14,16 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Curl\Curl;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\User;
 
 class UserApi extends AbstractApi
 {
+    /**
+     * The maximum number of items that are requested by default
+     */
+    private const MAX_ITEMS_PER_REQUEST = 100;
+
     const NAME = 'UserApi';
 
     /**
@@ -35,48 +39,31 @@ class UserApi extends AbstractApi
     }
 
     /**
-     * @return User
+     * Gets all the users who are members of the same organizations as the user
+     * currently making the request.
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws ResourceNotFoundException
-     * @throws UrlNotSetException
-     */
-    public function getCurrentUser()
-    {
-        $apiRequest = $this->prepareRequest('get-current-user');
-
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200 && (!empty($result->getData()))) {
-            $user = new User($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $user;
-    }
-
-    /**
+     * @param int      $offset    The offset from which start getting the items
+     * @param int      $limit     The maximum number of items to get
+     * @param string[] $fields The subset of fields to get (defaults to all)
+     *
      * @return User[]
-     *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
      */
-    public function getAllUsers()
+    public function list(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $fields = []): array
     {
         /** @var User[] $users */
-        $users = array();
+        $users = [];
+        $result = $this->triggerGet(
+            $this->prepareRequest('get-users', null, [], [
+                '_skip' => $offset,
+                '_limit' => $limit,
+                '_fields' => $fields,
+            ])
+        );
 
-        $apiRequest = $this->prepareRequest('get-users');
+        if (200 === $result->getReturnCode()) {
+            $responseData = $result->getData();
 
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
-            foreach ($rawData as $user) {
+            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $user) {
                 $users[] = new User($user);
             }
         }
@@ -85,36 +72,85 @@ class UserApi extends AbstractApi
     }
 
     /**
-     * @param string $id
+     * Gets the information about the user that matches the given ID.
+     *
+     * @param string $id The ID of the user
+     *
      * @return User
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws ResourceNotFoundException
-     * @throws UrlNotSetException
+     * @throws ResourceNotFoundException If a user with the given ID doesn't exists
      */
-    public function getUser($id)
+    public function get(string $id): User
     {
-        $apiRequest = $this->prepareRequest('get-user', null, ['id' => $id]);
+        $result = $this->triggerGet($this->prepareRequest('get-user', null, ['id' => $id]));
 
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200 && (!empty($result->getData()))) {
-            $user = new User($result->getData());
-        } else {
-            throw new ResourceNotFoundException();
-        }
-
-        return $user;
+        return new User($result->getData());
     }
 
     /**
-     * @param User $user
-     * @return bool
+     * Gets the information about the current logged-in user.
+     *
+     * @return User
+     *
+     * @throws ResourceNotFoundException
      */
-    public function validateUserForPost(User $user)
+    public function getCurrent(): User
     {
-        return true;
+        $result = $this->triggerGet($this->prepareRequest('get-current-user'));
+        $responseData = $result->getData();
+
+        if (200 === $result->getReturnCode() && !empty($responseData)) {
+            return new User($responseData);
+        }
+
+        throw new ResourceNotFoundException();
     }
 
+    /**
+     * Gets the information about the current logged-in user.
+     *
+     * @return User
+     *
+     * @throws ResourceNotFoundException
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use getCurrent() instead
+     */
+    public function getCurrentUser(): User
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use getCurrent() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->getCurrent();
+    }
+
+    /**
+     * Gets all the users.
+     *
+     * @return User[]
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use list() instead
+     */
+    public function getAllUsers(): array
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->list();
+    }
+
+    /**
+     * Gets the information about the user that matches the given ID.
+     *
+     * @param string $id The ID of the user
+     *
+     * @return User
+     *
+     * @throws ResourceNotFoundException If a user with the given ID doesn't exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
+     */
+    public function getUser(string $id): User
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->get($id);
+    }
 }

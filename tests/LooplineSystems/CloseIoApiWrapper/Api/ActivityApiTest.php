@@ -19,9 +19,20 @@ use LooplineSystems\CloseIoApiWrapper\Model\SmsActivity;
 class ActivityApiTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @var CloseIoApiWrapper
+     */
+    private $closeIoApiWrapper;
+
+    protected function setUp()
+    {
+        $closeIoConfig = new CloseIoConfig();
+        $closeIoConfig->setApiKey('testapikey');
+
+        $this->closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+    }
+
+    /**
      * @description tests updating a sms activity using mock curl object
-     *
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ApiNotFoundException
      */
     public function testUpdateSms()
     {
@@ -29,7 +40,8 @@ class ActivityApiTest extends \PHPUnit\Framework\TestCase
         $sms->setId('test-124');
         $sms->setLocalPhone('+123456789');
 
-        $activityApi = $this->getActivityApi();
+        $activitiesApi = $this->closeIoApiWrapper->getActivitiesApi();
+        $smsActivitiesApi = $this->closeIoApiWrapper->getSmsActivitiesApi();
 
         $returnedSms = clone $sms;
 
@@ -38,9 +50,9 @@ class ActivityApiTest extends \PHPUnit\Framework\TestCase
         $expectedResponse->setRawData(json_encode($returnedSms));
         $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
 
-        $activityApi->setCurl($this->getMockResponderCurl($expectedResponse));
+        $smsActivitiesApi->setCurl($this->getMockResponderCurl($expectedResponse));
 
-        $responseSms = $activityApi->addSms($sms);
+        $responseSms = $activitiesApi->addSms($sms);
 
         $this->assertTrue($responseSms->getLocalPhone() === $sms->getLocalPhone());
         $this->assertNotEmpty($responseSms->getId());
@@ -48,33 +60,17 @@ class ActivityApiTest extends \PHPUnit\Framework\TestCase
 
     public function testDeleteSms()
     {
-        $activityApi = $this->getActivityApi();
+        $activitiesApi = $this->closeIoApiWrapper->getActivitiesApi();
 
         $id = 'sms-to-be-deleted';
 
-        // init expected response
         $expectedResponse = new CloseIoResponse();
         $expectedResponse->setReturnCode('200');
-        $expectedResponse->setCurlInfoRaw(['url' => $activityApi->getApiHandler()->getConfig()->getUrl() . $id]);
+        $expectedResponse->setCurlInfoRaw(['url' => $activitiesApi->getApiHandler()->getConfig()->getUrl() . $id]);
 
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $activityApi->setCurl($mockCurl);
+        $activitiesApi->setCurl($this->getMockResponderCurl($expectedResponse));
 
-        $this->assertTrue($activityApi->deleteSms($id), 'should return true on delete');
-    }
-
-    /**
-     * @return ActivityApi
-     */
-    private function getActivityApi()
-    {
-        // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-
-        return $closeIoApiWrapper->getActivitiesApi();
+        $activitiesApi->deleteSms($id);
     }
 
     /**

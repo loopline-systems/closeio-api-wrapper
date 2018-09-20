@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -15,11 +18,15 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\UrlNotSetException;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
 class LeadApi extends AbstractApi
 {
+    /**
+     * The maximum number of items that are requested by default
+     */
+    private const MAX_ITEMS_PER_REQUEST = 100;
+
     const NAME = 'LeadApi';
 
     /**
@@ -33,30 +40,34 @@ class LeadApi extends AbstractApi
             'get-lead' => '/lead/[:id]/',
             'update-lead' => '/lead/[:id]/',
             'delete-lead' => '/lead/[:id]/',
+            'merge-leads' => '/lead/merge/',
         ];
     }
 
     /**
-     * @return Lead[]
+     * Gets up to the specified number of leads that matches the given criteria.
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @param int   $offset  The offset from which start getting the items
+     * @param int   $limit   The maximum number of items to get
+     * @param array $filters A set of criteria to filter the items by
+     * @param string[] $fields  The subset of fields to get (defaults to all)
+     *
+     * @return Lead[]
      */
-    public function getAllLeads()
+    public function list(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $filters = [], array $fields = []): array
     {
         /** @var Lead[] $leads */
         $leads = [];
+        $result = $this->triggerGet($this->prepareRequest('get-leads', null, [], array_merge($filters, [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ])));
 
-        $apiRequest = $this->prepareRequest('get-leads');
+        if (200 === $result->getReturnCode()) {
+            $responseData = $result->getData();
 
-        $result = $this->triggerGet($apiRequest);
-
-        if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()[CloseIoResponse::GET_RESPONSE_DATA_KEY];
-
-            foreach ($rawData as $lead) {
+            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $lead) {
                 $leads[] = new Lead($lead);
             }
         }
@@ -65,115 +76,205 @@ class LeadApi extends AbstractApi
     }
 
     /**
-     * @param array $queryParams
+     * Gets the information about the lead that matches the given ID.
      *
-     * @return Lead[]
-     *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
-     */
-    public function findLeads(array $queryParams)
-    {
-        /** @var Lead[] $leads */
-        $leads = [];
-        if (count($queryParams) > 0) {
-            $queryParams = ['query' => $this->buildQueryString($queryParams)];
-        }
-        $apiRequest = $this->prepareRequest('get-leads', '', [], $queryParams);
-
-        $result = $this->triggerGet($apiRequest);
-        if ($result->getReturnCode() == 200) {
-            $rawData = $result->getData()['data'];
-            foreach ($rawData as $lead) {
-                $leads[] = new Lead($lead);
-            }
-        }
-
-        return $leads;
-    }
-
-    /**
-     * @param string $id
+     * @param string   $id     The ID of the lead
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Lead
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a lead with the given ID doesn't
+     *                                   exists
      */
-    public function getLead($id)
+    public function get(string $id, array $fields = []): Lead
     {
-        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id]);
+        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id], ['_fields' => $fields]);
 
-        $result = $this->triggerGet($apiRequest);
-
-        return new Lead($result->getData());
+        return new Lead($this->triggerGet($apiRequest)->getData());
     }
 
     /**
-     * @param Lead $lead
+     * Creates a new lead using the given information.
+     *
+     * @param Lead $lead The information of the lead to create
      *
      * @return Lead
      *
-     * @throws BadApiRequestException
      * @throws InvalidNewLeadPropertyException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws BadApiRequestException          If the request contained invalid data
      */
-    public function addLead(Lead $lead)
+    public function create(Lead $lead): Lead
     {
         $this->validateLeadForPost($lead);
 
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('add-lead', $lead);
+        $apiRequest = $this->prepareRequest('add-lead', json_encode($lead));
 
         return new Lead($this->triggerPost($apiRequest)->getData());
     }
 
     /**
-     * @param Lead $lead
+     * Updates the given lead.
+     *
+     * @param Lead $lead The lead to update
      *
      * @return Lead
      *
-     * @throws BadApiRequestException
-     * @throws InvalidParamException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException If a lead with the given ID doesn't
+     *                                   exists
+     * @throws BadApiRequestException    If the request contained invalid data
      */
-    public function updateLead(Lead $lead)
+    public function update(Lead $lead): Lead
     {
-        // check if lead has id
-        if ($lead->getId() == null) {
-            throw new InvalidParamException('When updating a lead you must provide the lead ID');
-        }
-        // remove id from lead since it won't be part of the patch data
         $id = $lead->getId();
+
         $lead->setId(null);
 
-        $lead = json_encode($lead);
-        $apiRequest = $this->prepareRequest('update-lead', $lead, ['id' => $id]);
-        $response = $this->triggerPut($apiRequest);
+        $apiRequest = $this->prepareRequest('update-lead', json_encode($lead), ['id' => $id]);
 
-        return new Lead($response->getData());
+        return new Lead($this->triggerPut($apiRequest)->getData());
     }
 
     /**
-     * @param string $id
+     * Deletes the given lead.
      *
-     * @throws InvalidParamException
-     * @throws BadApiRequestException
-     * @throws UrlNotSetException
-     * @throws ResourceNotFoundException
+     * @param Lead $lead The lead to delete
+     *
+     * @throws ResourceNotFoundException If a lead with the given ID doesn't
+     *                                   exists
      */
-    public function deleteLead($id)
+    public function delete(Lead $lead): void
     {
-        $apiRequest = $this->prepareRequest('delete-lead', null, ['id' => $id]);
+        $id = $lead->getId();
 
-        $this->triggerDelete($apiRequest);
+        $lead->setId(null);
+
+        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
+    }
+
+    /**
+     * Merges two leads.
+     *
+     * @param Lead $source      The source lead (he will be deleted afterwards)
+     * @param Lead $destination The lead to merge the data in
+     *
+     * @throws InvalidParamException If any of the two leads have an invalid ID
+     * @throws ResourceNotFoundException If the merge fails for whatever reason
+     */
+    public function merge(Lead $source, Lead $destination): void
+    {
+        if (empty($source->getId()) || empty($destination->getId())) {
+            throw new InvalidParamException('You need to specify two already existing leads in order to merge them');
+        }
+
+        $result = $this->triggerPost($this->prepareRequest('merge-leads', json_encode([
+            'destination' => $destination->getId(),
+            'source' => $source->getId(),
+        ])));
+
+        if (!$result->isSuccess()) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    /**
+     * Gets all the leads.
+     *
+     * @return Lead[]
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use list() instead.
+     */
+    public function getAllLeads(): array
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->list();
+    }
+
+    /**
+     * Get all the leads that match the given criteria.
+     *
+     * @param array $queryParams The search criteria
+     *
+     * @return Lead[]
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use list() instead.
+     */
+    public function findLeads(array $queryParams): array
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->list(0, self::MAX_ITEMS_PER_REQUEST, $queryParams);
+    }
+
+    /**
+     * Gets the lead with the given ID.
+     *
+     * @param string $id The ID of the lead
+     *
+     * @return Lead
+     *
+     * @throws ResourceNotFoundException If a lead with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use get() instead.
+     */
+    public function getLead(string $id): Lead
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->get($id);
+    }
+
+    /**
+     * Creates a new lead using the given information.
+     *
+     * @param Lead $lead The information of the lead to create
+     *
+     * @return Lead
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
+     */
+    public function addLead(Lead $lead): Lead
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->create($lead);
+    }
+
+    /**
+     * Updates the given lead.
+     *
+     * @param Lead $lead The lead to update
+     *
+     * @return Lead
+     *
+     * @throws ResourceNotFoundException If a lead with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
+     */
+    public function updateLead(Lead $lead): Lead
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->update($lead);
+    }
+
+    /**
+     * Deletes the given lead.
+     *
+     * @param string $id The ID of the lead to delete
+     *
+     * @throws ResourceNotFoundException If a lead with the given ID doesn't
+     *                                   exists
+     *
+     * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
+     */
+    public function deleteLead(string $id): void
+    {
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
     }
 
     /**
@@ -190,22 +291,5 @@ class LeadApi extends AbstractApi
                 throw new InvalidNewLeadPropertyException('Cannot post ' . $invalidProperty . ' to new lead.');
             }
         }
-    }
-
-
-    /**
-     * @param array $params
-     *
-     * @return string
-     */
-    private function buildQueryString(array $params)
-    {
-        $flattened = [];
-        foreach ($params as $key => $value) {
-            $flattened[] = $key . '=' . $value;
-        }
-        $queryString = implode('&', $flattened);
-
-        return $queryString;
     }
 }
