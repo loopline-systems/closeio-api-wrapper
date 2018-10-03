@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\NoteActivity;
 
 class NoteActivityApi extends AbstractApi
@@ -59,12 +57,10 @@ class NoteActivityApi extends AbstractApi
             '_fields' => $fields,
         ]));
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $activity) {
-                $activities[] = new NoteActivity($activity);
-            }
+        foreach ($responseData['data'] as $activity) {
+            $activities[] = new NoteActivity($activity);
         }
 
         return $activities;
@@ -77,19 +73,12 @@ class NoteActivityApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return NoteActivity
-     *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): NoteActivity
     {
         $response = $this->client->get($this->prepareUrlForKey('get-note', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new NoteActivity($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new NoteActivity($response->getDecodedBody());
     }
 
     /**
@@ -98,19 +87,13 @@ class NoteActivityApi extends AbstractApi
      * @param NoteActivity $activity The information of the activity to create
      *
      * @return NoteActivity
-     *
-     * @throws BadApiRequestException
      */
     public function create(NoteActivity $activity): NoteActivity
     {
         $response = $this->client->post($this->prepareUrlForKey('add-note'), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new NoteActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new NoteActivity($responseData);
     }
 
     /**
@@ -119,8 +102,6 @@ class NoteActivityApi extends AbstractApi
      * @param NoteActivity $activity The activity to update
      *
      * @return NoteActivity
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function update(NoteActivity $activity): NoteActivity
     {
@@ -131,11 +112,7 @@ class NoteActivityApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-note', ['id' => $id]), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new NoteActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new NoteActivity($responseData);
     }
 
     /**

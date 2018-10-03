@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 
 class CallActivityApi extends AbstractApi
@@ -58,7 +56,7 @@ class CallActivityApi extends AbstractApi
             '_fields' => $fields,
         ]));
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
+        if (200 === $response->getHttpStatusCode() && !$response->hasError()) {
             $responseData = $response->getDecodedBody();
 
             foreach ($responseData['data'] as $activity) {
@@ -76,19 +74,12 @@ class CallActivityApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return CallActivity
-     *
-     * @throws ResourceNotFoundException If a call activity with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): CallActivity
     {
         $response = $this->client->get($this->prepareUrlForKey('get-call', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new CallActivity($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new CallActivity($response->getDecodedBody());
     }
 
     /**
@@ -98,28 +89,19 @@ class CallActivityApi extends AbstractApi
      *                               to create
      *
      * @return CallActivity
-     *
-     * @throws BadApiRequestException
      */
     public function create(CallActivity $activity): CallActivity
     {
         $response = $this->client->post($this->prepareUrlForKey('add-call'), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new CallActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new CallActivity($responseData);
     }
 
     /**
      * Deletes the given call activity.
      *
      * @param CallActivity $activity The call activity to delete
-     *
-     * @throws ResourceNotFoundException If a call activity with the given ID
-     *                                   doesn't exists
      */
     public function delete(CallActivity $activity): void
     {

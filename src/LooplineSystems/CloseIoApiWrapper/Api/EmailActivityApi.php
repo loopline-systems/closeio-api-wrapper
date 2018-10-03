@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\EmailActivity;
 
 class EmailActivityApi extends AbstractApi
@@ -59,12 +57,10 @@ class EmailActivityApi extends AbstractApi
             '_fields' => $fields,
         ]));
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $activity) {
-                $activities[] = new EmailActivity($activity);
-            }
+        foreach ($responseData['data'] as $activity) {
+            $activities[] = new EmailActivity($activity);
         }
 
         return $activities;
@@ -77,19 +73,12 @@ class EmailActivityApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return EmailActivity
-     *
-     * @throws ResourceNotFoundException If an email activity with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): EmailActivity
     {
         $response = $this->client->get($this->prepareUrlForKey('get-email', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new EmailActivity($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new EmailActivity($response->getDecodedBody());
     }
 
     /**
@@ -99,19 +88,13 @@ class EmailActivityApi extends AbstractApi
      *                                create
      *
      * @return EmailActivity
-     *
-     * @throws BadApiRequestException
      */
     public function create(EmailActivity $activity): EmailActivity
     {
         $response = $this->client->post($this->prepareUrlForKey('add-email'), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new EmailActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new EmailActivity($responseData);
     }
 
     /**
@@ -120,8 +103,6 @@ class EmailActivityApi extends AbstractApi
      * @param EmailActivity $activity The activity to update
      *
      * @return EmailActivity
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function update(EmailActivity $activity): EmailActivity
     {
@@ -132,11 +113,7 @@ class EmailActivityApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-email', ['id' => $id]), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new EmailActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new EmailActivity($responseData);
     }
 
     /**

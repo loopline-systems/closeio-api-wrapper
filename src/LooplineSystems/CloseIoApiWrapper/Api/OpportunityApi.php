@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Opportunity;
 
 class OpportunityApi extends AbstractApi
@@ -64,12 +62,10 @@ class OpportunityApi extends AbstractApi
         $opportunities = [];
         $response = $this->client->get($this->prepareUrlForKey('get-opportunities'), $params);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $opportunity) {
-                $opportunities[] = new Opportunity($opportunity);
-            }
+        foreach ($responseData['data'] as $opportunity) {
+            $opportunities[] = new Opportunity($opportunity);
         }
 
         return $opportunities;
@@ -82,19 +78,12 @@ class OpportunityApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Opportunity
-     *
-     * @throws ResourceNotFoundException If a opportunity with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): Opportunity
     {
         $response = $this->client->get($this->prepareUrlForKey('get-opportunity', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Opportunity($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new Opportunity($response->getDecodedBody());
     }
 
     /**
@@ -104,19 +93,13 @@ class OpportunityApi extends AbstractApi
      *                                 create
      *
      * @return Opportunity
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function create(Opportunity $opportunity): Opportunity
     {
         $response = $this->client->post($this->prepareUrlForKey('add-opportunity'), $opportunity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Opportunity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new Opportunity($responseData);
     }
 
     /**
@@ -125,10 +108,6 @@ class OpportunityApi extends AbstractApi
      * @param Opportunity $opportunity The opportunity to update
      *
      * @return Opportunity
-     *
-     * @throws ResourceNotFoundException If a opportunity with the given ID
-     *                                   doesn't exists
-     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(Opportunity $opportunity): Opportunity
     {
@@ -139,11 +118,7 @@ class OpportunityApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-opportunity', ['id' => $id]), $opportunity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Opportunity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new Opportunity($responseData);
     }
 
     /**
@@ -181,9 +156,6 @@ class OpportunityApi extends AbstractApi
      *
      * @return Opportunity
      *
-     * @throws ResourceNotFoundException If a opportunity with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getOpportunity($opportunityId): Opportunity
@@ -216,9 +188,6 @@ class OpportunityApi extends AbstractApi
      * @param Opportunity $opportunity The opportunity to update
      *
      * @return Opportunity
-     *
-     * @throws ResourceNotFoundException If a opportunity with the given ID
-     *                                   doesn't exists
      */
     public function updateOpportunity(Opportunity $opportunity): Opportunity
     {
@@ -231,9 +200,6 @@ class OpportunityApi extends AbstractApi
      * Deletes the given opportunity.
      *
      * @param string $id The ID of the opportunity to delete
-     *
-     * @throws ResourceNotFoundException If a opportunity with the given ID
-     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */

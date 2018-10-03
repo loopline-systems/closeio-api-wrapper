@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
 
 class CustomFieldApi extends AbstractApi
@@ -55,12 +53,10 @@ class CustomFieldApi extends AbstractApi
             '_fields' => $fields,
         ]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $customField) {
-                $customFields[] = new CustomField($customField);
-            }
+        foreach ($responseData['data'] as $customField) {
+            $customFields[] = new CustomField($customField);
         }
 
         return $customFields;
@@ -73,19 +69,12 @@ class CustomFieldApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return CustomField
-     *
-     * @throws ResourceNotFoundException If a custom field with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): CustomField
     {
         $response = $this->client->get($this->prepareUrlForKey('get-custom-field', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new CustomField($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new CustomField($response->getDecodedBody());
     }
 
     /**
@@ -94,19 +83,13 @@ class CustomFieldApi extends AbstractApi
      * @param CustomField $customField The information of the custom field to create
      *
      * @return CustomField
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function create(CustomField $customField): CustomField
     {
         $response = $this->client->post($this->prepareUrlForKey('create-custom-field'), $customField->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new CustomField($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new CustomField($responseData);
     }
 
     /**
@@ -115,10 +98,6 @@ class CustomFieldApi extends AbstractApi
      * @param CustomField $customField The custom field to update
      *
      * @return CustomField
-     *
-     * @throws ResourceNotFoundException If a custom field with the given ID
-     *                                   doesn't exists
-     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(CustomField $customField): CustomField
     {
@@ -129,11 +108,7 @@ class CustomFieldApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-custom-field', ['id' => $id]), $customField->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new CustomField($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new CustomField($responseData);
     }
 
     /**
@@ -171,9 +146,6 @@ class CustomFieldApi extends AbstractApi
      * @param CustomField $customField The custom field to update
      *
      * @return CustomField
-     *
-     * @throws ResourceNotFoundException If a custom field with the given ID
-     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */

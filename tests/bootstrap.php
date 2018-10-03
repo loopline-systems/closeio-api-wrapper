@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -7,15 +10,9 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
+use Http\Discovery\ClassDiscovery;
+use Http\Discovery\Strategy\MockClientStrategy;
 
-class FileNotFoundException extends \Exception
-{
-    /**
-     * @param string $filename
-     */
-    public function __construct($filename)
-    {
-        parent::__construct(sprintf('File %s not found', $filename));
-    }
-}
+require_once __DIR__ . '/../vendor/autoload.php';
+
+ClassDiscovery::appendStrategy(MockClientStrategy::class);

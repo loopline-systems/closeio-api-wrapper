@@ -61,6 +61,10 @@ class CloseIoResponseException extends CloseIoException
                 return new static($response, new CloseIoAuthenticationException($message, 0));
             case StatusCodeInterface::STATUS_TOO_MANY_REQUESTS:
                 return new static($response, new CloseIoThrottleException($message, 0));
+            case StatusCodeInterface::STATUS_NOT_FOUND:
+                return new static($response, new CloseIoResourceNotFoundException($message, 0));
+            case StatusCodeInterface::STATUS_BAD_REQUEST:
+                return new static($response, new CloseIoBadRequestException($message, 0));
             default:
                 return new static($response);
         }

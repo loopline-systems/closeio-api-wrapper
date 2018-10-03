@@ -1,15 +1,26 @@
-<phpunit backupGlobals="true" bootstrap="./vendor/autoload.php">
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/5.7/phpunit.xsd"
+         backupStaticAttributes="false"
+         backupGlobals="true"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         bootstrap="tests/bootstrap.php"
+>
     <filter>
         <whitelist>
-            <directory>./src</directory>
+            <directory>src</directory>
         </whitelist>
     </filter>
+
     <testsuites>
-        <testsuite name="Close.io Api Wrapper Tests">
-            <directory>./tests</directory>
+        <testsuite name="Close.io Api Wrapper Test Suite">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
 </phpunit>

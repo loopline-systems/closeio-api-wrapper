@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\User;
 
 class UserApi extends AbstractApi
@@ -55,12 +54,10 @@ class UserApi extends AbstractApi
             '_fields' => $fields,
         ]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $user) {
-                $users[] = new User($user);
-            }
+        foreach ($responseData['data'] as $user) {
+            $users[] = new User($user);
         }
 
         return $users;
@@ -73,18 +70,12 @@ class UserApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException If a user with the given ID doesn't exists
      */
     public function get(string $id, array $fields = []): User
     {
         $response = $this->client->get($this->prepareUrlForKey('get-user', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new User($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new User($response->getDecodedBody());
     }
 
     /**
@@ -93,26 +84,18 @@ class UserApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException
      */
     public function getCurrent(array $fields = []): User
     {
         $response = $this->client->get($this->prepareUrlForKey('get-current-user'), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new User($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new User($response->getDecodedBody());
     }
 
     /**
      * Gets the information about the current logged-in user.
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use getCurrent() instead
      */
@@ -143,8 +126,6 @@ class UserApi extends AbstractApi
      * @param string $id The ID of the user
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException If a user with the given ID doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */

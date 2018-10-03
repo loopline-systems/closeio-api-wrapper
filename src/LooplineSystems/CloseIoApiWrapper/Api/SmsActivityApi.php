@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\SmsActivity;
 
 class SmsActivityApi extends AbstractApi
@@ -60,12 +58,10 @@ class SmsActivityApi extends AbstractApi
             '_fields' => $fields,
         ]));
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $activity) {
-                $activities[] = new SmsActivity($activity);
-            }
+        foreach ($responseData['data'] as $activity) {
+            $activities[] = new SmsActivity($activity);
         }
 
         return $activities;
@@ -78,19 +74,12 @@ class SmsActivityApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return SmsActivity
-     *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): SmsActivity
     {
         $response = $this->client->get($this->prepareUrlForKey('get-sms', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new SmsActivity($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new SmsActivity($response->getDecodedBody());
     }
 
     /**
@@ -99,19 +88,13 @@ class SmsActivityApi extends AbstractApi
      * @param SmsActivity $activity The information of the activity to create
      *
      * @return SmsActivity
-     *
-     * @throws BadApiRequestException
      */
     public function create(SmsActivity $activity): SmsActivity
     {
         $response = $this->client->post($this->prepareUrlForKey('add-sms'), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new SmsActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new SmsActivity($responseData);
     }
 
     /**
@@ -120,8 +103,6 @@ class SmsActivityApi extends AbstractApi
      * @param SmsActivity $activity The activity to update
      *
      * @return SmsActivity
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function update(SmsActivity $activity): SmsActivity
     {
@@ -132,19 +113,13 @@ class SmsActivityApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-sms', ['id' => $id]), $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new SmsActivity($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new SmsActivity($responseData);
     }
 
     /**
      * Deletes the given SMS activity.
      *
      * @param SmsActivity $activity The activity to delete
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function delete(SmsActivity $activity): void
     {

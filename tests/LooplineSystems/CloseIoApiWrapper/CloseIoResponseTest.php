@@ -58,16 +58,16 @@ class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider isErrorDataProvider
+     * @dataProvider hasErrorDataProvider
      */
-    public function testIsError(string $responseBody, bool $isError): void
+    public function testHasError(string $responseBody, bool $isError): void
     {
         $response = new CloseIoResponse(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo'), StatusCodeInterface::STATUS_OK, $responseBody);
 
-        $this->assertSame($isError, $response->isError());
+        $this->assertSame($isError, $response->hasError());
     }
 
-    public function isErrorDataProvider(): array
+    public function hasErrorDataProvider(): array
     {
         return [
             ['{"error":"foo"}', true],

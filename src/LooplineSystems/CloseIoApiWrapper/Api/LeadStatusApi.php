@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
 
 class LeadStatusApi extends AbstractApi
@@ -58,12 +56,10 @@ class LeadStatusApi extends AbstractApi
             '_fields' => $fields,
         ]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $leadStatus) {
-                $leadStatuses[] = new LeadStatus($leadStatus);
-            }
+        foreach ($responseData['data'] as $leadStatus) {
+            $leadStatuses[] = new LeadStatus($leadStatus);
         }
 
         return $leadStatuses;
@@ -76,19 +72,12 @@ class LeadStatusApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return LeadStatus
-     *
-     * @throws ResourceNotFoundException If a lead status with the given ID doesn't
-     *                                   exists
      */
     public function get(string $id, array $fields = []): LeadStatus
     {
         $response = $this->client->get($this->prepareUrlForKey('get-status', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new LeadStatus($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new LeadStatus($response->getDecodedBody());
     }
 
     /**
@@ -103,11 +92,7 @@ class LeadStatusApi extends AbstractApi
         $response = $this->client->post($this->prepareUrlForKey('add-status'), $leadStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new LeadStatus($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new LeadStatus($responseData);
     }
 
     /**
@@ -116,10 +101,6 @@ class LeadStatusApi extends AbstractApi
      * @param LeadStatus $leadStatus The lead status to update
      *
      * @return LeadStatus
-     *
-     * @throws ResourceNotFoundException If a lead status with the given ID doesn't
-     *                                   exists
-     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(LeadStatus $leadStatus): LeadStatus
     {
@@ -130,11 +111,7 @@ class LeadStatusApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), $leadStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new LeadStatus($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new LeadStatus($responseData);
     }
 
     /**
@@ -174,9 +151,6 @@ class LeadStatusApi extends AbstractApi
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a lead status with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateStatus(LeadStatus $leadStatus): LeadStatus
@@ -207,9 +181,6 @@ class LeadStatusApi extends AbstractApi
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a lead status with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getStatus(string $leadStatusId): LeadStatus
@@ -223,9 +194,6 @@ class LeadStatusApi extends AbstractApi
      * Deletes the given lead status.
      *
      * @param string $id The ID of the lead status to delete
-     *
-     * @throws ResourceNotFoundException If a lead status with the given ID
-     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */

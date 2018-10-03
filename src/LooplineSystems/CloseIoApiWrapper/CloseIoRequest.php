@@ -88,6 +88,16 @@ class CloseIoRequest
     }
 
     /**
+     * Sets the parameters to send with this request.
+     *
+     * @param array $params The parameters
+     */
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
+
+    /**
      * Gets the parameters to send as body of this request (only POST and PUT
      * HTTP methods can contain a body).
      *
@@ -100,16 +110,6 @@ class CloseIoRequest
         }
 
         return [];
-    }
-
-    /**
-     * Sets the parameters to send with this request.
-     *
-     * @param array $params The parameters
-     */
-    public function setParams(array $params): void
-    {
-        $this->params = $params;
     }
 
     /**

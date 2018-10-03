@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Task;
 
 class TaskApi extends AbstractApi
@@ -57,12 +55,10 @@ class TaskApi extends AbstractApi
             '_fields' => $fields,
         ]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $task) {
-                $tasks[] = new Task($task);
-            }
+        foreach ($responseData['data'] as $task) {
+            $tasks[] = new Task($task);
         }
 
         return $tasks;
@@ -75,19 +71,12 @@ class TaskApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Task
-     *
-     * @throws ResourceNotFoundException If a task with the given ID doesn't
-     *                                   exists
      */
     public function get(string $id, array $fields = []): Task
     {
         $response = $this->client->get($this->prepareUrlForKey('get-task', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Task($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new Task($response->getDecodedBody());
     }
 
     /**
@@ -96,19 +85,13 @@ class TaskApi extends AbstractApi
      * @param Task $task The information of the task to create
      *
      * @return Task
-     *
-     * @throws BadApiRequestException
      */
     public function create(Task $task): Task
     {
         $response = $this->client->post($this->prepareUrlForKey('add-task'), $task->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Task($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new Task($responseData);
     }
 
     /**
@@ -117,8 +100,6 @@ class TaskApi extends AbstractApi
      * @param Task $task The task to update
      *
      * @return Task
-     *
-     * @throws BadApiRequestException If the request contained invalid data
      */
     public function update(Task $task): Task
     {
@@ -129,11 +110,7 @@ class TaskApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-task', ['id' => $id]), $task->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Task($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new Task($responseData);
     }
 
     /**
@@ -169,9 +146,6 @@ class TaskApi extends AbstractApi
      *
      * @return Task
      *
-     * @throws ResourceNotFoundException If a task with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getTask($id): Task
@@ -204,9 +178,6 @@ class TaskApi extends AbstractApi
      *
      * @return Task
      *
-     * @throws ResourceNotFoundException If a task with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateTask(Task $task): Task
@@ -220,9 +191,6 @@ class TaskApi extends AbstractApi
      * Deletes the given task.
      *
      * @param string $id The ID of the task to delete
-     *
-     * @throws ResourceNotFoundException If a task with the given ID doesn't
-     *                                   exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */

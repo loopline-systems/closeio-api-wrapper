@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper;
 
 use Http\Client\HttpClient;
+use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoResponseException;
 use LooplineSystems\CloseIoApiWrapper\Exception\JsonException;
 
@@ -45,6 +46,10 @@ interface ClientInterface
      * @param array  $params   The parameters to send with the request
      *
      * @return CloseIoResponse
+     *
+     * @throws CloseIoException         If an error happens while processing the request
+     * @throws CloseIoResponseException If the response errored
+     * @throws JsonException            If the response body could not be parsed as JSON
      */
     public function get(string $endpoint, array $params = []): CloseIoResponse;
 
@@ -55,6 +60,10 @@ interface ClientInterface
      * @param array  $params   The parameters to send with the request
      *
      * @return CloseIoResponse
+     *
+     * @throws CloseIoException         If an error happens while processing the request
+     * @throws CloseIoResponseException If the response errored
+     * @throws JsonException            If the response body could not be parsed as JSON
      */
     public function post(string $endpoint, array $params = []): CloseIoResponse;
 
@@ -65,6 +74,10 @@ interface ClientInterface
      * @param array  $params   The parameters to send with the request
      *
      * @return CloseIoResponse
+     *
+     * @throws CloseIoException         If an error happens while processing the request
+     * @throws CloseIoResponseException If the response errored
+     * @throws JsonException            If the response body could not be parsed as JSON
      */
     public function put(string $endpoint, array $params = []): CloseIoResponse;
 
@@ -75,6 +88,10 @@ interface ClientInterface
      * @param array  $params   The parameters to send with the request
      *
      * @return CloseIoResponse
+     *
+     * @throws CloseIoException         If an error happens while processing the request
+     * @throws CloseIoResponseException If the response errored
+     * @throws JsonException            If the response body could not be parsed as JSON
      */
     public function delete(string $endpoint, array $params = []): CloseIoResponse;
 
@@ -85,8 +102,9 @@ interface ClientInterface
      *
      * @return CloseIoResponse
      *
-     * @throws JsonException            If the response body could not be parsed as JSON
+     * @throws CloseIoException         If an error happens while processing the request
      * @throws CloseIoResponseException If the response errored
+     * @throws JsonException            If the response body could not be parsed as JSON
      */
     public function sendRequest(CloseIoRequest $request): CloseIoResponse;
 }

@@ -102,7 +102,6 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
      *
      * @param Lead $lead
      *
@@ -125,9 +124,6 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($originalLead->getId(), $response->getId());
     }
 
-    /**
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
-     */
     public function testDeleteLead()
     {
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));

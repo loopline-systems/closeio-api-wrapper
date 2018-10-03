@@ -12,18 +12,21 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
+use Fig\Http\Message\RequestMethodInterface;
+use Fig\Http\Message\StatusCodeInterface;
 use Http\Client\Common\Plugin\AuthenticationPlugin;
 use Http\Client\Common\Plugin\BaseUriPlugin;
-use Http\Client\Common\Plugin\ErrorPlugin;
 use Http\Client\Common\Plugin\HeaderSetPlugin;
 use Http\Client\Common\PluginClient;
-use Http\Client\HttpClient;
+use Http\Client\Exception as HttpClientException;
+use Http\Client\HttpClient as HttpClientInterface;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Discovery\UriFactoryDiscovery;
 use Http\Message\Authentication\BasicAuth;
 use Http\Message\MessageFactory;
 use Http\Message\UriFactory;
+use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoResponseException;
 
 /**
@@ -49,7 +52,7 @@ final class Client implements ClientInterface
     private $configuration;
 
     /**
-     * @var HttpClient The HTTP client
+     * @var HttpClientInterface The HTTP client
      */
     private $httpClient;
 
@@ -66,12 +69,12 @@ final class Client implements ClientInterface
     /**
      * Constructor.
      *
-     * @param Configuration       $configuration  The configuration of the client
-     * @param HttpClient|null     $httpClient     The HTTP client
-     * @param UriFactory|null     $uriFactory     The URI factory
-     * @param MessageFactory|null $messageFactory The factory of PSR-7 requests
+     * @param Configuration            $configuration  The configuration of the client
+     * @param HttpClientInterface|null $httpClient     The HTTP client
+     * @param UriFactory|null          $uriFactory     The URI factory
+     * @param MessageFactory|null      $messageFactory The factory of PSR-7 requests
      */
-    public function __construct(Configuration $configuration, ?HttpClient $httpClient = null, ?UriFactory $uriFactory = null, ?MessageFactory $messageFactory = null)
+    public function __construct(Configuration $configuration, ?HttpClientInterface $httpClient = null, ?UriFactory $uriFactory = null, ?MessageFactory $messageFactory = null)
     {
         $this->configuration = $configuration;
         $this->uriFactory = $uriFactory ?: UriFactoryDiscovery::find();
@@ -90,7 +93,7 @@ final class Client implements ClientInterface
     /**
      * {@inheritdoc}
      */
-    public function getHttpClient(): HttpClient
+    public function getHttpClient(): HttpClientInterface
     {
         return $this->httpClient;
     }
@@ -100,7 +103,7 @@ final class Client implements ClientInterface
      */
     public function get(string $endpoint, array $params = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest('GET', $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, $endpoint, $params));
     }
 
     /**
@@ -108,7 +111,7 @@ final class Client implements ClientInterface
      */
     public function post(string $endpoint, array $params = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest('POST', $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_POST, $endpoint, $params));
     }
 
     /**
@@ -116,7 +119,7 @@ final class Client implements ClientInterface
      */
     public function put(string $endpoint, array $params = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest('PUT', $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_PUT, $endpoint, $params));
     }
 
     /**
@@ -124,7 +127,7 @@ final class Client implements ClientInterface
      */
     public function delete(string $endpoint, array $params = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest('DELETE', $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_DELETE, $endpoint, $params));
     }
 
     /**
@@ -139,12 +142,17 @@ final class Client implements ClientInterface
         }
 
         $rawRequest = $this->messageFactory->createRequest($request->getMethod(), $request->getUrl(), [], $requestBody);
-        $rawResponse = $this->httpClient->sendRequest($rawRequest);
+
+        try {
+            $rawResponse = $this->httpClient->sendRequest($rawRequest);
+        } catch (HttpClientException $exception) {
+            throw new CloseIoException($exception->getMessage(), $exception->getCode(), $exception);
+        }
 
         $response = new CloseIoResponse($request, $rawResponse->getStatusCode(), (string) $rawResponse->getBody(), $rawResponse->getHeaders());
 
-        if ($response->isError()) {
-            throw new CloseIoResponseException($response);
+        if (StatusCodeInterface::STATUS_OK !== $response->getHttpStatusCode() || $response->hasError()) {
+            throw CloseIoResponseException::create($response);
         }
 
         return $response;
@@ -155,11 +163,11 @@ final class Client implements ClientInterface
      * use the base URL specified in the configuration and the access token for
      * the Basic Auth.
      *
-     * @param HttpClient $httpClient The HTTP client to decorate
+     * @param HttpClientInterface $httpClient The HTTP client to decorate
      *
-     * @return HttpClient
+     * @return HttpClientInterface
      */
-    private function createHttpClientInstance(HttpClient $httpClient): HttpClient
+    private function createHttpClientInstance(HttpClientInterface $httpClient): HttpClientInterface
     {
         return new PluginClient($httpClient, [
             new BaseUriPlugin($this->uriFactory->createUri($this->configuration->getBaseUrl())),
@@ -168,7 +176,6 @@ final class Client implements ClientInterface
                 'User-Agent' => self::USER_AGENT,
                 'Content-Type' => 'application/json',
             ]),
-            new ErrorPlugin(),
         ]);
     }
 }

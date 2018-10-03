@@ -9,6 +9,8 @@ use Fig\Http\Message\StatusCodeInterface;
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoAuthenticationException;
+use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoBadRequestException;
+use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoResponseException;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoThrottleException;
 use PHPUnit\Framework\TestCase;
@@ -73,6 +75,18 @@ class CloseIoResponseExceptionTest extends TestCase
                 '{"error":"foo"}',
                 'foo',
                 CloseIoThrottleException::class,
+            ],
+            [
+                StatusCodeInterface::STATUS_NOT_FOUND,
+                '{"error":"foo"}',
+                'foo',
+                CloseIoResourceNotFoundException::class,
+            ],
+            [
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                '{"error":"foo"}',
+                'foo',
+                CloseIoBadRequestException::class,
             ],
             [
                 StatusCodeInterface::STATUS_SERVICE_UNAVAILABLE,

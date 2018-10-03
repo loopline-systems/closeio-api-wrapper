@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
+use Fig\Http\Message\RequestMethodInterface;
+use Fig\Http\Message\StatusCodeInterface;
+use Http\Client\Exception\TransferException;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Mock\Client as HttpClientMock;
 use LooplineSystems\CloseIoApiWrapper\Client;
@@ -22,23 +25,34 @@ use Psr\Http\Message\RequestInterface;
 
 class ClientTest extends TestCase
 {
+    /**
+     * @var HttpClientMock
+     */
+    private $httpClient;
+
+    /**
+     * @var Client
+     */
+    private $client;
+
+    protected function setUp()
+    {
+        $this->httpClient = new HttpClientMock();
+        $this->client = new Client(new Configuration('foo'), $this->httpClient);
+    }
+
     public function testGetConfiguration(): void
     {
-        $configuration = new Configuration('foo');
-        $client = new Client($configuration);
-
-        $this->assertSame($configuration, $client->getConfiguration());
+        $this->assertAttributeSame($this->client->getConfiguration(), 'configuration', $this->client);
     }
 
     public function testGet(): void
     {
-        $httpClient = new HttpClientMock();
-        $httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{}'));
 
-        $client = new Client(new Configuration('foo'), $httpClient);
-        $client->get('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
+        $this->client->get('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
 
-        $lastRequest = $httpClient->getLastRequest();
+        $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
@@ -47,13 +61,11 @@ class ClientTest extends TestCase
 
     public function testPost(): void
     {
-        $httpClient = new HttpClientMock();
-        $httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{}'));
 
-        $client = new Client(new Configuration('foo'), $httpClient);
-        $client->post('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
+        $this->client->post('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
 
-        $lastRequest = $httpClient->getLastRequest();
+        $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
@@ -62,13 +74,11 @@ class ClientTest extends TestCase
 
     public function testPut(): void
     {
-        $httpClient = new HttpClientMock();
-        $httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{}'));
 
-        $client = new Client(new Configuration('foo'), $httpClient);
-        $client->put('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
+        $this->client->put('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
 
-        $lastRequest = $httpClient->getLastRequest();
+        $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
@@ -77,13 +87,11 @@ class ClientTest extends TestCase
 
     public function testDelete(): void
     {
-        $httpClient = new HttpClientMock();
-        $httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{}'));
 
-        $client = new Client(new Configuration('foo'), $httpClient);
-        $client->delete('/foo/', []);
+        $this->client->delete('/foo/', []);
 
-        $lastRequest = $httpClient->getLastRequest();
+        $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         $this->assertEquals('https://app.close.io/api/v1/foo/', (string) $lastRequest->getUri());
@@ -92,18 +100,46 @@ class ClientTest extends TestCase
 
     public function testSendRequest(): void
     {
-        $httpClient = new HttpClientMock();
-        $httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{"foo":"bar"}'));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{"foo":"bar"}'));
 
-        $client = new Client(new Configuration('foo'), $httpClient);
-        $response = $client->sendRequest(new CloseIoRequest('GET', '/foo/', ['foo' => 'bar', 'bar' => 'foo']));
+        $response = $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/', ['foo' => 'bar', 'bar' => 'foo']));
 
-        $lastRequest = $httpClient->getLastRequest();
+        $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
         $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
         $this->assertEquals('GET', $lastRequest->getMethod());
         $this->assertEquals('{"foo":"bar"}', (string) $response->getBody());
         $this->assertEquals(['foo' => 'bar'], $response->getDecodedBody());
+    }
+
+    /**
+     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException
+     */
+    public function testSendRequestThrowsOnBadRequest(): void
+    {
+        $this->httpClient->addException(new TransferException());
+
+        $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/'));
+    }
+
+    /**
+     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException
+     */
+    public function testSendRequestThrowsOnResponseThatHasErrors(): void
+    {
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{"error":"foo"}'));
+
+        $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/'));
+    }
+
+    /**
+     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException
+     */
+    public function testSendRequestThrowsOnResponseWithStatusCodeDifferentFromOk()
+    {
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_NOT_FOUND, null, [], '{}'));
+
+        $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/'));
     }
 }

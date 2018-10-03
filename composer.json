@@ -30,7 +30,6 @@
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.0",
-        "php-http/curl-client": "^1.7",
         "php-http/message": "^1.7",
         "php-http/mock-client": "^1.1",
         "phpstan/phpstan": "^0.10.3",

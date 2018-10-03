@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\OpportunityStatus;
 
 class OpportunityStatusApi extends AbstractApi
@@ -58,12 +56,10 @@ class OpportunityStatusApi extends AbstractApi
             '_fields' => $fields,
         ]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $opportunityStatus) {
-                $opportunityStatuses[] = new OpportunityStatus($opportunityStatus);
-            }
+        foreach ($responseData['data'] as $opportunityStatus) {
+            $opportunityStatuses[] = new OpportunityStatus($opportunityStatus);
         }
 
         return $opportunityStatuses;
@@ -77,19 +73,12 @@ class OpportunityStatusApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return OpportunityStatus
-     *
-     * @throws ResourceNotFoundException If an opportunity status with the given
-     *                                   ID doesn't exists
      */
     public function get(string $id, array $fields = []): OpportunityStatus
     {
         $response = $this->client->get($this->prepareUrlForKey('get-status', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new OpportunityStatus($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new OpportunityStatus($response->getDecodedBody());
     }
 
     /**
@@ -98,19 +87,13 @@ class OpportunityStatusApi extends AbstractApi
      * @param OpportunityStatus $opportunityStatus The opportunity status to create
      *
      * @return OpportunityStatus
-     *
-     * @throws BadApiRequestException
      */
     public function create(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
         $response = $this->client->post($this->prepareUrlForKey('add-status'), $opportunityStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new OpportunityStatus($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new OpportunityStatus($responseData);
     }
 
     /**
@@ -119,9 +102,6 @@ class OpportunityStatusApi extends AbstractApi
      * @param OpportunityStatus $opportunityStatus The opportunity status to update
      *
      * @return OpportunityStatus
-     *
-     * @throws ResourceNotFoundException If an opportunity status with the given
-     *                                   ID doesn't exists
      */
     public function update(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
@@ -132,11 +112,7 @@ class OpportunityStatusApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), $opportunityStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new OpportunityStatus($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new OpportunityStatus($responseData);
     }
 
     /**
@@ -176,9 +152,6 @@ class OpportunityStatusApi extends AbstractApi
      *
      * @return OpportunityStatus
      *
-     * @throws ResourceNotFoundException If an opportunity status with the given
-     *                                   ID doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateStatus(OpportunityStatus $opportunityStatus): OpportunityStatus
@@ -209,9 +182,6 @@ class OpportunityStatusApi extends AbstractApi
      * @param string $opportunityStatusId The ID of the opportunityStatus
      *
      * @return OpportunityStatus
-     *
-     * @throws ResourceNotFoundException If an opportunity status with the given
-     *                                   ID doesn't exists
      */
     public function getStatus($opportunityStatusId): OpportunityStatus
     {

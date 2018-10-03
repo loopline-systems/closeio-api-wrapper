@@ -15,8 +15,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Api;
 use LooplineSystems\CloseIoApiWrapper\ClientInterface;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Activity;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 use LooplineSystems\CloseIoApiWrapper\Model\EmailActivity;
@@ -74,12 +72,10 @@ class ActivityApi extends AbstractApi
             '_fields' => $fields,
         ]));
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $activity) {
-                $activities[] = new Activity($activity);
-            }
+        foreach ($responseData['data'] as $activity) {
+            $activities[] = new Activity($activity);
         }
 
         return $activities;
@@ -91,8 +87,6 @@ class ActivityApi extends AbstractApi
      * @param NoteActivity $activity The information of the activity to create
      *
      * @return NoteActivity
-     *
-     * @throws BadApiRequestException If any error occurs during the request
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use NoteActivityApi::create() instead.
      */
@@ -114,8 +108,6 @@ class ActivityApi extends AbstractApi
      *
      * @return CallActivity
      *
-     * @throws BadApiRequestException If any error occurs during the request
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use CallActivityApi::create() instead.
      */
     public function addCall(CallActivity $activity)
@@ -135,8 +127,6 @@ class ActivityApi extends AbstractApi
      *                                create
      *
      * @return EmailActivity
-     *
-     * @throws BadApiRequestException If any error occurs during the request
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use EmailActivityApi::create() instead.
      */
@@ -233,9 +223,6 @@ class ActivityApi extends AbstractApi
      *
      * @return SmsActivity
      *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::get() instead.
      */
     public function getSms(string $id): SmsActivity
@@ -254,10 +241,6 @@ class ActivityApi extends AbstractApi
      * @param SmsActivity $activity The activity to update
      *
      * @return SmsActivity
-     *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
-     * @throws BadApiRequestException    If the request contained invalid data
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::update() instead.
      */
@@ -278,8 +261,6 @@ class ActivityApi extends AbstractApi
      *
      * @return SmsActivity
      *
-     * @throws BadApiRequestException If any error occurs during the request
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::create() instead.
      */
     public function addSms(SmsActivity $activity): SmsActivity
@@ -296,9 +277,6 @@ class ActivityApi extends AbstractApi
      * Deletes the given SMS activity.
      *
      * @param string $activityId The ID of the activity to delete
-     *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::delete() instead.
      */

@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 
 class ContactApi extends AbstractApi
@@ -57,12 +55,10 @@ class ContactApi extends AbstractApi
             '_fields' => $fields,
         ]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            $responseData = $response->getDecodedBody();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData['data'] as $contact) {
-                $contacts[] = new Contact($contact);
-            }
+        foreach ($responseData['data'] as $contact) {
+            $contacts[] = new Contact($contact);
         }
 
         return $contacts;
@@ -75,19 +71,12 @@ class ContactApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Contact
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
      */
     public function get(string $id, array $fields = []): Contact
     {
         $response = $this->client->get($this->prepareUrlForKey('get-contact', ['id' => $id]), ['_fields' => $fields]);
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Contact($response->getDecodedBody());
-        }
-
-        throw new ResourceNotFoundException();
+        return new Contact($response->getDecodedBody());
     }
 
     /**
@@ -96,19 +85,13 @@ class ContactApi extends AbstractApi
      * @param Contact $contact The information of the contact to create
      *
      * @return Contact
-     *
-     * @throws BadApiRequestException
      */
     public function create(Contact $contact): Contact
     {
         $response = $this->client->post($this->prepareUrlForKey('add-contact'), $contact->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Contact($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new Contact($responseData);
     }
 
     /**
@@ -117,10 +100,6 @@ class ContactApi extends AbstractApi
      * @param Contact $contact The contact to update
      *
      * @return Contact
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
-     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(Contact $contact): Contact
     {
@@ -131,11 +110,7 @@ class ContactApi extends AbstractApi
         $response = $this->client->put($this->prepareUrlForKey('update-contact', ['id' => $id]), $contact->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
-        if (200 === $response->getHttpStatusCode() && !$response->isError()) {
-            return new Contact($responseData);
-        }
-
-        throw new BadApiRequestException($responseData['error']);
+        return new Contact($responseData);
     }
 
     /**
@@ -173,9 +148,6 @@ class ContactApi extends AbstractApi
      *
      * @return Contact
      *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getContact($contactId): Contact
@@ -207,9 +179,6 @@ class ContactApi extends AbstractApi
      * @param Contact $contact The contact to update
      *
      * @return Contact
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */

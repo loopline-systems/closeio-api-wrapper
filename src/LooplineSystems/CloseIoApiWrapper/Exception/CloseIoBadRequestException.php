@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -7,15 +10,13 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
+namespace LooplineSystems\CloseIoApiWrapper\Exception;
 
-class UndefinedMethodException extends \Exception
+/**
+ * This exception is thrown when a request contains invalid data.
+ *
+ * @author Stefano Arlandini <sarlandini@alice.it>
+ */
+class CloseIoBadRequestException extends CloseIoException
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct($method)
-    {
-        parent::__construct(sprintf('Method: %s does not exist', $method));
-    }
 }

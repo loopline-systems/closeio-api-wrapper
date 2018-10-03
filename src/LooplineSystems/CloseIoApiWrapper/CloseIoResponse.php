@@ -111,7 +111,7 @@ class CloseIoResponse
      *
      * @return bool
      */
-    public function isError(): bool
+    public function hasError(): bool
     {
         return isset($this->decodedBody['error']) || isset($this->decodedBody['errors']) || isset($this->decodedBody['field-errors']);
     }
