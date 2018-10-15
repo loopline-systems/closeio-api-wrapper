@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -10,107 +13,68 @@
 namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
-use LooplineSystems\CloseIoApiWrapper\Library\Api\ApiHandler;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
+use LooplineSystems\CloseIoApiWrapper\Exception\InvalidHttpMethodException;
+use PHPUnit\Framework\TestCase;
 
-class CloseIoRequestTest extends \PHPUnit\Framework\TestCase
+class CloseIoRequestTest extends TestCase
 {
-
-    /**
-     * @description testing basic initialization
-     */
-    public function testCreate()
+    public function testGettersAndSetters(): void
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
-        $request = new CloseIoRequest($closeIoApiHandler);
+        $request = new CloseIoRequest('GET', '/foo/', ['foo' => 'bar']);
 
-        $this->assertInstanceOf(CloseIoRequest::class, $request);
+        $this->assertEquals('GET', $request->getMethod());
+        $this->assertEquals('/foo/', $request->getEndpoint());
+        $this->assertEquals(['foo' => 'bar'], $request->getParams());
     }
 
     /**
-     * @description test that 'accept' and 'content type' headers match json format
+     * @dataProvider getUrlHandlesParametersCorrectlyDataProvider
      */
-    public function testHeadersAreJson()
+    public function testGetUrlHandlesParametersCorrectly(string $initialUrl, string $expectedUrl, array $params): void
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
-        $request = new CloseIoRequest($closeIoApiHandler);
+        $request = new CloseIoRequest('GET', $initialUrl, $params);
 
-        $headers = $request->getHeaders();
-
-        $this->assertContains('Accept: application/json', $headers);
-        $this->assertContains('Content-Type: application/json', $headers);
+        $this->assertEquals($expectedUrl, $request->getUrl());
     }
 
-    /**
-     * @param mixed $data
-     * @param string $expectedData
-     *
-     * @dataProvider validJSONStringProvider
-     * @throws InvalidParamException
-     */
-    public function testValidJSONData($data, $expectedData)
-    {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
-        $request = new CloseIoRequest($closeIoApiHandler);
-
-        $request->setData($data);
-        $this->assertEquals($expectedData, $request->getData());
-    }
-
-    /**
-     * @return array
-     */
-    public function validJSONStringProvider()
+    public function getUrlHandlesParametersCorrectlyDataProvider(): array
     {
         return [
-            [[], []],
-            [2, 2],
-            [2.1, 2.1],
-            [null, null],
-            [true, true],
-            [false, false],
-            ['{"Value": "This is valid JSON."}', ['Value' => 'This is valid JSON.']],
-            [
-                '{"Value": [], "Value Two": {"name": "This is also valid"}}',
-                ["Value" => [], 'Value Two' => ['name' => 'This is also valid']]
-            ],
-            [['this is an array, not json at all!'], ['this is an array, not json at all!']],
-            ['"I\'m a json string"', 'I\'m a json string']
+            ['/foo/', '/foo/', []],
+            ['/foo/?foo=bar', '/foo/?bar=foo&foo=bar', ['bar' => 'foo']],
+            ['/foo/?', '/foo/?', []],
+            ['/foo/?', '/foo/?foo=bar', ['foo' => 'bar']],
+            ['/foo/', '/foo/', ['_fields' => []]],
+            ['/foo/', '/foo/?_fields=foo%2Cbar%2Cid', ['_fields' => ['foo', 'bar']]],
         ];
     }
 
     /**
-     * @param mixed $data
-     *
-     * @dataProvider brokenJSONStringProvider
-     * @throws InvalidParamException
+     * @dataProvider requestMethodIsValidatedAndNormalizedDataProvider
      */
-    public function testBrokenJSONData($data)
+    public function testRequestMethodIsValidatedAndNormalized(string $method, string $normalizedMethod, bool $isValid): void
     {
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiHandler = new ApiHandler($closeIoConfig);
-        $request = new CloseIoRequest($closeIoApiHandler);
+        if (!$isValid) {
+            $this->expectException(InvalidHttpMethodException::class);
+        }
 
-        $this->expectException(InvalidParamException::class);
-        $request->setData($data);
+        $request = new CloseIoRequest($method, '/foo/', ['foo' => 'bar']);
+
+        $this->assertEquals($normalizedMethod, $request->getMethod());
     }
 
-    /**
-     * @return array
-     */
-    public function brokenJSONStringProvider()
+    public function requestMethodIsValidatedAndNormalizedDataProvider(): array
     {
         return [
-            [new \stdClass(), false],
-            ['{"Problem: {"name": "This time problem is missing a closing quotation mark"}}'],
+            ['GET', 'GET', true],
+            ['POST', 'POST', true],
+            ['PUT', 'PUT', true],
+            ['DELETE', 'DELETE', true],
+            ['get', 'GET', false],
+            ['post', 'POST', false],
+            ['put', 'PUT', false],
+            ['delete', 'DELETE', false],
+            ['foo', 'foo', false],
         ];
     }
 }

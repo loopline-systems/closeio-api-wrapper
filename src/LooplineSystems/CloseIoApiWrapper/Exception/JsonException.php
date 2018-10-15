@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -7,15 +10,13 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
+namespace LooplineSystems\CloseIoApiWrapper\Exception;
 
-class UrlNotSetException extends \Exception {
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct()
-    {
-        parent::__construct('Url not set');
-    }
+/**
+ * This exception is thrown when encoding/decoding of a JSON fails.
+ *
+ * @author Stefano Arlandini <sarlandini@alice.it>
+ */
+class JsonException extends CloseIoException
+{
 }

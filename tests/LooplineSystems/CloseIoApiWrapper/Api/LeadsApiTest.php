@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -9,13 +12,37 @@
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
+use Http\Discovery\MessageFactoryDiscovery;
+use Http\Mock\Client as HttpClientMock;
+use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
+use LooplineSystems\CloseIoApiWrapper\Client;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
-use LooplineSystems\CloseIoApiWrapper\CloseIoConfig;
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
+use Psr\Http\Message\RequestInterface;
 
 class LeadsApiTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var HttpClientMock
+     */
+    protected $httpClient;
+
+    /**
+     * @var LeadApi
+     */
+    protected $leadApi;
+
+    protected function setUp()
+    {
+        $this->httpClient = new HttpClientMock();
+
+        $client = new Client(new Configuration('foo'), $this->httpClient);
+        $closeIoApiWrapper = new CloseIoApiWrapper($client);
+
+        $this->leadApi = $closeIoApiWrapper->getLeadApi();
+    }
+
     /**
      * @param Lead $lead
      *
@@ -24,25 +51,16 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      */
     public function testAddLead(Lead $lead)
     {
-        $leadsApi = $this->getLeadsApi();
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{"id":"TestIdString"}'));
 
         $returnedLead = clone $lead;
         $returnedLead->setId('TestIdString');
 
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode(201);
-        $expectedResponse->setRawData(json_encode($returnedLead));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
+        $createdLead = $this->leadApi->addLead($lead);
 
-        $leadsApi->setCurl($this->getMockResponderCurl($expectedResponse));
-
-        $responseLead = $leadsApi->addLead($lead);
-
-        $createdLead = $responseLead;
-
-        $this->assertTrue($createdLead->getName() === $lead->getName());
-        $this->assertNotEmpty($createdLead->getId());
-        $this->assertEmpty($lead->getId());
+        $this->assertNotSame($returnedLead, $createdLead);
+        $this->assertNull($lead->getId());
+        $this->assertEquals('TestIdString', $createdLead->getId());
     }
 
     /**
@@ -52,23 +70,13 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetLead($lead)
     {
-        $leadsApi = $this->getLeadsApi();
+        $lead->setId('TestId');
 
-        $id = 'TestId';
-        $lead->setId($id);
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], json_encode($lead)));
 
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode(200);
-        $expectedResponse->setRawData(json_encode($lead));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
+        $returnedLead = $this->leadApi->getLead('TestId');
 
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $leadsApi->setCurl($mockCurl);
-
-        $returnedLead = $leadsApi->getLead($id);
-
-        $this->assertTrue($returnedLead == $lead);
+        $this->assertEquals($returnedLead, $lead);
     }
 
     /**
@@ -79,32 +87,21 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
     public function testGetAllLeads($leadsArray)
     {
         $responseBody = [
-            CloseIoResponse::GET_ALL_RESPONSE_HAS_MORE_KEY => false,
-            CloseIoResponse::GET_ALL_RESPONSE_TOTAL_RESULTS_KEY => '3',
-            CloseIoResponse::GET_RESPONSE_DATA_KEY => $leadsArray
+            'has_more' => false,
+            'data' => $leadsArray
         ];
 
-        $leadsApi = $this->getLeadsApi();
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], json_encode($responseBody)));
 
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode(200);
-        $expectedResponse->setRawData(json_encode($responseBody));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
-
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $leadsApi->setCurl($mockCurl);
-
-        $returnedLeads = $leadsApi->getAllLeads();
+        $returnedLeads = $this->leadApi->getAllLeads();
 
         foreach ($returnedLeads as $key => $lead) {
-            $this->assertTrue($lead == $leadsArray[$key]);
+            $this->assertEquals($leadsArray[$key], $lead);
         }
     }
 
     /**
      * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
      *
      * @param Lead $lead
      *
@@ -112,83 +109,32 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      */
     public function testUpdateLead($lead)
     {
-        $leadsApi = $this->getLeadsApi();
-
         $lead->setId('TestId');
         $originalLead = clone $lead;
 
         $returnedLead = $lead;
         $returnedLead->setName('Test Name');
 
-        // init expected response
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode('200');
-        $expectedResponse->setRawData(json_encode($returnedLead));
-        $expectedResponse->setData(json_decode($expectedResponse->getRawData(), true));
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], json_encode($returnedLead)));
 
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $leadsApi->setCurl($mockCurl);
+        $response = $this->leadApi->updateLead($lead);
 
-        /* @var Lead $response */
-        $response = $leadsApi->updateLead($lead);
-
+        $this->assertNotSame($originalLead, $returnedLead);
         $this->assertEquals($lead->getDescription(), $response->getDescription());
         $this->assertEquals($originalLead->getId(), $response->getId());
     }
 
-    /**
-     * @throws \LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException
-     */
     public function testDeleteLead()
     {
-        $leadsApi = $this->getLeadsApi();
+        $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));
 
-        $id = 'lead-to-be-deleted';
+        $this->leadApi->deleteLead('foo');
 
-        // init expected response
-        $expectedResponse = new CloseIoResponse();
-        $expectedResponse->setReturnCode('200');
-        $expectedResponse->setCurlInfoRaw(['url' => $leadsApi->getApiHandler()->getConfig()->getUrl() . $id]);
+        $lastRequest = $this->httpClient->getLastRequest();
 
-        // create stub
-        $mockCurl = $this->getMockResponderCurl($expectedResponse);
-        $leadsApi->setCurl($mockCurl);
-
-        $leadsApi->deleteLead($id);
-    }
-
-    /**
-     * @return \LooplineSystems\CloseIoApiWrapper\Api\LeadApi
-     */
-    private function getLeadsApi()
-    {
-        // init wrapper
-        $closeIoConfig = new CloseIoConfig();
-        $closeIoConfig->setApiKey('testapikey');
-        $closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
-
-        return $closeIoApiWrapper->getLeadApi();
-    }
-
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     * @description Need to be careful of the order, if method() comes after expects() it will return null
-     */
-    private function getMockResponderCurl($expectedResponse)
-    {
-        // create stub
-        $mockCurl = $this->getMockBuilder('Curl')
-            ->setMethods(['getResponse'])
-            ->getMock();
-
-        // configure the stub.
-        $mockCurl->method('getResponse')->willReturn($expectedResponse);
-
-        $mockCurl->expects($this->once())
-            ->method('getResponse');
-
-        return $mockCurl;
+        $this->assertInstanceOf(RequestInterface::class, $lastRequest);
+        $this->assertEquals('https://app.close.io/api/v1/lead/foo/', (string) $lastRequest->getUri());
+        $this->assertEquals('DELETE', $lastRequest->getMethod());
     }
 
     /**

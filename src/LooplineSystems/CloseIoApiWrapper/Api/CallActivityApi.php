@@ -12,10 +12,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 
 class CallActivityApi extends AbstractApi
@@ -24,8 +21,6 @@ class CallActivityApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'CallActivityApi';
 
     /**
      * {@inheritdoc}
@@ -55,18 +50,16 @@ class CallActivityApi extends AbstractApi
     {
         /** @var CallActivity[] $activities */
         $activities = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-calls', null, [], array_merge($filters, [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ]))
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-calls'), array_merge($filters, [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]));
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        if (200 === $response->getHttpStatusCode() && !$response->hasError()) {
+            $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $activity) {
+            foreach ($responseData['data'] as $activity) {
                 $activities[] = new CallActivity($activity);
             }
         }
@@ -81,15 +74,12 @@ class CallActivityApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return CallActivity
-     *
-     * @throws ResourceNotFoundException If a call activity with the given ID
-     *                                   doesn't exists
      */
     public function get(string $id, array $fields = []): CallActivity
     {
-        $apiRequest = $this->prepareRequest('get-call', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-call', ['id' => $id]), ['_fields' => $fields]);
 
-        return new CallActivity($this->triggerGet($apiRequest)->getData());
+        return new CallActivity($response->getDecodedBody());
     }
 
     /**
@@ -99,23 +89,19 @@ class CallActivityApi extends AbstractApi
      *                               to create
      *
      * @return CallActivity
-     *
-     * @throws BadApiRequestException
      */
     public function create(CallActivity $activity): CallActivity
     {
-        $apiRequest = $this->prepareRequest('add-call', json_encode($activity));
+        $response = $this->client->post($this->prepareUrlForKey('add-call'), $activity->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new CallActivity($this->triggerPost($apiRequest)->getData());
+        return new CallActivity($responseData);
     }
 
     /**
      * Deletes the given call activity.
      *
      * @param CallActivity $activity The call activity to delete
-     *
-     * @throws ResourceNotFoundException If a call activity with the given ID
-     *                                   doesn't exists
      */
     public function delete(CallActivity $activity): void
     {
@@ -123,6 +109,6 @@ class CallActivityApi extends AbstractApi
 
         $activity->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-call', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-call', ['id' => $id]));
     }
 }

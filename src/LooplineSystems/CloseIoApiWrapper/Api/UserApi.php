@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\User;
 
 class UserApi extends AbstractApi
@@ -23,8 +21,6 @@ class UserApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'UserApi';
 
     /**
      * {@inheritdoc}
@@ -42,8 +38,8 @@ class UserApi extends AbstractApi
      * Gets all the users who are members of the same organizations as the user
      * currently making the request.
      *
-     * @param int      $offset    The offset from which start getting the items
-     * @param int      $limit     The maximum number of items to get
+     * @param int      $offset The offset from which start getting the items
+     * @param int      $limit  The maximum number of items to get
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return User[]
@@ -52,20 +48,16 @@ class UserApi extends AbstractApi
     {
         /** @var User[] $users */
         $users = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-users', null, [], [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ])
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-users'), [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]);
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $user) {
-                $users[] = new User($user);
-            }
+        foreach ($responseData['data'] as $user) {
+            $users[] = new User($user);
         }
 
         return $users;
@@ -74,44 +66,36 @@ class UserApi extends AbstractApi
     /**
      * Gets the information about the user that matches the given ID.
      *
-     * @param string $id The ID of the user
+     * @param string   $id     The ID of the user
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException If a user with the given ID doesn't exists
      */
-    public function get(string $id): User
+    public function get(string $id, array $fields = []): User
     {
-        $result = $this->triggerGet($this->prepareRequest('get-user', null, ['id' => $id]));
+        $response = $this->client->get($this->prepareUrlForKey('get-user', ['id' => $id]), ['_fields' => $fields]);
 
-        return new User($result->getData());
+        return new User($response->getDecodedBody());
+    }
+
+    /**
+     * Gets the information about the current logged-in user.
+     *
+     * @param string[] $fields The subset of fields to get (defaults to all)
+     *
+     * @return User
+     */
+    public function getCurrent(array $fields = []): User
+    {
+        $response = $this->client->get($this->prepareUrlForKey('get-current-user'), ['_fields' => $fields]);
+
+        return new User($response->getDecodedBody());
     }
 
     /**
      * Gets the information about the current logged-in user.
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException
-     */
-    public function getCurrent(): User
-    {
-        $result = $this->triggerGet($this->prepareRequest('get-current-user'));
-        $responseData = $result->getData();
-
-        if (200 === $result->getReturnCode() && !empty($responseData)) {
-            return new User($responseData);
-        }
-
-        throw new ResourceNotFoundException();
-    }
-
-    /**
-     * Gets the information about the current logged-in user.
-     *
-     * @return User
-     *
-     * @throws ResourceNotFoundException
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use getCurrent() instead
      */
@@ -142,8 +126,6 @@ class UserApi extends AbstractApi
      * @param string $id The ID of the user
      *
      * @return User
-     *
-     * @throws ResourceNotFoundException If a user with the given ID doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */

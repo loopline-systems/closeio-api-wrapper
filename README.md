@@ -1,8 +1,6 @@
 closeio-api-wrapper
 ===================
 
-PHP Wrapper to use the Close.io API
-
 [![License](https://img.shields.io/packagist/l/loopline-systems/closeio-api-wrapper.svg)](http://opensource.org/licenses/MIT)
 [![Build Status](http://img.shields.io/travis/loopline-systems/closeio-api-wrapper.svg)](https://travis-ci.org/loopline-systems/closeio-api-wrapper)
 [![Coverage Status](https://img.shields.io/coveralls/loopline-systems/closeio-api-wrapper.svg)](https://coveralls.io/r/loopline-systems/closeio-api-wrapper?branch=master)
@@ -12,22 +10,45 @@ PHP Wrapper to use the Close.io API
 [![Packagist](http://img.shields.io/packagist/dm/loopline-systems/closeio-api-wrapper.svg)](https://packagist.org/packages/loopline-systems/closeio-api-wrapper)
 [![Packagist](http://img.shields.io/packagist/dd/loopline-systems/closeio-api-wrapper.svg)](https://packagist.org/packages/loopline-systems/closeio-api-wrapper)
 
+The CloseIo API Wrapper is a package that allows you to access in an object
+oriented way the Close.io REST APIs and fetch or create data.
 
-Installation and Configuration
+Installation
 ------------
-Require via [Composer](https://github.com/composer/composer)<br />
-```bash
-composer require loopline-systems/closeio-api-wrapper
-```
+
+To install the library you will need to be using [Composer](https://github.com/composer/composer)
+in your project. To install it please see the [official docs](https://getcomposer.org/download/).
+CloseIo Api Wrapper uses Httplug to not be tied to any specific library that sends
+HTTP messages. This means that users are free to choose whichever PSR-7 implementation
+and HTTP client they want, be it Guzzle or a simple cURL client.
+
+If you just want to get started quickly you should run the following command:
+
+`composer require loopline-systems/closeio-api-wrapper php-http/curl-client nyholm/psr7`
+
+This will install the library itself along with an HTTP client adapter for
+Httplug that uses cURL and a PSR-7 implementation needed to create the
+messages. You do not need to use those packages if you don't want to: you
+may use any package that provides [php-http/async-client-implementation](https://packagist.org/providers/php-http/async-client-implementation)
+and [http-message-implementation](https://packagist.org/providers/psr/http-message-implementation).
 
 Usage
-------------
-```php
-// you can optionally pass in close.io api endpoint as init argument (it defaults to 'https://app.close.io/api/v1')
-$closeIoConfig = new CloseIoConfig();
-$closeIoConfig->setApiKey('yourApiKey');
+-----
 
-$closeIoApiWrapper = new CloseIoApiWrapper($closeIoConfig);
+To get started you just need to create an instance of the client and then use
+its method to query the REST APIs of Close.io.
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+
+use LooplineSystems\CloseIoApiWrapper\Client;
+use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
+use LooplineSystems\CloseIoApiWrapper\Configuration;
+
+$configuration = new Configuration('{api-key}');
+$client = new Client($configuration);
+$closeIoApiWrapper = new CloseIoApiWrapper($client);
+
 $leadsApi = $closeIoApiWrapper->getLeadApi();
 
 // create lead
@@ -68,6 +89,7 @@ $response = $leadsApi->addLead($lead);
 
 Adding Opportunities
 ----------------------
+
 ```php
 $opportunity = new Opportunity();
 $opportunity->setValue(500);
@@ -114,6 +136,7 @@ $activityApi->addEmail($sms);
 
 Updating custom fields
 ----------------------
+
 ```php
 $customField = new CustomField();
 $customField->setId('Custom field id')
@@ -124,28 +147,28 @@ $result = $customFieldApi->updateCustomField($customField);
 ```
 
 Info
-------------
-Right now just a few request are implemented, because the main need was to create leads.
-Feel free to add requests and create pull requests or go on forking the repo.
+----
 
-We use https://github.com/btford/adj-noun for our release names, so don`t worry they have no special meaning :)
+Right now just a few APIs are implemented, because the main need was to create
+leads. Feel free to add requests and create pull requests or go on forking the
+repository.
 
-Requirements
-------------
-
-PHP 5.6.0 or above
+We use https://github.com/btford/adj-noun for our release names, so don't worry
+they have no special meaning :)
 
 Authors
 -------
 
 Michael Devery - <michaeldevery@gmail.com><br />
 Marco Roßdeutscher - <marco.rossdeutscher@loopline-systems.com><br />
-Marc Zahn - <marc.zahn@loopline-systems.com><br />
+Marc Zahn - <marc.zahn@loopline-systems.com>
 
 See also the list of [contributors](https://github.com/loopline-systems/closeio-api-wrapper/contributors) who participated in this project.
 
 License
 -------
 
-The Close.io API Wrapper is licensed under the MIT License - see the LICENSE file for details<br />
+The Close.io API Wrapper is licensed under the MIT License: see the LICENSE
+file for more information.
+
 *! We are not affiliated with Close.io itself.*

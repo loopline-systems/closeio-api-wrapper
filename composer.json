@@ -19,14 +19,21 @@
     ],
     "require": {
         "php": ">=7.1.0",
-        "ext-curl": "*",
         "ext-json": "*",
-        "doctrine/inflector": "^1.3.0"
+        "doctrine/inflector": "^1.3.0",
+        "fig/http-message-util": "^1.1",
+        "php-http/client-common": "^1.7",
+        "php-http/client-implementation": "^1.0",
+        "php-http/discovery": "^1.4",
+        "php-http/httplug": "^1.1",
+        "psr/http-message-implementation": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.3.1",
         "php-coveralls/php-coveralls": "^2.0",
-        "phpstan/phpstan": "^0.10.3"
+        "php-http/message": "^1.7",
+        "php-http/mock-client": "^1.1",
+        "phpstan/phpstan": "^0.10.3",
+        "phpunit/phpunit": "^7.3.1"
     },
     "autoload": {
         "psr-4": {
@@ -37,5 +44,8 @@
         "psr-4": {
             "Tests\\LooplineSystems\\CloseIoApiWrapper\\": "tests/LooplineSystems/CloseIoApiWrapper"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }

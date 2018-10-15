@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Contact;
 
 class ContactApi extends AbstractApi
@@ -23,8 +21,6 @@ class ContactApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'ContactApi';
 
     /**
      * {@inheritdoc}
@@ -53,20 +49,16 @@ class ContactApi extends AbstractApi
     {
         /** @var Contact[] $contacts */
         $contacts = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-contacts', null, [], [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ])
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-contacts'), [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]);
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $contact) {
-                $contacts[] = new Contact($contact);
-            }
+        foreach ($responseData['data'] as $contact) {
+            $contacts[] = new Contact($contact);
         }
 
         return $contacts;
@@ -75,18 +67,16 @@ class ContactApi extends AbstractApi
     /**
      * Gets the information about the contact that matches the given ID.
      *
-     * @param string $id The ID of the contact
+     * @param string   $id     The ID of the contact
+     * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Contact
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
      */
-    public function get(string $id): Contact
+    public function get(string $id, array $fields = []): Contact
     {
-        $result = $this->triggerGet($this->prepareRequest('get-contact', null, ['id' => $id]));
+        $response = $this->client->get($this->prepareUrlForKey('get-contact', ['id' => $id]), ['_fields' => $fields]);
 
-        return new Contact($result->getData());
+        return new Contact($response->getDecodedBody());
     }
 
     /**
@@ -98,9 +88,10 @@ class ContactApi extends AbstractApi
      */
     public function create(Contact $contact): Contact
     {
-        $apiRequest = $this->prepareRequest('add-contact', json_encode($contact));
+        $response = $this->client->post($this->prepareUrlForKey('add-contact'), $contact->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Contact($this->triggerPost($apiRequest)->getData());
+        return new Contact($responseData);
     }
 
     /**
@@ -109,9 +100,6 @@ class ContactApi extends AbstractApi
      * @param Contact $contact The contact to update
      *
      * @return Contact
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
      */
     public function update(Contact $contact): Contact
     {
@@ -119,9 +107,10 @@ class ContactApi extends AbstractApi
 
         $contact->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-contact', json_encode($contact), ['id' => $id]));
+        $response = $this->client->put($this->prepareUrlForKey('update-contact', ['id' => $id]), $contact->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Contact($response->getData());
+        return new Contact($responseData);
     }
 
     /**
@@ -135,7 +124,7 @@ class ContactApi extends AbstractApi
 
         $contact->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-contact', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-contact', ['id' => $id]));
     }
 
     /**
@@ -158,9 +147,6 @@ class ContactApi extends AbstractApi
      * @param string $contactId The ID of the contact
      *
      * @return Contact
-     *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
@@ -194,9 +180,6 @@ class ContactApi extends AbstractApi
      *
      * @return Contact
      *
-     * @throws ResourceNotFoundException If a contact with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateContact(Contact $contact): Contact
@@ -217,6 +200,6 @@ class ContactApi extends AbstractApi
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-contact', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-contact', ['id' => $id]));
     }
 }

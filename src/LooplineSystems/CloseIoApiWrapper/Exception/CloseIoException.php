@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -7,15 +10,13 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
+namespace LooplineSystems\CloseIoApiWrapper\Exception;
 
-class FileNotFoundException extends \Exception
+/**
+ * This is the base class for all exceptions thrown by this library.
+ *
+ * @author Stefano Arlandini <sarlandini@alice.it>
+ */
+class CloseIoException extends \Exception
 {
-    /**
-     * @param string $filename
-     */
-    public function __construct($filename)
-    {
-        parent::__construct(sprintf('File %s not found', $filename));
-    }
 }

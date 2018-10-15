@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -7,15 +10,9 @@
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Library\Exception;
+use Http\Discovery\ClassDiscovery;
+use Http\Discovery\Strategy\MockClientStrategy;
 
-class ApiNotFoundException extends \RuntimeException
-{
-    /**
-     * @param string $api_name
-     */
-    public function __construct($api_name)
-    {
-        parent::__construct(sprintf('Api of type %s not found', $api_name));
-    }
-}
+require_once __DIR__ . '/../vendor/autoload.php';
+
+ClassDiscovery::appendStrategy(MockClientStrategy::class);

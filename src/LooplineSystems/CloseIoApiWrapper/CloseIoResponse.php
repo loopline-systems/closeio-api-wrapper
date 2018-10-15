@@ -1,4 +1,7 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
 /**
  * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
  *
@@ -9,125 +12,135 @@
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
+use LooplineSystems\CloseIoApiWrapper\Exception\JsonException;
+
+/**
+ * This class represents a response received by a Close.io REST API.
+ *
+ * @author Stefano Arlandini <sarlandini@alice.it>
+ */
 class CloseIoResponse
 {
-    const GET_RESPONSE_DATA_KEY = 'data';
-    const GET_ALL_RESPONSE_HAS_MORE_KEY = 'has_more';
-    const GET_ALL_RESPONSE_TOTAL_RESULTS_KEY = 'total_results';
+    /**
+     * @var CloseIoRequest The original request that returned this response
+     */
+    protected $request;
 
     /**
-     * @var int
+     * @var int The HTTP status code returned by this response
      */
-    private $returnCode;
+    protected $httpStatusCode;
 
     /**
-     * @var array
+     * @var null|string The body response
      */
-    private $data;
+    protected $body;
 
     /**
-     * @var string
+     * @var array The decoded body response
      */
-    private $rawData;
+    protected $decodedBody;
 
     /**
-     * @var array
+     * @var array The HTTP headers returned by this response
      */
-    private $curlInfoRaw;
+    protected $headers;
 
     /**
-     * @param array $data
+     * Constructor.
+     *
+     * @param CloseIoRequest $request        The original request that returned this response
+     * @param int            $httpStatusCode The status code of this response
+     * @param null|string    $body           The body response
+     * @param array          $headers        The returned HTTP headers
+     *
+     * @throws JsonException If the response body failed to be decoded as JSON
      */
-    public function setData($data)
+    public function __construct(CloseIoRequest $request, int $httpStatusCode, ?string $body = null, array $headers = [])
     {
-        $this->data = $data;
+        $this->request = $request;
+        $this->httpStatusCode = $httpStatusCode;
+        $this->body = $body;
+        $this->headers = $headers;
+
+        $this->decodeBody();
     }
 
     /**
-     * @return array
+     * Gets the original request that returned this response.
+     *
+     * @return CloseIoRequest
      */
-    public function getData()
+    public function getRequest(): CloseIoRequest
     {
-        return $this->data;
+        return $this->request;
     }
 
     /**
-     * @param string $rawData
-     */
-    public function setRawData($rawData)
-    {
-        $this->rawData = $rawData;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRawData()
-    {
-        return $this->rawData;
-    }
-
-    /**
-     * @param int $returnCode
-     */
-    public function setReturnCode($returnCode)
-    {
-        $this->returnCode = $returnCode;
-    }
-
-    /**
+     * Gets the HTTP status code returned by this response.
+     *
      * @return int
      */
-    public function getReturnCode()
+    public function getHttpStatusCode(): int
     {
-        return $this->returnCode;
+        return $this->httpStatusCode;
     }
 
-
     /**
-     * @return bool
+     * Gets the body content returned by this response.
+     *
+     * @return null|string
      */
-    public function isSuccess()
+    public function getBody(): ?string
     {
-        return $this->returnCode >= 200 && $this->returnCode < 300;
+        return $this->body;
     }
 
     /**
-     * @param array $curlInfoRaw
-     */
-    public function setCurlInfoRaw($curlInfoRaw)
-    {
-        $this->curlInfoRaw = $curlInfoRaw;
-    }
-
-    /**
+     * Gets the decoded body response.
+     *
      * @return array
      */
-    public function getCurlInfoRaw()
+    public function getDecodedBody(): array
     {
-        return $this->curlInfoRaw;
+        return $this->decodedBody;
     }
 
     /**
-     * @return array
-     */
-    public function getErrors()
-    {
-        $errors = [];
-        $data = $this->getData();
-
-        if (isset($data['errors'])) $errors['errors'] = $data['errors'];
-        if (isset($data['error'])) $errors['error'] = $data['error'];
-        if (isset($data['field-errors'])) $errors['field-errors'] = $data['field-errors'];
-
-        return $errors;
-    }
-
-    /**
+     * Gets whether the Close.io server returned an error.
+     *
      * @return bool
      */
-    public function hasErrors()
+    public function hasError(): bool
     {
-        return !empty($this->getErrors());
+        return isset($this->decodedBody['error']) || isset($this->decodedBody['errors']) || isset($this->decodedBody['field-errors']);
+    }
+
+    /**
+     * Gets the HTTP headers returned by this response.
+     *
+     * @return array
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * Converts the raw response into an array.
+     *
+     * @throws JsonException If the response body failed to be decoded as JSON
+     */
+    private function decodeBody(): void
+    {
+        $this->decodedBody = json_decode($this->body, true);
+
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new JsonException('The body of the response could not be decoded as JSON.');
+        }
+
+        if (!is_array($this->decodedBody)) {
+            $this->decodedBody = [];
+        }
     }
 }

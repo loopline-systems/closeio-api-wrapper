@@ -12,10 +12,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\LeadStatus;
 
 class LeadStatusApi extends AbstractApi
@@ -24,8 +21,6 @@ class LeadStatusApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'LeadStatusApi';
 
     /**
      * {@inheritdoc}
@@ -55,20 +50,16 @@ class LeadStatusApi extends AbstractApi
     {
         /** @var LeadStatus[] $leadStatuses */
         $leadStatuses = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-statuses', null, [], [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ])
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-statuses'), [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]);
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $leadStatus) {
-                $leadStatuses[] = new LeadStatus($leadStatus);
-            }
+        foreach ($responseData['data'] as $leadStatus) {
+            $leadStatuses[] = new LeadStatus($leadStatus);
         }
 
         return $leadStatuses;
@@ -81,15 +72,12 @@ class LeadStatusApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return LeadStatus
-     *
-     * @throws ResourceNotFoundException If a lead status with the given ID doesn't
-     *                                   exists
      */
     public function get(string $id, array $fields = []): LeadStatus
     {
-        $apiRequest = $this->prepareRequest('get-status', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-status', ['id' => $id]), ['_fields' => $fields]);
 
-        return new LeadStatus($this->triggerGet($apiRequest)->getData());
+        return new LeadStatus($response->getDecodedBody());
     }
 
     /**
@@ -101,9 +89,10 @@ class LeadStatusApi extends AbstractApi
      */
     public function create(LeadStatus $leadStatus): LeadStatus
     {
-        $apiRequest = $this->prepareRequest('add-status', json_encode($leadStatus));
+        $response = $this->client->post($this->prepareUrlForKey('add-status'), $leadStatus->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new LeadStatus($this->triggerPost($apiRequest)->getData());
+        return new LeadStatus($responseData);
     }
 
     /**
@@ -112,10 +101,6 @@ class LeadStatusApi extends AbstractApi
      * @param LeadStatus $leadStatus The lead status to update
      *
      * @return LeadStatus
-     *
-     * @throws ResourceNotFoundException If a lead status with the given ID doesn't
-     *                                   exists
-     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(LeadStatus $leadStatus): LeadStatus
     {
@@ -123,9 +108,10 @@ class LeadStatusApi extends AbstractApi
 
         $leadStatus->setId(null);
 
-        $response = $this->triggerPut($this->prepareRequest('update-status', json_encode($leadStatus), ['id' => $id]));
+        $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), $leadStatus->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new LeadStatus($response->getData());
+        return new LeadStatus($responseData);
     }
 
     /**
@@ -139,7 +125,7 @@ class LeadStatusApi extends AbstractApi
 
         $leadStatus->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-status', ['id' => $id]));
     }
 
     /**
@@ -164,9 +150,6 @@ class LeadStatusApi extends AbstractApi
      * @param LeadStatus $leadStatus The lead status to update
      *
      * @return LeadStatus
-     *
-     * @throws ResourceNotFoundException If a lead status with the given ID
-     *                                   doesn't exists
      *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
@@ -198,9 +181,6 @@ class LeadStatusApi extends AbstractApi
      *
      * @return LeadStatus
      *
-     * @throws ResourceNotFoundException If a lead status with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getStatus(string $leadStatusId): LeadStatus
@@ -215,15 +195,12 @@ class LeadStatusApi extends AbstractApi
      *
      * @param string $id The ID of the lead status to delete
      *
-     * @throws ResourceNotFoundException If a lead status with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
     public function deleteStatus(string $id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-status', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-status', ['id' => $id]));
     }
 }

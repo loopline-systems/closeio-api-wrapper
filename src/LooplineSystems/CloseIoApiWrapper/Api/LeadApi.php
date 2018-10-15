@@ -12,12 +12,9 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidNewLeadPropertyException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
 
 class LeadApi extends AbstractApi
@@ -26,8 +23,6 @@ class LeadApi extends AbstractApi
      * The maximum number of items that are requested by default
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
-
-    const NAME = 'LeadApi';
 
     /**
      * {@inheritdoc}
@@ -58,18 +53,16 @@ class LeadApi extends AbstractApi
     {
         /** @var Lead[] $leads */
         $leads = [];
-        $result = $this->triggerGet($this->prepareRequest('get-leads', null, [], array_merge($filters, [
+        $response = $this->client->get($this->prepareUrlForKey('get-leads'), array_merge($filters, [
             '_skip' => $offset,
             '_limit' => $limit,
             '_fields' => $fields,
-        ])));
+        ]));
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $lead) {
-                $leads[] = new Lead($lead);
-            }
+        foreach ($responseData['data'] as $lead) {
+            $leads[] = new Lead($lead);
         }
 
         return $leads;
@@ -82,15 +75,12 @@ class LeadApi extends AbstractApi
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Lead
-     *
-     * @throws ResourceNotFoundException If a lead with the given ID doesn't
-     *                                   exists
      */
     public function get(string $id, array $fields = []): Lead
     {
-        $apiRequest = $this->prepareRequest('get-lead', null, ['id' => $id], ['_fields' => $fields]);
+        $response = $this->client->get($this->prepareUrlForKey('get-lead', ['id' => $id]), ['_fields' => $fields]);
 
-        return new Lead($this->triggerGet($apiRequest)->getData());
+        return new Lead($response->getDecodedBody());
     }
 
     /**
@@ -101,15 +91,15 @@ class LeadApi extends AbstractApi
      * @return Lead
      *
      * @throws InvalidNewLeadPropertyException
-     * @throws BadApiRequestException          If the request contained invalid data
      */
     public function create(Lead $lead): Lead
     {
         $this->validateLeadForPost($lead);
 
-        $apiRequest = $this->prepareRequest('add-lead', json_encode($lead));
+        $response = $this->client->post($this->prepareUrlForKey('add-lead'), $lead->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Lead($this->triggerPost($apiRequest)->getData());
+        return new Lead($responseData);
     }
 
     /**
@@ -118,10 +108,6 @@ class LeadApi extends AbstractApi
      * @param Lead $lead The lead to update
      *
      * @return Lead
-     *
-     * @throws ResourceNotFoundException If a lead with the given ID doesn't
-     *                                   exists
-     * @throws BadApiRequestException    If the request contained invalid data
      */
     public function update(Lead $lead): Lead
     {
@@ -129,18 +115,16 @@ class LeadApi extends AbstractApi
 
         $lead->setId(null);
 
-        $apiRequest = $this->prepareRequest('update-lead', json_encode($lead), ['id' => $id]);
+        $response = $this->client->put($this->prepareUrlForKey('update-lead', ['id' => $id]), $lead->jsonSerialize());
+        $responseData = $response->getDecodedBody();
 
-        return new Lead($this->triggerPut($apiRequest)->getData());
+        return new Lead($responseData);
     }
 
     /**
      * Deletes the given lead.
      *
      * @param Lead $lead The lead to delete
-     *
-     * @throws ResourceNotFoundException If a lead with the given ID doesn't
-     *                                   exists
      */
     public function delete(Lead $lead): void
     {
@@ -148,7 +132,7 @@ class LeadApi extends AbstractApi
 
         $lead->setId(null);
 
-        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-lead', ['id' => $id]));
     }
 
     /**
@@ -158,7 +142,6 @@ class LeadApi extends AbstractApi
      * @param Lead $destination The lead to merge the data in
      *
      * @throws InvalidParamException If any of the two leads have an invalid ID
-     * @throws ResourceNotFoundException If the merge fails for whatever reason
      */
     public function merge(Lead $source, Lead $destination): void
     {
@@ -166,14 +149,10 @@ class LeadApi extends AbstractApi
             throw new InvalidParamException('You need to specify two already existing leads in order to merge them');
         }
 
-        $result = $this->triggerPost($this->prepareRequest('merge-leads', json_encode([
+        $this->client->post($this->prepareUrlForKey('merge-leads'), [
             'destination' => $destination->getId(),
             'source' => $source->getId(),
-        ])));
-
-        if (!$result->isSuccess()) {
-            throw new ResourceNotFoundException();
-        }
+        ]);
     }
 
     /**
@@ -213,9 +192,6 @@ class LeadApi extends AbstractApi
      *
      * @return Lead
      *
-     * @throws ResourceNotFoundException If a lead with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead.
      */
     public function getLead(string $id): Lead
@@ -248,9 +224,6 @@ class LeadApi extends AbstractApi
      *
      * @return Lead
      *
-     * @throws ResourceNotFoundException If a lead with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateLead(Lead $lead): Lead
@@ -265,16 +238,13 @@ class LeadApi extends AbstractApi
      *
      * @param string $id The ID of the lead to delete
      *
-     * @throws ResourceNotFoundException If a lead with the given ID doesn't
-     *                                   exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use delete() instead
      */
     public function deleteLead(string $id): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-lead', null, ['id' => $id]));
+        $this->client->delete($this->prepareUrlForKey('delete-lead', ['id' => $id]));
     }
 
     /**

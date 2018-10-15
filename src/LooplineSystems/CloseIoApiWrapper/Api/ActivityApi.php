@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
-use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
+use LooplineSystems\CloseIoApiWrapper\ClientInterface;
+use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\BadApiRequestException;
-use LooplineSystems\CloseIoApiWrapper\Library\Exception\ResourceNotFoundException;
 use LooplineSystems\CloseIoApiWrapper\Model\Activity;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 use LooplineSystems\CloseIoApiWrapper\Model\EmailActivity;
@@ -29,7 +28,17 @@ class ActivityApi extends AbstractApi
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
 
-    const NAME = 'ActivityApi';
+    /**
+     * @var CloseIoApiWrapper
+     */
+    private $closeIoApiWrapper;
+
+    public function __construct(ClientInterface $client, CloseIoApiWrapper $closeIoApiWrapper)
+    {
+        $this->closeIoApiWrapper = $closeIoApiWrapper;
+
+        parent::__construct($client);
+    }
 
     /**
      * @description initialize the routes array
@@ -57,20 +66,16 @@ class ActivityApi extends AbstractApi
     {
         /** @var Activity[] $activities */
         $activities = [];
-        $result = $this->triggerGet(
-            $this->prepareRequest('get-activities', null, [], array_merge($filters, [
-                '_skip' => $offset,
-                '_limit' => $limit,
-                '_fields' => $fields,
-            ]))
-        );
+        $response = $this->client->get($this->prepareUrlForKey('get-activities'), array_merge($filters, [
+            '_skip' => $offset,
+            '_limit' => $limit,
+            '_fields' => $fields,
+        ]));
 
-        if (200 === $result->getReturnCode()) {
-            $responseData = $result->getData();
+        $responseData = $response->getDecodedBody();
 
-            foreach ($responseData[CloseIoResponse::GET_RESPONSE_DATA_KEY] as $activity) {
-                $activities[] = new Activity($activity);
-            }
+        foreach ($responseData['data'] as $activity) {
+            $activities[] = new Activity($activity);
         }
 
         return $activities;
@@ -83,8 +88,6 @@ class ActivityApi extends AbstractApi
      *
      * @return NoteActivity
      *
-     * @throws BadApiRequestException If any error occurs during the request
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use NoteActivityApi::create() instead.
      */
     public function addNote(NoteActivity $activity)
@@ -92,7 +95,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use NoteActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var NoteActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(NoteActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getNoteActivitiesApi();
 
         return $apiHandler->create($activity);
     }
@@ -105,8 +108,6 @@ class ActivityApi extends AbstractApi
      *
      * @return CallActivity
      *
-     * @throws BadApiRequestException If any error occurs during the request
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use CallActivityApi::create() instead.
      */
     public function addCall(CallActivity $activity)
@@ -114,7 +115,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use CallActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var CallActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(CallActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getCallActivitiesApi();
 
         return $apiHandler->create($activity);
     }
@@ -127,8 +128,6 @@ class ActivityApi extends AbstractApi
      *
      * @return EmailActivity
      *
-     * @throws BadApiRequestException If any error occurs during the request
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use EmailActivityApi::create() instead.
      */
     public function addEmail(EmailActivity $activity)
@@ -136,7 +135,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use EmailActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var EmailActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(EmailActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getEmailActivitiesApi();
 
         return $apiHandler->create($activity);
     }
@@ -155,7 +154,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use NoteActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var NoteActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(NoteActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getNoteActivitiesApi();
 
         return $apiHandler->list(0, self::MAX_ITEMS_PER_REQUEST, $filters);
     }
@@ -174,7 +173,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use CallActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var CallActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(CallActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getCallActivitiesApi();
 
         return $apiHandler->list(0, self::MAX_ITEMS_PER_REQUEST, $filters);
     }
@@ -193,7 +192,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use EmailActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var EmailActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(EmailActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getEmailActivitiesApi();
 
         return $apiHandler->list(0, self::MAX_ITEMS_PER_REQUEST, $filters);
     }
@@ -212,7 +211,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(SmsActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
 
         return $apiHandler->list(0, self::MAX_ITEMS_PER_REQUEST, $filters);
     }
@@ -224,9 +223,6 @@ class ActivityApi extends AbstractApi
      *
      * @return SmsActivity
      *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::get() instead.
      */
     public function getSms(string $id): SmsActivity
@@ -234,7 +230,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::get() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(SmsActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
 
         return $apiHandler->get($id);
     }
@@ -246,10 +242,6 @@ class ActivityApi extends AbstractApi
      *
      * @return SmsActivity
      *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
-     * @throws BadApiRequestException    If the request contained invalid data
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::update() instead.
      */
     public function updateSms(SmsActivity $activity): SmsActivity
@@ -257,7 +249,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::update() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(SmsActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
 
         return $apiHandler->update($activity);
     }
@@ -269,8 +261,6 @@ class ActivityApi extends AbstractApi
      *
      * @return SmsActivity
      *
-     * @throws BadApiRequestException If any error occurs during the request
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::create() instead.
      */
     public function addSms(SmsActivity $activity): SmsActivity
@@ -278,7 +268,7 @@ class ActivityApi extends AbstractApi
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
-        $apiHandler = $this->getApiHandler()->getApi(SmsActivityApi::NAME);
+        $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
 
         return $apiHandler->create($activity);
     }
@@ -288,15 +278,12 @@ class ActivityApi extends AbstractApi
      *
      * @param string $activityId The ID of the activity to delete
      *
-     * @throws ResourceNotFoundException If the activity with the given ID
-     *                                   doesn't exists
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::delete() instead.
      */
     public function deleteSms(string $activityId): void
     {
         @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::delete() instead.', __METHOD__), E_USER_DEPRECATED);
 
-        $this->triggerDelete($this->prepareRequest('delete-sms', null, ['id' => $activityId]));
+        $this->client->delete($this->prepareUrlForKey('delete-sms', ['id' => $activityId]));
     }
 }
