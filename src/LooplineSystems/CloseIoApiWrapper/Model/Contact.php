@@ -1,21 +1,24 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
+declare(strict_types=1);
+
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Contact implements \JsonSerializable
 {
-
     use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
 
@@ -45,7 +48,7 @@ class Contact implements \JsonSerializable
     private $id;
 
     /**
-     * @var  string
+     * @var string
      */
     private $organization_id;
 
@@ -55,22 +58,22 @@ class Contact implements \JsonSerializable
     private $lead_id;
 
     /**
-     * @var  Url[]
+     * @var Url[]
      */
     private $urls;
 
     /**
-     * @var  string
+     * @var string
      */
     private $date_created;
 
     /**
-     * @var  string
+     * @var string
      */
     private $updated_by;
 
     /**
-     * @var  Phone[]
+     * @var Phone[]
      */
     private $phones;
 
@@ -101,6 +104,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Email $email
+     *
      * @return $this
      */
     public function addEmail(Email $email)
@@ -112,6 +116,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Email[] $emails
+     *
      * @return $this
      */
     public function setEmails(array $emails)
@@ -131,6 +136,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -150,6 +156,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Phone $phone
+     *
      * @return $this
      */
     public function addPhone(Phone $phone)
@@ -161,6 +168,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Phone[] $phones
+     *
      * @return $this
      */
     public function setPhones(array $phones)
@@ -180,6 +188,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function setTitle($title)
@@ -199,6 +208,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $created_by
+     *
      * @return $this
      */
     public function setCreatedBy($created_by)
@@ -218,6 +228,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $date_created
+     *
      * @return $this
      */
     public function setDateCreated($date_created)
@@ -237,6 +248,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $date_updated
+     *
      * @return $this
      */
     public function setDateUpdated($date_updated)
@@ -256,6 +268,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -275,6 +288,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $organization_id
+     *
      * @return $this
      */
     public function setOrganizationId($organization_id)
@@ -294,6 +308,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $lead_id
+     *
      * @return $this
      */
     public function setLeadId($lead_id)
@@ -313,6 +328,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param string $updated_by
+     *
      * @return $this
      */
     public function setUpdatedBy($updated_by)
@@ -332,6 +348,7 @@ class Contact implements \JsonSerializable
 
     /**
      * @param Url[] $urls
+     *
      * @return $this
      */
     public function setUrls(array $urls)

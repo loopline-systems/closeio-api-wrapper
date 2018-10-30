@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
+
+declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
@@ -15,7 +19,6 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Opportunity implements \JsonSerializable
 {
-
     const OPPORTUNITY_FREQUENCY_ONE_OFF = 'one_time';
     const OPPORTUNITY_FREQUENCY_MONTHLY = 'monthly';
     const OPPORTUNITY_FREQUENCY_ANNUAL = 'annual';
@@ -186,7 +189,7 @@ class Opportunity implements \JsonSerializable
      */
     public function setConfidence($confidence)
     {
-        if (is_int($confidence)) {
+        if (\is_int($confidence)) {
             $this->confidence = $confidence;
         } else {
             throw new InvalidParamException('Opportunity confidence must be of type int');
@@ -205,6 +208,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $created_by
+     *
      * @return $this
      */
     public function setCreatedBy($created_by)
@@ -224,6 +228,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $date_created
+     *
      * @return $this
      */
     public function setDateCreated($date_created)
@@ -243,6 +248,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $date_won
+     *
      * @return $this
      */
     public function setDateWon($date_won)
@@ -262,6 +268,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $lead_name
+     *
      * @return $this
      */
     public function setLeadName($lead_name)
@@ -281,6 +288,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $note
+     *
      * @return $this
      */
     public function setNote($note)
@@ -300,6 +308,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $user_name
+     *
      * @return $this
      */
     public function setUserName($user_name)
@@ -319,6 +328,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $value_period
+     *
      * @return $this
      */
     public function setValuePeriod($value_period)
@@ -338,6 +348,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $contact_id
+     *
      * @return $this
      */
     public function setContactId($contact_id)
@@ -357,6 +368,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $created_by_name
+     *
      * @return $this
      */
     public function setCreatedByName($created_by_name)
@@ -376,6 +388,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $date_lost
+     *
      * @return $this
      */
     public function setDateLost($date_lost)
@@ -395,6 +408,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $date_updated
+     *
      * @return $this
      */
     public function setDateUpdated($date_updated)
@@ -414,6 +428,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -433,6 +448,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $lead_id
+     *
      * @return $this
      */
     public function setLeadId($lead_id)
@@ -452,6 +468,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $organization_id
+     *
      * @return $this
      */
     public function setOrganizationId($organization_id)
@@ -471,6 +488,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $status_id
+     *
      * @return $this
      */
     public function setStatusId($status_id)
@@ -490,6 +508,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $status_label
+     *
      * @return $this
      */
     public function setStatusLabel($status_label)
@@ -509,6 +528,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $status_type
+     *
      * @return $this
      */
     public function setStatusType($status_type)
@@ -528,6 +548,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $updated_by
+     *
      * @return $this
      */
     public function setUpdatedBy($updated_by)
@@ -547,6 +568,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $updated_by_name
+     *
      * @return $this
      */
     public function setUpdatedByName($updated_by_name)
@@ -566,6 +588,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $user_id
+     *
      * @return $this
      */
     public function setUserId($user_id)
@@ -585,6 +608,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $value
+     *
      * @return $this
      */
     public function setValue($value)
@@ -604,6 +628,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $value_currency
+     *
      * @return $this
      */
     public function setValueCurrency($value_currency)
@@ -623,6 +648,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $contact_name
+     *
      * @return $this
      */
     public function setContactName($contact_name)
@@ -642,6 +668,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param string $value_formatted
+     *
      * @return $this
      */
     public function setValueFormatted($value_formatted)
@@ -661,6 +688,7 @@ class Opportunity implements \JsonSerializable
 
     /**
      * @param array $integration_links
+     *
      * @return $this
      */
     public function setIntegrationLinks($integration_links)

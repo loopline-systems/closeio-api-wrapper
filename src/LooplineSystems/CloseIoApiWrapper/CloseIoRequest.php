@@ -1,14 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
+
+declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
@@ -48,7 +49,7 @@ class CloseIoRequest
      */
     public function __construct(string $method, string $endpoint, array $params = [])
     {
-        if (!in_array($method, [RequestMethodInterface::METHOD_GET, RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE], true)) {
+        if (!\in_array($method, [RequestMethodInterface::METHOD_GET, RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE], true)) {
             throw new InvalidHttpMethodException();
         }
 
@@ -105,7 +106,7 @@ class CloseIoRequest
      */
     public function getBodyParams(): array
     {
-        if (in_array($this->method, [RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
+        if (\in_array($this->method, [RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
             return $this->params;
         }
 
@@ -121,7 +122,7 @@ class CloseIoRequest
     {
         $url = $this->endpoint;
 
-        if (in_array($this->method, [RequestMethodInterface::METHOD_GET, RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
+        if (\in_array($this->method, [RequestMethodInterface::METHOD_GET, RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
             $url = $this->appendParamsToUrl($url, $this->params);
         }
 
@@ -148,7 +149,7 @@ class CloseIoRequest
 
         // If the _fields param is set transform it to a single string so that
         // it's not urlencoded as an array
-        if (isset($params['_fields']) && is_array($params['_fields'])) {
+        if (isset($params['_fields']) && \is_array($params['_fields'])) {
             $params['_fields'] = array_unique(array_merge($params['_fields'], ['id']));
             $params['_fields'] = implode(',', $params['_fields']);
         }

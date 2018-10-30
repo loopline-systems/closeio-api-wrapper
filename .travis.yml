@@ -1,15 +1,12 @@
 language: php
 
-sudo: false
-
 php:
-  - 7.1
-  - 7.2
-  - nightly
+    - 7.1
+    - 7.2
 
 env:
-  - dependencies=lowest
-  - dependencies=highest
+    - dependencies=lowest
+    - dependencies=highest
 
 matrix:
     fast_finish: true
@@ -22,7 +19,8 @@ cache:
 
 stages:
     - Code style & static analysis
-    - test
+    - Test
+    - Code coverage
 
 jobs:
     include:
@@ -31,13 +29,26 @@ jobs:
           script: composer phpcs
         - script: composer phpstan
           name: PHPStan
-
+        - stage: Test
+          php: nightly
+          allow_failure: true
+          env: dependencies=lowest
+          before_install:
+              - composer remove --dev friendsofphp/php-cs-fixer # This is needed until PHP-CS-Fixer becames compatible with PHP 7.4
+        - php: nightly
+          allow_failure: true
+          env: dependencies=highest
+          before_install:
+              - composer remove --dev friendsofphp/php-cs-fixer # This is needed until PHP-CS-Fixer becames compatible with PHP 7.4
+        - stage: Code coverage
+          php: 7.2
+          env: dependencies=highest
+          script: vendor/bin/phpunit --verbose --coverage-clover=build/logs/clover.xml
+          after_success:
+              - travis_retry php vendor/bin/php-coveralls --verbose
 install:
-    - if [ "$dependencies" = "lowest"  ]; then composer update --no-interaction --prefer-lowest --prefer-dist; fi;
+    - if [ "$dependencies" = "lowest" ]; then composer update --no-interaction --prefer-lowest --prefer-dist; fi;
     - if [ "$dependencies" = "highest" ]; then composer update --no-interaction --prefer-dist; fi;
 
 script:
     - composer tests
-
-after_success:
-    - php vendor/bin/php-coveralls -v

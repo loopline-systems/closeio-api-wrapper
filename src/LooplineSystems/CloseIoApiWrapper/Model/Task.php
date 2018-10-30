@@ -1,17 +1,21 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
+declare(strict_types=1);
+
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
-use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Task implements \JsonSerializable
 {
@@ -130,6 +134,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $type
+     *
      * @return $this
      */
     public function setType($type)
@@ -149,6 +154,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $assigned_to
+     *
      * @return $this
      */
     public function setAssignedTo($assigned_to)
@@ -168,6 +174,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $due_date
+     *
      * @return $this
      */
     public function setDueDate($due_date)
@@ -187,6 +194,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param bool $is_complete
+     *
      * @return $this
      */
     public function setCompleted($is_complete)
@@ -206,6 +214,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $lead_name
+     *
      * @return $this
      */
     public function setLeadName($lead_name)
@@ -225,6 +234,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $text
+     *
      * @return $this
      */
     public function setText($text)
@@ -244,6 +254,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $assigned_to_name
+     *
      * @return $this
      */
     public function setAssignedToName($assigned_to_name)
@@ -263,6 +274,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $created_by
+     *
      * @return $this
      */
     public function setCreatedBy($created_by)
@@ -282,6 +294,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $created_by_name
+     *
      * @return $this
      */
     public function setCreatedByName($created_by_name)
@@ -301,6 +314,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $date_updated
+     *
      * @return $this
      */
     public function setDateUpdated($date_updated)
@@ -320,6 +334,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $id
+     *
      * @return $this
      */
     public function setId($id)
@@ -339,6 +354,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $lead_id
+     *
      * @return $this
      */
     public function setLeadId($lead_id)
@@ -358,6 +374,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $organization_id
+     *
      * @return $this
      */
     public function setOrganizationId($organization_id)
@@ -377,6 +394,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $updated_by
+     *
      * @return $this
      */
     public function setUpdatedBy($updated_by)
@@ -396,6 +414,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $updated_by_name
+     *
      * @return $this
      */
     public function setUpdatedByName($updated_by_name)
@@ -415,6 +434,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $date_created
+     *
      * @return $this
      */
     public function setDateCreated($date_created)
@@ -434,6 +454,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $date
+     *
      * @return $this
      */
     public function setDate($date)
@@ -453,6 +474,7 @@ class Task implements \JsonSerializable
 
     /**
      * @param string $view
+     *
      * @return $this
      */
     public function setView($view)
