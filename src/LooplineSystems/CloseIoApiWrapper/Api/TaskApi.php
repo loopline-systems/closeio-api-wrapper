@@ -1,14 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
+
+declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
@@ -18,7 +19,7 @@ use LooplineSystems\CloseIoApiWrapper\Model\Task;
 class TaskApi extends AbstractApi
 {
     /**
-     * The maximum number of items that are requested by default
+     * The maximum number of items that are requested by default.
      */
     private const MAX_ITEMS_PER_REQUEST = 100;
 
@@ -32,15 +33,15 @@ class TaskApi extends AbstractApi
             'add-task' => '/task/',
             'get-task' => '/task/[:id]/',
             'update-task' => '/task/[:id]/',
-            'delete-task' => '/task/[:id]/'
+            'delete-task' => '/task/[:id]/',
         ];
     }
 
     /**
      * Gets up to the specified number of tasks that matches the given criteria.
      *
-     * @param int   $offset The offset from which start getting the items
-     * @param int   $limit  The maximum number of items to get
+     * @param int      $offset The offset from which start getting the items
+     * @param int      $limit  The maximum number of items to get
      * @param string[] $fields The subset of fields to get (defaults to all)
      *
      * @return Task[]

@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
+
+declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
@@ -66,11 +70,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $subject
+     *
      * @return EmailActivity
      */
     public function setSubject($subject)
     {
         $this->subject = $subject;
+
         return $this;
     }
 
@@ -84,11 +90,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $sender
+     *
      * @return EmailActivity
      */
     public function setSender($sender)
     {
         $this->sender = $sender;
+
         return $this;
     }
 
@@ -102,11 +110,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param mixed $to
+     *
      * @return EmailActivity
      */
     public function setTo($to)
     {
         $this->to = $to;
+
         return $this;
     }
 
@@ -120,11 +130,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param mixed $bcc
+     *
      * @return EmailActivity
      */
     public function setBcc($bcc)
     {
         $this->bcc = $bcc;
+
         return $this;
     }
 
@@ -138,11 +150,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param mixed $cc
+     *
      * @return EmailActivity
      */
     public function setCc($cc)
     {
         $this->cc = $cc;
+
         return $this;
     }
 
@@ -156,11 +170,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $body_text
+     *
      * @return EmailActivity
      */
     public function setBodyText($body_text)
     {
         $this->body_text = $body_text;
+
         return $this;
     }
 
@@ -174,11 +190,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $body_html
+     *
      * @return EmailActivity
      */
     public function setBodyHtml($body_html)
     {
         $this->body_html = $body_html;
+
         return $this;
     }
 
@@ -192,11 +210,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $direction
+     *
      * @return EmailActivity
      */
     public function setDirection($direction)
     {
         $this->direction = $direction;
+
         return $this;
     }
 
@@ -210,11 +230,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $status
+     *
      * @return EmailActivity
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -228,11 +250,13 @@ class EmailActivity extends Activity implements \JsonSerializable
 
     /**
      * @param string $date_scheduled
+     *
      * @return EmailActivity
      */
     public function setDateScheduled($date_scheduled)
     {
         $this->date_scheduled = $date_scheduled;
+
         return $this;
     }
 }

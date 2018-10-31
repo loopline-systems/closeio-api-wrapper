@@ -1,14 +1,17 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
 
-namespace LooplineSystems\CloseIoApiWrapper\Model;
+declare(strict_types=1);
 
+namespace LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
@@ -45,6 +48,7 @@ class OpportunityStatus implements \JsonSerializable
 
     /**
      * OpportunityStatus constructor.
+     *
      * @param array $data
      *
      * @throws InvalidParamException
@@ -58,11 +62,13 @@ class OpportunityStatus implements \JsonSerializable
 
     /**
      * @param string $label
+     *
      * @return OpportunityStatus
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -76,11 +82,13 @@ class OpportunityStatus implements \JsonSerializable
 
     /**
      * @param string $id
+     *
      * @return OpportunityStatus
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -94,11 +102,13 @@ class OpportunityStatus implements \JsonSerializable
 
     /**
      * @param string $type
+     *
      * @return OpportunityStatus
      */
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
@@ -112,11 +122,13 @@ class OpportunityStatus implements \JsonSerializable
 
     /**
      * @param string $organizationId
+     *
      * @return OpportunityStatus
      */
     public function setOrganizationId($organizationId)
     {
         $this->organizationId = $organizationId;
+
         return $this;
     }
 

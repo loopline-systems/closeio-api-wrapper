@@ -1,29 +1,54 @@
 language: php
+
 php:
-  - 7.1
-  - 7.2
-  - master
+    - 7.1
+    - 7.2
 
 env:
-  - dependencies=lowest
-  - dependencies=highest
+    - dependencies=lowest
+    - dependencies=highest
 
 matrix:
-  allow_failures:
-    - php: master
-      env: dependencies=lowest
-    - php: master
-      env: dependencies=highest
+    fast_finish: true
+    allow_failures:
+        - php: nightly
 
-before_script:
-  - composer self-update
-  - if [ "$dependencies" = "lowest"  ]; then composer update --no-interaction --prefer-lowest; fi;
-  - if [ "$dependencies" = "highest" ]; then composer update --no-interaction; fi;
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+stages:
+    - Code style & static analysis
+    - Test
+    - Code coverage
+
+jobs:
+    include:
+        - stage: Code style & static analysis
+          name: PHP CS Fixer
+          script: composer phpcs
+        - script: composer phpstan
+          name: PHPStan
+        - stage: Test
+          php: nightly
+          allow_failure: true
+          env: dependencies=lowest
+          before_install:
+              - composer remove --dev friendsofphp/php-cs-fixer # This is needed until PHP-CS-Fixer becames compatible with PHP 7.4
+        - php: nightly
+          allow_failure: true
+          env: dependencies=highest
+          before_install:
+              - composer remove --dev friendsofphp/php-cs-fixer # This is needed until PHP-CS-Fixer becames compatible with PHP 7.4
+        - stage: Code coverage
+          php: 7.2
+          env: dependencies=highest
+          script: vendor/bin/phpunit --verbose --coverage-clover=build/logs/clover.xml
+          after_success:
+              - travis_retry php vendor/bin/php-coveralls --verbose
+install:
+    - if [ "$dependencies" = "lowest" ]; then composer update --no-interaction --prefer-lowest --prefer-dist; fi;
+    - if [ "$dependencies" = "highest" ]; then composer update --no-interaction --prefer-dist; fi;
 
 script:
-    - mkdir -p build/logs
-    - vendor/bin/phpunit
-    - if [ "$dependencies" = "highest" ]; then php vendor/bin/phpstan analyze --level=4 src tests; fi;
-
-after_script:
-    - php vendor/bin/php-coveralls -v
+    - composer tests

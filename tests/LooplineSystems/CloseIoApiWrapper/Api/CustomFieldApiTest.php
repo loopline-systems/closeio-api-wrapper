@@ -1,11 +1,15 @@
-<?php declare(strict_types=1);
+<?php
+
 /**
- * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems
+ * Close.io Api Wrapper - LLS Internet GmbH - Loopline Systems.
  *
- * @link      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ * @see      https://github.com/loopline-systems/closeio-api-wrapper for the canonical source repository
+ *
  * @copyright Copyright (c) 2014 LLS Internet GmbH - Loopline Systems (http://www.loopline-systems.com)
  * @license   https://github.com/loopline-systems/closeio-api-wrapper/blob/master/LICENSE (MIT Licence)
  */
+
+declare(strict_types=1);
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Api;
 
@@ -43,12 +47,14 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
      * @dataProvider customFieldArrayProvider
      *
      * @param CustomField[] $customFieldArray
+     *
+     * @group legacy
      */
     public function testGetCustomFields($customFieldArray)
     {
         $responseBody = [
             'has_more' => false,
-            'data' => $customFieldArray
+            'data' => $customFieldArray,
         ];
 
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], json_encode($responseBody)));
@@ -65,6 +71,8 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
      * @dataProvider customFieldDataProvider
      *
      * @param CustomField $customField
+     *
+     * @group legacy
      */
     public function testUpdateCustomField($customField)
     {
@@ -90,8 +98,8 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
     {
         return [
             [
-                new CustomField(['name' => 'Test Name'])
-            ]
+                new CustomField(['name' => 'Test Name']),
+            ],
         ];
     }
 
@@ -113,10 +121,9 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
         $customFields = [
             $customFieldOne,
             $customFieldTwo,
-            $customFieldThree
+            $customFieldThree,
         ];
 
         return [[$customFields]];
     }
 }
-
