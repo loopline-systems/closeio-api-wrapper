@@ -206,7 +206,7 @@ class CustomField implements \JsonSerializable
     {
         $index = array_search($choice, $this->choices);
 
-        if (false !== $index) {
+        if ($index !== false) {
             unset($this->choices[$index]);
         }
 

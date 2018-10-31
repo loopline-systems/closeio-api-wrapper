@@ -152,7 +152,7 @@ final class Client implements ClientInterface
 
         $response = new CloseIoResponse($request, $rawResponse->getStatusCode(), (string) $rawResponse->getBody(), $rawResponse->getHeaders());
 
-        if (StatusCodeInterface::STATUS_OK !== $response->getHttpStatusCode() || $response->hasError()) {
+        if ($response->getHttpStatusCode() !== StatusCodeInterface::STATUS_OK || $response->hasError()) {
             throw CloseIoResponseException::create($response);
         }
 

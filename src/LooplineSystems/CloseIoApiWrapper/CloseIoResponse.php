@@ -136,7 +136,7 @@ class CloseIoResponse
     {
         $this->decodedBody = json_decode($this->body, true);
 
-        if (JSON_ERROR_NONE !== json_last_error()) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             throw new JsonException('The body of the response could not be decoded as JSON.');
         }
 

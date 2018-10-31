@@ -156,7 +156,7 @@ class CloseIoRequest
 
         // If there is no question mark in the URL we can just add the params
         // to the query string and exit early
-        if (false === strpos($url, '?')) {
+        if (strpos($url, '?') === false) {
             return $url . '?' . http_build_query($params, '', '&');
         }
 

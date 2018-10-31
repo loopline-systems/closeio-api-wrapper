@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Api;
 
+use Fig\Http\Message\StatusCodeInterface;
 use LooplineSystems\CloseIoApiWrapper\Library\Api\AbstractApi;
 use LooplineSystems\CloseIoApiWrapper\Model\CallActivity;
 
@@ -57,7 +58,7 @@ class CallActivityApi extends AbstractApi
             '_fields' => $fields,
         ]));
 
-        if (200 === $response->getHttpStatusCode() && !$response->hasError()) {
+        if ($response->getHttpStatusCode() === StatusCodeInterface::STATUS_OK && !$response->hasError()) {
             $responseData = $response->getDecodedBody();
 
             foreach ($responseData['data'] as $activity) {

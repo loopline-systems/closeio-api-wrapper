@@ -7,7 +7,7 @@ return PhpCsFixer\Config::create()
         '@Symfony:risky' => true,
         'random_api_migration' => true,
         'ordered_imports' => true,
-        'yoda_style' => true,
+        'yoda_style' => false,
         'array_syntax' => [
             'syntax' => 'short',
         ],
