@@ -18,6 +18,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Exception;
  *
  * @author Stefano Arlandini <sarlandini@alice.it>
  */
-class CloseIoResourceNotFoundException extends CloseIoException
+class CloseIoResourceNotFoundException extends CloseIoResponseException
 {
 }

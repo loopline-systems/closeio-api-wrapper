@@ -19,6 +19,6 @@ namespace LooplineSystems\CloseIoApiWrapper\Exception;
  *
  * @author Stefano Arlandini <sarlandini@alice.it>
  */
-class CloseIoAuthenticationException extends CloseIoException
+class CloseIoAuthenticationException extends CloseIoResponseException
 {
 }
