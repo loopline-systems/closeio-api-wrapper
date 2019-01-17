@@ -20,6 +20,28 @@ trait JsonSerializableHelperTrait
      */
     public function jsonSerialize()
     {
-        return array_filter(get_object_vars($this));
+        $objectVars = get_object_vars($this);
+
+        // The `custom` object is deprecated and doesn't supports setting
+        // `null` values to unset a field from a lead, so when serializing
+        // to JSON we flat the pair or field name/field value in the root
+        // object using as name of the field `custom.<field ID>`
+        if (isset($objectVars['custom'])) {
+            foreach ($objectVars['custom'] as $fieldName => $fieldValue) {
+                $objectVars['custom.' . $fieldName] = $fieldValue;
+            }
+        }
+
+        unset($objectVars['custom']);
+
+        $objectVars = array_filter($objectVars, static function ($value, $key): bool {
+            if (strpos($key, 'custom.') === 0) {
+                return true;
+            }
+
+            return (bool) $value;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $objectVars;
     }
 }
