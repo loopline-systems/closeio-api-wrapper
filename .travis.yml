@@ -3,6 +3,8 @@ language: php
 php:
     - 7.1
     - 7.2
+    - 7.3
+    - nightly
 
 env:
     - dependencies=lowest
@@ -29,19 +31,8 @@ jobs:
           script: composer phpcs
         - script: composer phpstan
           name: PHPStan
-        - stage: Test
-          php: nightly
-          allow_failure: true
-          env: dependencies=lowest
-          before_install:
-              - composer remove --dev friendsofphp/php-cs-fixer # This is needed until PHP-CS-Fixer becames compatible with PHP 7.4
-        - php: nightly
-          allow_failure: true
-          env: dependencies=highest
-          before_install:
-              - composer remove --dev friendsofphp/php-cs-fixer # This is needed until PHP-CS-Fixer becames compatible with PHP 7.4
         - stage: Code coverage
-          php: 7.2
+          php: 7.3
           env: dependencies=highest
           script: vendor/bin/phpunit --verbose --coverage-clover=build/logs/clover.xml
           after_success:
