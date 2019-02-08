@@ -284,6 +284,22 @@ class Lead implements \JsonSerializable
     }
 
     /**
+     * Sets the value of a custom field. By passing a `null` value the field
+     * will be unset from the lead.
+     *
+     * @param string $name  The name or ID of the field
+     * @param mixed  $value The value
+     *
+     * @return $this
+     */
+    public function setCustomField(string $name, $value)
+    {
+        $this->custom[$name] = $value;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDateCreated()
@@ -626,5 +642,16 @@ class Lead implements \JsonSerializable
         $this->updated_by_name = $updated_by_name;
 
         return $this;
+    }
+
+    public function __set(string $name, $value)
+    {
+        if (strpos($name, 'custom.') === 0) {
+            @trigger_error('Setting a custom field using the $object->$fieldName syntax is deprecated since version 0.8. Use the setCustomField() method instead.', E_USER_DEPRECATED);
+
+            $this->custom[substr($name, 7)] = $value;
+        } else {
+            $this->$name = $value;
+        }
     }
 }
