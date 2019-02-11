@@ -38,12 +38,12 @@
     },
     "autoload": {
         "psr-4": {
-            "LooplineSystems\\CloseIoApiWrapper\\": "src/LooplineSystems/CloseIoApiWrapper"
+            "LooplineSystems\\CloseIoApiWrapper\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\LooplineSystems\\CloseIoApiWrapper\\": "tests/LooplineSystems/CloseIoApiWrapper"
+            "Tests\\LooplineSystems\\CloseIoApiWrapper\\": "tests"
         }
     },
     "scripts": {
