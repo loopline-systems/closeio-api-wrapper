@@ -139,7 +139,15 @@ final class Client implements ClientInterface
         $requestBody = null;
 
         if (!empty($request->getBodyParams())) {
-            $requestBody = json_encode($request->getBodyParams());
+            $params = $request->getBodyParams();
+
+            foreach ($params as $name => $value) {
+                if ($value instanceof \DateTimeInterface) {
+                    $params[$name] = $value->format(DATE_ATOM);
+                }
+            }
+
+            $requestBody = json_encode($params);
         }
 
         $rawRequest = $this->messageFactory->createRequest($request->getMethod(), $request->getUrl(), [], $requestBody);
