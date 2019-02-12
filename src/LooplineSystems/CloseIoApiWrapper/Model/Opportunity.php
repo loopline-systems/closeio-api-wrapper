@@ -136,7 +136,7 @@ class Opportunity implements \JsonSerializable
     private $status_label;
 
     /**
-     * @var string
+     * @var int
      */
     private $value;
 
@@ -599,7 +599,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getValue()
     {
@@ -607,7 +607,7 @@ class Opportunity implements \JsonSerializable
     }
 
     /**
-     * @param string $value
+     * @param int $value
      *
      * @return $this
      */
