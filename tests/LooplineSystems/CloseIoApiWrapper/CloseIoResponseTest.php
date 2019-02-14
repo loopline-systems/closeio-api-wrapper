@@ -35,7 +35,7 @@ class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getDecodedBodyDataProvider
      */
-    public function testGetDecodedBody(string $body, array $expectedDecodedBody): void
+    public function testGetDecodedBody(?string $body, array $expectedDecodedBody): void
     {
         $response = new CloseIoResponse(new CloseIoRequest('GET', '/foo/'), 200, $body);
 
@@ -47,6 +47,8 @@ class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
         return [
             ['{"foo":"bar"}', ['foo' => 'bar']],
             ['false', []],
+            ['', []],
+            [null, []],
         ];
     }
 

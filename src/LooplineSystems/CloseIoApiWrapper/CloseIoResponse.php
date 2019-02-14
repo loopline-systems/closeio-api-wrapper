@@ -134,6 +134,12 @@ class CloseIoResponse
      */
     private function decodeBody(): void
     {
+        if (empty($this->body) || $this->body === null) {
+            $this->decodedBody = [];
+
+            return;
+        }
+
         $this->decodedBody = json_decode($this->body, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
