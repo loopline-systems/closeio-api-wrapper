@@ -25,8 +25,8 @@ use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\MessageFactoryDiscovery;
 use Http\Discovery\UriFactoryDiscovery;
 use Http\Message\Authentication\BasicAuth;
-use Http\Message\MessageFactory;
-use Http\Message\UriFactory;
+use Http\Message\RequestFactory as RequestFactoryInterface;
+use Http\Message\UriFactory as UriFactoryInterface;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoResponseException;
 
@@ -58,28 +58,28 @@ final class Client implements ClientInterface
     private $httpClient;
 
     /**
-     * @var UriFactory The URI factory
+     * @var UriFactoryInterface The URI factory
      */
     private $uriFactory;
 
     /**
-     * @var MessageFactory The factory of PSR-7 requests
+     * @var RequestFactoryInterface The factory of PSR-7 requests
      */
-    private $messageFactory;
+    private $requestFactory;
 
     /**
      * Constructor.
      *
-     * @param Configuration            $configuration  The configuration of the client
-     * @param HttpClientInterface|null $httpClient     The HTTP client
-     * @param UriFactory|null          $uriFactory     The URI factory
-     * @param MessageFactory|null      $messageFactory The factory of PSR-7 requests
+     * @param Configuration                $configuration  The configuration of the client
+     * @param HttpClientInterface|null     $httpClient     The HTTP client
+     * @param UriFactoryInterface|null     $uriFactory     The URI factory
+     * @param RequestFactoryInterface|null $requestFactory The factory of PSR-7 requests
      */
-    public function __construct(Configuration $configuration, ?HttpClientInterface $httpClient = null, ?UriFactory $uriFactory = null, ?MessageFactory $messageFactory = null)
+    public function __construct(Configuration $configuration, ?HttpClientInterface $httpClient = null, ?UriFactoryInterface $uriFactory = null, ?RequestFactoryInterface $requestFactory = null)
     {
         $this->configuration = $configuration;
         $this->uriFactory = $uriFactory ?: UriFactoryDiscovery::find();
-        $this->messageFactory = $messageFactory ?: MessageFactoryDiscovery::find();
+        $this->requestFactory = $requestFactory ?: MessageFactoryDiscovery::find();
         $this->httpClient = $this->createHttpClientInstance($httpClient ?: HttpClientDiscovery::find());
     }
 
@@ -150,7 +150,7 @@ final class Client implements ClientInterface
             $requestBody = json_encode($params);
         }
 
-        $rawRequest = $this->messageFactory->createRequest($request->getMethod(), $request->getUrl(), [], $requestBody);
+        $rawRequest = $this->requestFactory->createRequest($request->getMethod(), $request->getUrl(), [], $requestBody);
 
         try {
             $rawResponse = $this->httpClient->sendRequest($rawRequest);

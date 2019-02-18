@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
-use Http\Client\HttpClient;
+use Http\Client\HttpClient as HttpClientInterface;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException;
 use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoResponseException;
 use LooplineSystems\CloseIoApiWrapper\Exception\JsonException;
@@ -36,9 +36,9 @@ interface ClientInterface
     /**
      * Gets the HTTP client, configured to authenticate with the server.
      *
-     * @return HttpClient
+     * @return HttpClientInterface
      */
-    public function getHttpClient(): HttpClient;
+    public function getHttpClient(): HttpClientInterface;
 
     /**
      * Sends a GET request to Close.io REST API and returns the result.
