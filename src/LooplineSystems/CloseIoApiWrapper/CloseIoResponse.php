@@ -33,7 +33,7 @@ class CloseIoResponse
     protected $httpStatusCode;
 
     /**
-     * @var null|string The body response
+     * @var string|null The body response
      */
     protected $body;
 
@@ -52,7 +52,7 @@ class CloseIoResponse
      *
      * @param CloseIoRequest $request        The original request that returned this response
      * @param int            $httpStatusCode The status code of this response
-     * @param null|string    $body           The body response
+     * @param string|null    $body           The body response
      * @param array          $headers        The returned HTTP headers
      *
      * @throws JsonException If the response body failed to be decoded as JSON
@@ -90,7 +90,7 @@ class CloseIoResponse
     /**
      * Gets the body content returned by this response.
      *
-     * @return null|string
+     * @return string|null
      */
     public function getBody(): ?string
     {
