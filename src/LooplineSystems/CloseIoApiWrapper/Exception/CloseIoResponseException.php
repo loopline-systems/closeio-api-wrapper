@@ -54,18 +54,15 @@ class CloseIoResponseException extends CloseIoException
      */
     public static function create(CloseIoResponse $response): self
     {
-        $data = $response->getDecodedBody();
-        $message = $data['error'] ?? self::UNKNOWN_ERROR_MESSAGE;
-
         switch ($response->getHttpStatusCode()) {
             case StatusCodeInterface::STATUS_UNAUTHORIZED:
-                return new static($response, new CloseIoAuthenticationException($message, 0));
+                return new CloseIoAuthenticationException($response);
             case StatusCodeInterface::STATUS_TOO_MANY_REQUESTS:
-                return new static($response, new CloseIoThrottleException($message, 0));
+                return new CloseIoThrottleException($response);
             case StatusCodeInterface::STATUS_NOT_FOUND:
-                return new static($response, new CloseIoResourceNotFoundException($message, 0));
+                return new CloseIoResourceNotFoundException($response);
             case StatusCodeInterface::STATUS_BAD_REQUEST:
-                return new static($response, new CloseIoBadRequestException($message, 0));
+                return new CloseIoBadRequestException($response);
             default:
                 return new static($response);
         }
