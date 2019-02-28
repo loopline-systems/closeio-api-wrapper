@@ -99,19 +99,57 @@ class ClientTest extends TestCase
         $this->assertEquals('DELETE', $lastRequest->getMethod());
     }
 
-    public function testSendRequest(): void
+    /**
+     * @dataProvider sendRequestDataProvider
+     */
+    public function testSendRequest(string $requestMethod, array $queryParams, array $bodyParams, string $expectedRequestUrl, string $expectedRequestBody): void
     {
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{"foo":"bar"}'));
 
-        $response = $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/', ['foo' => 'bar', 'bar' => 'foo']));
+        $response = $this->client->sendRequest(new CloseIoRequest($requestMethod, '/foo/', $queryParams, $bodyParams));
 
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
-        $this->assertEquals('GET', $lastRequest->getMethod());
+        $this->assertEquals($expectedRequestUrl, (string) $lastRequest->getUri());
+        $this->assertEquals($expectedRequestBody, (string) $lastRequest->getBody());
+        $this->assertEquals($requestMethod, $lastRequest->getMethod());
         $this->assertEquals('{"foo":"bar"}', (string) $response->getBody());
         $this->assertEquals(['foo' => 'bar'], $response->getDecodedBody());
+    }
+
+    public function sendRequestDataProvider(): array
+    {
+        return [
+            [
+                RequestMethodInterface::METHOD_GET,
+                ['foo' => 'bar'],
+                ['bar' => 'foo'],
+                'https://app.close.io/api/v1/foo/?foo=bar',
+                '',
+            ],
+            [
+                RequestMethodInterface::METHOD_POST,
+                ['foo' => 'bar'],
+                ['bar' => 'foo'],
+                'https://app.close.io/api/v1/foo/?foo=bar',
+                '{"bar":"foo"}',
+            ],
+            [
+                RequestMethodInterface::METHOD_PUT,
+                ['foo' => 'bar'],
+                ['bar' => 'foo'],
+                'https://app.close.io/api/v1/foo/?foo=bar',
+                '{"bar":"foo"}',
+            ],
+            [
+                RequestMethodInterface::METHOD_DELETE,
+                ['foo' => 'bar'],
+                ['bar' => 'foo'],
+                'https://app.close.io/api/v1/foo/?foo=bar',
+                '',
+            ],
+        ];
     }
 
     /**
