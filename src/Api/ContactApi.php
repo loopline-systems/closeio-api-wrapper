@@ -89,7 +89,7 @@ class ContactApi extends AbstractApi
      */
     public function create(Contact $contact): Contact
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-contact'), $contact->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-contact'), [], $contact->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Contact($responseData);
@@ -108,7 +108,7 @@ class ContactApi extends AbstractApi
 
         $contact->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-contact', ['id' => $id]), $contact->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-contact', ['id' => $id]), [], $contact->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Contact($responseData);

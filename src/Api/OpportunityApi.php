@@ -97,7 +97,7 @@ class OpportunityApi extends AbstractApi
      */
     public function create(Opportunity $opportunity): Opportunity
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-opportunity'), $opportunity->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-opportunity'), [], $opportunity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Opportunity($responseData);
@@ -116,7 +116,7 @@ class OpportunityApi extends AbstractApi
 
         $opportunity->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-opportunity', ['id' => $id]), $opportunity->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-opportunity', ['id' => $id]), [], $opportunity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Opportunity($responseData);

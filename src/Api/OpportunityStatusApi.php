@@ -91,7 +91,7 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function create(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-status'), $opportunityStatus->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-status'), [], $opportunityStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new OpportunityStatus($responseData);
@@ -110,7 +110,7 @@ class OpportunityStatusApi extends AbstractApi
 
         $opportunityStatus->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), $opportunityStatus->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), [], $opportunityStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new OpportunityStatus($responseData);

@@ -97,7 +97,7 @@ class LeadApi extends AbstractApi
     {
         $this->validateLeadForPost($lead);
 
-        $response = $this->client->post($this->prepareUrlForKey('add-lead'), $lead->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-lead'), [], $lead->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Lead($responseData);
@@ -116,7 +116,7 @@ class LeadApi extends AbstractApi
 
         $lead->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-lead', ['id' => $id]), $lead->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-lead', ['id' => $id]), [], $lead->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Lead($responseData);
@@ -150,7 +150,7 @@ class LeadApi extends AbstractApi
             throw new InvalidParamException('You need to specify two already existing leads in order to merge them');
         }
 
-        $this->client->post($this->prepareUrlForKey('merge-leads'), [
+        $this->client->post($this->prepareUrlForKey('merge-leads'), [], [
             'destination' => $destination->getId(),
             'source' => $source->getId(),
         ]);

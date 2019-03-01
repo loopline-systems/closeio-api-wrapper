@@ -90,7 +90,7 @@ class LeadStatusApi extends AbstractApi
      */
     public function create(LeadStatus $leadStatus): LeadStatus
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-status'), $leadStatus->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-status'), [], $leadStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new LeadStatus($responseData);
@@ -109,7 +109,7 @@ class LeadStatusApi extends AbstractApi
 
         $leadStatus->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), $leadStatus->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-status', ['id' => $id]), [], $leadStatus->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new LeadStatus($responseData);

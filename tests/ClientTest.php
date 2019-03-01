@@ -64,26 +64,28 @@ class ClientTest extends TestCase
     {
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{}'));
 
-        $this->client->post('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
+        $this->client->post('/foo/', ['foo' => 'bar'], ['bar' => 'foo']);
 
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
+        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar', (string) $lastRequest->getUri());
         $this->assertEquals('POST', $lastRequest->getMethod());
+        $this->assertEquals('{"bar":"foo"}', (string) $lastRequest->getBody());
     }
 
     public function testPut(): void
     {
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{}'));
 
-        $this->client->put('/foo/', ['foo' => 'bar', 'bar' => 'foo']);
+        $this->client->put('/foo/', ['foo' => 'bar'], ['bar' => 'foo']);
 
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
+        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar', (string) $lastRequest->getUri());
         $this->assertEquals('PUT', $lastRequest->getMethod());
+        $this->assertEquals('{"bar":"foo"}', (string) $lastRequest->getBody());
     }
 
     public function testDelete(): void

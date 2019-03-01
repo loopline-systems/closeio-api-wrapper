@@ -87,7 +87,7 @@ class CustomFieldApi extends AbstractApi
      */
     public function create(CustomField $customField): CustomField
     {
-        $response = $this->client->post($this->prepareUrlForKey('create-custom-field'), $customField->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('create-custom-field'), [], $customField->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new CustomField($responseData);
@@ -106,7 +106,7 @@ class CustomFieldApi extends AbstractApi
 
         $customField->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-custom-field', ['id' => $id]), $customField->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-custom-field', ['id' => $id]), [], $customField->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new CustomField($responseData);
