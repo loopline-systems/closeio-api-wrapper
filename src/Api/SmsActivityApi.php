@@ -91,7 +91,7 @@ class SmsActivityApi extends AbstractApi
      */
     public function create(SmsActivity $activity): SmsActivity
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-sms'), $activity->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-sms'), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new SmsActivity($responseData);
@@ -110,7 +110,7 @@ class SmsActivityApi extends AbstractApi
 
         $activity->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-sms', ['id' => $id]), $activity->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-sms', ['id' => $id]), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new SmsActivity($responseData);

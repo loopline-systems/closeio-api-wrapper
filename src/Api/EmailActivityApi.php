@@ -92,7 +92,7 @@ class EmailActivityApi extends AbstractApi
      */
     public function create(EmailActivity $activity): EmailActivity
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-email'), $activity->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-email'), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new EmailActivity($responseData);
@@ -111,7 +111,7 @@ class EmailActivityApi extends AbstractApi
 
         $activity->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-email', ['id' => $id]), $activity->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-email', ['id' => $id]), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new EmailActivity($responseData);

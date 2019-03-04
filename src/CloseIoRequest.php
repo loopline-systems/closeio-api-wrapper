@@ -34,20 +34,26 @@ class CloseIoRequest
     protected $endpoint;
 
     /**
-     * @var array The parameters to send with this request
+     * @var array The parameters to send in the query string
      */
-    protected $params = [];
+    protected $queryParams = [];
+
+    /**
+     * @var array The parameters to send in the body
+     */
+    protected $bodyParams = [];
 
     /**
      * Constructor.
      *
-     * @param string $method   The HTTP method
-     * @param string $endpoint The REST endpoint
-     * @param array  $params   The parameters to send
+     * @param string $method      The HTTP method
+     * @param string $endpoint    The REST endpoint
+     * @param array  $queryParams The parameters to send in the query string
+     * @param array  $bodyParams  The parameters to send in the body
      *
      * @throws InvalidHttpMethodException
      */
-    public function __construct(string $method, string $endpoint, array $params = [])
+    public function __construct(string $method, string $endpoint, array $queryParams = [], array $bodyParams = [])
     {
         if (!\in_array($method, [RequestMethodInterface::METHOD_GET, RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT, RequestMethodInterface::METHOD_DELETE], true)) {
             throw new InvalidHttpMethodException();
@@ -55,7 +61,8 @@ class CloseIoRequest
 
         $this->method = $method;
         $this->endpoint = $endpoint;
-        $this->params = $params;
+        $this->queryParams = $queryParams;
+        $this->bodyParams = $bodyParams;
     }
 
     /**
@@ -79,23 +86,23 @@ class CloseIoRequest
     }
 
     /**
-     * Gets the parameters to send with this request.
+     * Gets the parameters to send in the query string.
      *
      * @return array
      */
-    public function getParams(): array
+    public function getQueryParams(): array
     {
-        return $this->params;
+        return $this->queryParams;
     }
 
     /**
-     * Sets the parameters to send with this request.
+     * Sets the parameters to send in the query string of this request.
      *
-     * @param array $params The parameters
+     * @param array $queryParams The parameters
      */
-    public function setParams(array $params): void
+    public function setQueryParams(array $queryParams): void
     {
-        $this->params = $params;
+        $this->queryParams = $queryParams;
     }
 
     /**
@@ -106,11 +113,17 @@ class CloseIoRequest
      */
     public function getBodyParams(): array
     {
-        if (\in_array($this->method, [RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
-            return $this->params;
-        }
+        return $this->bodyParams;
+    }
 
-        return [];
+    /**
+     * Sets the parameters to send as body of this request.
+     *
+     * @param array $bodyParams The parameters
+     */
+    public function setBodyParams(array $bodyParams): void
+    {
+        $this->bodyParams = $bodyParams;
     }
 
     /**
@@ -120,13 +133,7 @@ class CloseIoRequest
      */
     public function getUrl(): string
     {
-        $url = $this->endpoint;
-
-        if (\in_array($this->method, [RequestMethodInterface::METHOD_GET, RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
-            $url = $this->appendParamsToUrl($url, $this->params);
-        }
-
-        return $url;
+        return $this->appendParamsToUrl($this->endpoint, $this->queryParams);
     }
 
     /**

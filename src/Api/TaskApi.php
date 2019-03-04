@@ -89,7 +89,7 @@ class TaskApi extends AbstractApi
      */
     public function create(Task $task): Task
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-task'), $task->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-task'), [], $task->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Task($responseData);
@@ -108,7 +108,7 @@ class TaskApi extends AbstractApi
 
         $task->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-task', ['id' => $id]), $task->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-task', ['id' => $id]), [], $task->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new Task($responseData);

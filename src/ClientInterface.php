@@ -43,8 +43,8 @@ interface ClientInterface
     /**
      * Sends a GET request to Close.io REST API and returns the result.
      *
-     * @param string $endpoint The REST endpoint for the request
-     * @param array  $params   The parameters to send with the request
+     * @param string $endpoint    The REST endpoint for the request
+     * @param array  $queryParams The parameters to send in the query string
      *
      * @return CloseIoResponse
      *
@@ -52,13 +52,14 @@ interface ClientInterface
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
      */
-    public function get(string $endpoint, array $params = []): CloseIoResponse;
+    public function get(string $endpoint, array $queryParams = []): CloseIoResponse;
 
     /**
      * Sends a POST request to Close.io REST API and returns the result.
      *
-     * @param string $endpoint The REST endpoint for the request
-     * @param array  $params   The parameters to send with the request
+     * @param string $endpoint    The REST endpoint for the request
+     * @param array  $queryParams The parameters to send in the query string
+     * @param array  $bodyParams  The parameters to send as body of the request
      *
      * @return CloseIoResponse
      *
@@ -66,13 +67,14 @@ interface ClientInterface
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
      */
-    public function post(string $endpoint, array $params = []): CloseIoResponse;
+    public function post(string $endpoint, array $queryParams = [], array $bodyParams = []): CloseIoResponse;
 
     /**
      * Sends a PUT request to Close.io REST API and returns the result.
      *
-     * @param string $endpoint The REST endpoint for the request
-     * @param array  $params   The parameters to send with the request
+     * @param string $endpoint    The REST endpoint for the request
+     * @param array  $queryParams The parameters to send in the query string
+     * @param array  $bodyParams  The parameters to send as body of the request
      *
      * @return CloseIoResponse
      *
@@ -80,13 +82,13 @@ interface ClientInterface
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
      */
-    public function put(string $endpoint, array $params = []): CloseIoResponse;
+    public function put(string $endpoint, array $queryParams = [], array $bodyParams = []): CloseIoResponse;
 
     /**
      * Sends a DELETE request to Close.io REST API and returns the result.
      *
-     * @param string $endpoint The REST endpoint for the request
-     * @param array  $params   The parameters to send with the request
+     * @param string $endpoint    The REST endpoint for the request
+     * @param array  $queryParams The parameters to send in the query string
      *
      * @return CloseIoResponse
      *
@@ -94,7 +96,7 @@ interface ClientInterface
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
      */
-    public function delete(string $endpoint, array $params = []): CloseIoResponse;
+    public function delete(string $endpoint, array $queryParams = []): CloseIoResponse;
 
     /**
      * Sends a request to the server and returns the response.

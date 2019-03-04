@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper;
 
+use Fig\Http\Message\RequestMethodInterface;
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\Exception\InvalidHttpMethodException;
 use PHPUnit\Framework\TestCase;
@@ -21,19 +22,26 @@ class CloseIoRequestTest extends TestCase
 {
     public function testGettersAndSetters(): void
     {
-        $request = new CloseIoRequest('GET', '/foo/', ['foo' => 'bar']);
+        $request = new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/', ['foo' => 'bar'], ['bar' => 'foo']);
 
         $this->assertEquals('GET', $request->getMethod());
         $this->assertEquals('/foo/', $request->getEndpoint());
-        $this->assertEquals(['foo' => 'bar'], $request->getParams());
+        $this->assertEquals(['foo' => 'bar'], $request->getQueryParams());
+        $this->assertEquals(['bar' => 'foo'], $request->getBodyParams());
+
+        $request->setQueryParams(['bar' => 'foo']);
+        $request->setBodyParams(['foo' => 'bar']);
+
+        $this->assertEquals(['bar' => 'foo'], $request->getQueryParams());
+        $this->assertEquals(['foo' => 'bar'], $request->getBodyParams());
     }
 
     /**
      * @dataProvider getUrlHandlesParametersCorrectlyDataProvider
      */
-    public function testGetUrlHandlesParametersCorrectly(string $initialUrl, string $expectedUrl, array $params): void
+    public function testGetUrlHandlesParametersCorrectly(string $requestMethod, string $initialUrl, string $expectedUrl, array $queryParams, array $bodyParams): void
     {
-        $request = new CloseIoRequest('GET', $initialUrl, $params);
+        $request = new CloseIoRequest($requestMethod, $initialUrl, $queryParams, $bodyParams);
 
         $this->assertEquals($expectedUrl, $request->getUrl());
     }
@@ -41,12 +49,78 @@ class CloseIoRequestTest extends TestCase
     public function getUrlHandlesParametersCorrectlyDataProvider(): array
     {
         return [
-            ['/foo/', '/foo/', []],
-            ['/foo/?foo=bar', '/foo/?bar=foo&foo=bar', ['bar' => 'foo']],
-            ['/foo/?', '/foo/?', []],
-            ['/foo/?', '/foo/?foo=bar', ['foo' => 'bar']],
-            ['/foo/', '/foo/', ['_fields' => []]],
-            ['/foo/', '/foo/?_fields=foo%2Cbar%2Cid', ['_fields' => ['foo', 'bar']]],
+            [
+                RequestMethodInterface::METHOD_GET,
+                '/foo/',
+                '/foo/',
+                [],
+                [],
+            ],
+            [
+                RequestMethodInterface::METHOD_GET,
+                '/foo/?foo=bar',
+                '/foo/?bar=foo&foo=bar',
+                [
+                    'bar' => 'foo',
+                ],
+                [],
+            ],
+            [
+                RequestMethodInterface::METHOD_GET,
+                '/foo/?',
+                '/foo/?',
+                [],
+                [],
+            ],
+            [
+                RequestMethodInterface::METHOD_GET,
+                '/foo/?',
+                '/foo/?foo=bar',
+                [
+                    'foo' => 'bar',
+                ],
+                [],
+            ],
+            [
+                RequestMethodInterface::METHOD_GET,
+                '/foo/',
+                '/foo/',
+                [
+                    '_fields' => [],
+                ],
+                [],
+            ],
+            [
+                RequestMethodInterface::METHOD_GET,
+                '/foo/',
+                '/foo/?_fields=foo%2Cbar%2Cid',
+                [
+                    '_fields' => ['foo', 'bar'],
+                ],
+                [],
+            ],
+            [
+                RequestMethodInterface::METHOD_POST,
+                '/foo/',
+                '/foo/?_fields=foo%2Cbar%2Cid',
+                [
+                    '_fields' => ['foo', 'bar'],
+                ],
+                [
+                    'foo' => 'bar',
+                ],
+            ],
+            [
+                RequestMethodInterface::METHOD_PUT,
+                '/foo/',
+                '/foo/?_fields=foo%2Cbar%2Cid',
+                [
+                    '_fields' => ['foo', 'bar'],
+                ],
+                [
+                    'foo' => 'bar',
+                ],
+            ],
         ];
     }
 

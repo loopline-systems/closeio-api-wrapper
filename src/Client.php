@@ -102,33 +102,33 @@ final class Client implements ClientInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $endpoint, array $params = []): CloseIoResponse
+    public function get(string $endpoint, array $queryParams = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, $endpoint, $queryParams));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function post(string $endpoint, array $params = []): CloseIoResponse
+    public function post(string $endpoint, array $queryParams = [], array $bodyParams = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_POST, $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_POST, $endpoint, $queryParams, $bodyParams));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function put(string $endpoint, array $params = []): CloseIoResponse
+    public function put(string $endpoint, array $queryParams = [], array $bodyParams = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_PUT, $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_PUT, $endpoint, $queryParams, $bodyParams));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function delete(string $endpoint, array $params = []): CloseIoResponse
+    public function delete(string $endpoint, array $queryParams = []): CloseIoResponse
     {
-        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_DELETE, $endpoint, $params));
+        return $this->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_DELETE, $endpoint, $queryParams));
     }
 
     /**
@@ -138,7 +138,7 @@ final class Client implements ClientInterface
     {
         $requestBody = null;
 
-        if (!empty($request->getBodyParams())) {
+        if (!empty($request->getBodyParams()) && \in_array($request->getMethod(), [RequestMethodInterface::METHOD_POST, RequestMethodInterface::METHOD_PUT], true)) {
             $params = $request->getBodyParams();
 
             foreach ($params as $name => $value) {

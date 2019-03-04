@@ -91,7 +91,7 @@ class NoteActivityApi extends AbstractApi
      */
     public function create(NoteActivity $activity): NoteActivity
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-note'), $activity->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-note'), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new NoteActivity($responseData);
@@ -110,7 +110,7 @@ class NoteActivityApi extends AbstractApi
 
         $activity->setId(null);
 
-        $response = $this->client->put($this->prepareUrlForKey('update-note', ['id' => $id]), $activity->jsonSerialize());
+        $response = $this->client->put($this->prepareUrlForKey('update-note', ['id' => $id]), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new NoteActivity($responseData);

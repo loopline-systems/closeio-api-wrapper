@@ -94,7 +94,7 @@ class CallActivityApi extends AbstractApi
      */
     public function create(CallActivity $activity): CallActivity
     {
-        $response = $this->client->post($this->prepareUrlForKey('add-call'), $activity->jsonSerialize());
+        $response = $this->client->post($this->prepareUrlForKey('add-call'), [], $activity->jsonSerialize());
         $responseData = $response->getDecodedBody();
 
         return new CallActivity($responseData);
