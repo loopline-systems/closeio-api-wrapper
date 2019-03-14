@@ -38,7 +38,7 @@ final class Configuration
      *
      * @throws \InvalidArgumentException If any of the parameters is invalid
      */
-    public function __construct(string $apiKey, string $baseUrl = 'https://app.close.io/api/v1')
+    public function __construct(string $apiKey, string $baseUrl = 'https://api.close.com/api/v1')
     {
         if (empty($apiKey)) {
             throw new \InvalidArgumentException('The API key must not be an empty string.');
