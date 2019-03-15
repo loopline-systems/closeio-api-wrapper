@@ -56,7 +56,7 @@ class ClientTest extends TestCase
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
+        $this->assertEquals('https://api.close.com/api/v1/foo/?foo=bar&bar=foo', (string) $lastRequest->getUri());
         $this->assertEquals('GET', $lastRequest->getMethod());
     }
 
@@ -69,7 +69,7 @@ class ClientTest extends TestCase
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar', (string) $lastRequest->getUri());
+        $this->assertEquals('https://api.close.com/api/v1/foo/?foo=bar', (string) $lastRequest->getUri());
         $this->assertEquals('POST', $lastRequest->getMethod());
         $this->assertEquals('{"bar":"foo"}', (string) $lastRequest->getBody());
     }
@@ -83,7 +83,7 @@ class ClientTest extends TestCase
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/?foo=bar', (string) $lastRequest->getUri());
+        $this->assertEquals('https://api.close.com/api/v1/foo/?foo=bar', (string) $lastRequest->getUri());
         $this->assertEquals('PUT', $lastRequest->getMethod());
         $this->assertEquals('{"bar":"foo"}', (string) $lastRequest->getBody());
     }
@@ -97,7 +97,7 @@ class ClientTest extends TestCase
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/foo/', (string) $lastRequest->getUri());
+        $this->assertEquals('https://api.close.com/api/v1/foo/', (string) $lastRequest->getUri());
         $this->assertEquals('DELETE', $lastRequest->getMethod());
     }
 
@@ -127,28 +127,28 @@ class ClientTest extends TestCase
                 RequestMethodInterface::METHOD_GET,
                 ['foo' => 'bar'],
                 ['bar' => 'foo'],
-                'https://app.close.io/api/v1/foo/?foo=bar',
+                'https://api.close.com/api/v1/foo/?foo=bar',
                 '',
             ],
             [
                 RequestMethodInterface::METHOD_POST,
                 ['foo' => 'bar'],
                 ['bar' => 'foo'],
-                'https://app.close.io/api/v1/foo/?foo=bar',
+                'https://api.close.com/api/v1/foo/?foo=bar',
                 '{"bar":"foo"}',
             ],
             [
                 RequestMethodInterface::METHOD_PUT,
                 ['foo' => 'bar'],
                 ['bar' => 'foo'],
-                'https://app.close.io/api/v1/foo/?foo=bar',
+                'https://api.close.com/api/v1/foo/?foo=bar',
                 '{"bar":"foo"}',
             ],
             [
                 RequestMethodInterface::METHOD_DELETE,
                 ['foo' => 'bar'],
                 ['bar' => 'foo'],
-                'https://app.close.io/api/v1/foo/?foo=bar',
+                'https://api.close.com/api/v1/foo/?foo=bar',
                 '',
             ],
         ];

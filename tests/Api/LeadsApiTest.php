@@ -145,7 +145,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
         $lastRequest = $this->httpClient->getLastRequest();
 
         $this->assertInstanceOf(RequestInterface::class, $lastRequest);
-        $this->assertEquals('https://app.close.io/api/v1/lead/foo/', (string) $lastRequest->getUri());
+        $this->assertEquals('https://api.close.com/api/v1/lead/foo/', (string) $lastRequest->getUri());
         $this->assertEquals('DELETE', $lastRequest->getMethod());
     }
 
