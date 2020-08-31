@@ -80,7 +80,7 @@ class Email implements \JsonSerializable
      */
     public function setEmail($email)
     {
-        if (!$this->validator($email, $this->validation)) {
+        if (!$this->validator->isValid($email, $this->validation)) {
             throw new InvalidParamException('Invalid email format: "' . $email . '"');
         } else {
             $this->email = $email;
