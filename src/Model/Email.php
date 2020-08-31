@@ -58,9 +58,6 @@ class Email implements \JsonSerializable
         if ($data) {
             $this->hydrate($data);
         }
-
-	$this->validator = new EmailValidator();
-        $this->validation = new RFCValidation();
     }
 
     /**
@@ -80,7 +77,7 @@ class Email implements \JsonSerializable
      */
     public function setEmail($email)
     {
-        if (!$this->validator->isValid($email, $this->validation)) {
+        if (!$this->_getValidator()->isValid($email, $this->_getValidation())) {
             throw new InvalidParamException('Invalid email format: "' . $email . '"');
         } else {
             $this->email = $email;
@@ -108,4 +105,21 @@ class Email implements \JsonSerializable
 
         return $this;
     }
+
+    private function _getValidator()
+    {
+        if (is_null($this->validator))
+            $this->validator = new EmailValidator();
+
+        return $this->validator;
+    }
+
+    private function _getValidation()
+    {
+        if (is_null($this->validation))
+            $this->validation = new RFCValidation();
+
+        return $this->validation;
+    }
 }
+
