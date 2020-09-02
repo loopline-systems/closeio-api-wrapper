@@ -50,18 +50,13 @@ class OpportunityApi extends AbstractApi
      */
     public function list(int $offset = 0, int $limit = self::MAX_ITEMS_PER_REQUEST, array $filters = [], array $fields = []): array
     {
-        $params = [
+        /** @var Opportunity[] $opportunities */
+        $opportunities = [];
+        $response = $this->client->get($this->prepareUrlForKey('get-opportunities'), array_merge($filters, [
             '_skip' => $offset,
             '_limit' => $limit,
             '_fields' => $fields,
-        ];
-
-        if (!empty($filters)) {
-            $params['query'] = $this->buildQueryString($filters);
-        }
-
-        $opportunities = [];
-        $response = $this->client->get($this->prepareUrlForKey('get-opportunities'), $params);
+        ]));
 
         $responseData = $response->getDecodedBody();
 
