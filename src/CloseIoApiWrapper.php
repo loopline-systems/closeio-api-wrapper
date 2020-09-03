@@ -20,6 +20,7 @@ use LooplineSystems\CloseIoApiWrapper\Api\CustomFieldApi;
 use LooplineSystems\CloseIoApiWrapper\Api\EmailActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadApi;
 use LooplineSystems\CloseIoApiWrapper\Api\LeadStatusApi;
+use LooplineSystems\CloseIoApiWrapper\Api\MeetingActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\NoteActivityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityApi;
 use LooplineSystems\CloseIoApiWrapper\Api\OpportunityStatusApi;
@@ -80,6 +81,11 @@ class CloseIoApiWrapper
     private $emailActivitiesApi;
 
     /**
+     * @var MeetingActivityApi
+     */
+    private $meetingActivitiesApi;
+
+    /**
      * @var NoteActivityApi
      */
     private $noteActivitiesApi;
@@ -106,6 +112,7 @@ class CloseIoApiWrapper
         $this->callActivitiesApi = new CallActivityApi($client);
         $this->smsActivitiesApi = new SmsActivityApi($client);
         $this->emailActivitiesApi = new EmailActivityApi($client);
+        $this->meetingActivitiesApi = new MeetingActivityApi($client);
         $this->noteActivitiesApi = new NoteActivityApi($client);
         $this->taskApi = new TaskApi($client);
         $this->userApi = new UserApi($client);
@@ -189,6 +196,14 @@ class CloseIoApiWrapper
     public function getEmailActivitiesApi(): EmailActivityApi
     {
         return $this->emailActivitiesApi;
+    }
+
+    /**
+     * @return MeetingActivityApi
+     */
+    public function getMeetingActivitiesApi(): MeetingActivityApi
+    {
+        return $this->meetingActivitiesApi;
     }
 
     /**
