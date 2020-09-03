@@ -21,6 +21,7 @@
         "php": "^7.1",
         "ext-json": "*",
         "doctrine/inflector": "^1.3",
+        "egulias/email-validator": "^2.1",
         "fig/http-message-util": "^1.1",
         "php-http/client-common": "^1.5|^2.0",
         "php-http/client-implementation": "^1.0",

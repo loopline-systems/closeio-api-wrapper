@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Model;
 
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
@@ -35,6 +37,16 @@ class Email implements \JsonSerializable
      * @var string
      */
     private $type;
+
+    /**
+     * @var object
+     */
+    private $validator;
+
+    /**
+     * @var object
+     */
+    private $validation;
 
     /**
      * @param array $data
@@ -65,7 +77,7 @@ class Email implements \JsonSerializable
      */
     public function setEmail($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!$this->_getValidator()->isValid($email, $this->_getValidation())) {
             throw new InvalidParamException('Invalid email format: "' . $email . '"');
         } else {
             $this->email = $email;
@@ -93,4 +105,21 @@ class Email implements \JsonSerializable
 
         return $this;
     }
+
+    private function _getValidator()
+    {
+        if (is_null($this->validator))
+            $this->validator = new EmailValidator();
+
+        return $this->validator;
+    }
+
+    private function _getValidation()
+    {
+        if (is_null($this->validation))
+            $this->validation = new RFCValidation();
+
+        return $this->validation;
+    }
 }
+
