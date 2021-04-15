@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper\Library;
 
-use Doctrine\Common\Inflector\Inflector;
+use LooplineSystems\CloseIoApiWrapper\Library\Doctrine\InflectorSingleton;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 
 trait ObjectHydrateHelperTrait
@@ -34,7 +34,7 @@ trait ObjectHydrateHelperTrait
 
             if (!\in_array($key, $nestedObjects)) {
                 // get setter method for each key in data
-                $setter = 'set' . Inflector::classify($key);
+                $setter = 'set' . InflectorSingleton::getInstance()->classify($key);
                 if (method_exists($this, $setter)) {
                     $this->$setter($value);
                 } else {
@@ -56,8 +56,8 @@ trait ObjectHydrateHelperTrait
                             $nestedObject = $data[$currentNestedObject];
                             $NestedObjectCollection = [];
                             foreach ($nestedObject as $nestedObjectArguments) {
-                                $singluarizedName = Inflector::singularize($currentNestedObject);
-                                $className = Inflector::classify($singluarizedName);
+                                $singluarizedName = InflectorSingleton::getInstance()->singularize($currentNestedObject);
+                                $className = InflectorSingleton::getInstance()->classify($singluarizedName);
                                 $classNameWithFQDN = str_replace('Library', 'Model', __NAMESPACE__) . '\\' . $className;
                                 $reflection = new \ReflectionClass($classNameWithFQDN);
                                 $nestedObjectClass = $reflection->newInstanceArgs([$nestedObjectArguments]);
