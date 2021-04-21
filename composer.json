@@ -33,7 +33,7 @@
         "php-coveralls/php-coveralls": "^2.0",
         "php-http/mock-client": "^1.1",
         "phpstan/phpstan": "^0.12",
-        "phpunit/phpunit": "^7.3",
+        "phpunit/phpunit": "^9.5",
         "symfony/phpunit-bridge": "^4.1"
     },
     "replace": {

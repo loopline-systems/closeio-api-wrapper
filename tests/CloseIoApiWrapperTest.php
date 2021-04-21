@@ -29,8 +29,9 @@ use LooplineSystems\CloseIoApiWrapper\Api\UserApi;
 use LooplineSystems\CloseIoApiWrapper\Client;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\Configuration;
+use PHPUnit\Framework\TestCase;
 
-class CloseIoApiWrapperTest extends \PHPUnit\Framework\TestCase
+class CloseIoApiWrapperTest extends TestCase
 {
     /**
      * @var Client
@@ -42,73 +43,73 @@ class CloseIoApiWrapperTest extends \PHPUnit\Framework\TestCase
      */
     protected $closeIoApiWrapper;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = new Client(new Configuration('foo'));
         $this->closeIoApiWrapper = new CloseIoApiWrapper($this->client);
     }
 
-    public function testItReturnsUserApi()
+    public function testItReturnsUserApi(): void
     {
         $this->assertInstanceOf(UserApi::class, $this->closeIoApiWrapper->getUserApi());
     }
 
-    public function testItReturnsLeadApi()
+    public function testItReturnsLeadApi(): void
     {
         $this->assertInstanceOf(LeadApi::class, $this->closeIoApiWrapper->getLeadApi());
     }
 
-    public function testItReturnsCustomFieldApi()
+    public function testItReturnsCustomFieldApi(): void
     {
         $this->assertInstanceOf(CustomFieldApi::class, $this->closeIoApiWrapper->getCustomFieldApi());
     }
 
-    public function testItReturnsOpportunityApi()
+    public function testItReturnsOpportunityApi(): void
     {
         $this->assertInstanceOf(OpportunityApi::class, $this->closeIoApiWrapper->getOpportunityApi());
     }
 
-    public function testItReturnsLeadStatusApi()
+    public function testItReturnsLeadStatusApi(): void
     {
         $this->assertInstanceOf(LeadStatusApi::class, $this->closeIoApiWrapper->getLeadStatusesApi());
     }
 
-    public function testItReturnsOpportunityStatusApi()
+    public function testItReturnsOpportunityStatusApi(): void
     {
         $this->assertInstanceOf(OpportunityStatusApi::class, $this->closeIoApiWrapper->getOpportunityStatusesApi());
     }
 
-    public function testItReturnsContactApi()
+    public function testItReturnsContactApi(): void
     {
         $this->assertInstanceOf(ContactApi::class, $this->closeIoApiWrapper->getContactApi());
     }
 
-    public function testItReturnsActivityApi()
+    public function testItReturnsActivityApi(): void
     {
         $this->assertInstanceOf(ActivityApi::class, $this->closeIoApiWrapper->getActivitiesApi());
     }
 
-    public function testItReturnsCallActivityApi()
+    public function testItReturnsCallActivityApi(): void
     {
         $this->assertInstanceOf(CallActivityApi::class, $this->closeIoApiWrapper->getCallActivitiesApi());
     }
 
-    public function testItReturnsSmsActivityApi()
+    public function testItReturnsSmsActivityApi(): void
     {
         $this->assertInstanceOf(SmsActivityApi::class, $this->closeIoApiWrapper->getSmsActivitiesApi());
     }
 
-    public function testItReturnsEmailActivityApi()
+    public function testItReturnsEmailActivityApi(): void
     {
         $this->assertInstanceOf(EmailActivityApi::class, $this->closeIoApiWrapper->getEmailActivitiesApi());
     }
 
-    public function testItReturnsNoteActivityApi()
+    public function testItReturnsNoteActivityApi(): void
     {
         $this->assertInstanceOf(NoteActivityApi::class, $this->closeIoApiWrapper->getNoteActivitiesApi());
     }
 
-    public function testItReturnsTaskApi()
+    public function testItReturnsTaskApi(): void
     {
         $this->assertInstanceOf(TaskApi::class, $this->closeIoApiWrapper->getTaskApi());
     }
