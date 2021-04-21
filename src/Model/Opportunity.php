@@ -189,11 +189,11 @@ class Opportunity implements \JsonSerializable
      */
     public function setConfidence($confidence)
     {
-        if (\is_int($confidence)) {
-            $this->confidence = $confidence;
-        } else {
+        if (!\is_int($confidence)) {
             throw new InvalidParamException('Opportunity confidence must be of type int');
         }
+
+        $this->confidence = $confidence;
 
         return $this;
     }

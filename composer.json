@@ -32,7 +32,7 @@
         "friendsofphp/php-cs-fixer": "^2.13",
         "php-coveralls/php-coveralls": "^2.0",
         "php-http/mock-client": "^1.1",
-        "phpstan/phpstan": "^0.10.3",
+        "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^7.3",
         "symfony/phpunit-bridge": "^4.1"
     },
