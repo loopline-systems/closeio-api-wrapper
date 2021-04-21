@@ -21,6 +21,7 @@ use Http\Mock\Client as HttpClientMock;
 use LooplineSystems\CloseIoApiWrapper\Client;
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\Configuration;
+use LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
@@ -36,15 +37,21 @@ class ClientTest extends TestCase
      */
     private $client;
 
-    protected function setUp()
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    protected function setUp(): void
     {
+        $this->configuration = new Configuration('foo');
         $this->httpClient = new HttpClientMock();
-        $this->client = new Client(new Configuration('foo'), $this->httpClient);
+        $this->client = new Client($this->configuration, $this->httpClient);
     }
 
     public function testGetConfiguration(): void
     {
-        $this->assertAttributeSame($this->client->getConfiguration(), 'configuration', $this->client);
+        $this->assertSame($this->client->getConfiguration(), $this->configuration);
     }
 
     public function testGet(): void
@@ -154,31 +161,28 @@ class ClientTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException
-     */
     public function testSendRequestThrowsOnBadRequest(): void
     {
+        $this->expectException(CloseIoException::class);
+
         $this->httpClient->addException(new TransferException());
 
         $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/'));
     }
 
-    /**
-     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException
-     */
     public function testSendRequestThrowsOnResponseThatHasErrors(): void
     {
+        $this->expectException(CloseIoException::class);
+
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_OK, null, [], '{"error":"foo"}'));
 
         $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/'));
     }
 
-    /**
-     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\CloseIoException
-     */
-    public function testSendRequestThrowsOnResponseWithStatusCodeDifferentFromOk()
+    public function testSendRequestThrowsOnResponseWithStatusCodeDifferentFromOk(): void
     {
+        $this->expectException(CloseIoException::class);
+
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(StatusCodeInterface::STATUS_NOT_FOUND, null, [], '{}'));
 
         $this->client->sendRequest(new CloseIoRequest(RequestMethodInterface::METHOD_GET, '/foo/'));

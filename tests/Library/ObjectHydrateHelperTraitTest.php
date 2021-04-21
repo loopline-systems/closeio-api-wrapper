@@ -13,21 +13,22 @@ declare(strict_types=1);
 
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Library;
 
+use PHPUnit\Framework\TestCase;
 use Tests\LooplineSystems\CloseIoApiWrapper\Library\Fake\ObjectHydrateHelperDemo;
 
-class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
+class ObjectHydrateHelperTraitTest extends TestCase
 {
     /**
      * @var ObjectHydrateHelperDemo
      */
     private $testObject;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->testObject = new ObjectHydrateHelperDemo();
     }
 
-    public function testHydrateWithoutData()
+    public function testHydrateWithoutData(): void
     {
         $data = [];
 
@@ -37,7 +38,7 @@ class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->testObject->getSecond());
     }
 
-    public function testHydratePartialData()
+    public function testHydratePartialData(): void
     {
         $data = [
             'first' => 10,
@@ -49,7 +50,7 @@ class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->testObject->getSecond());
     }
 
-    public function testDoNotHydrateFalsyData()
+    public function testDoNotHydrateFalsyData(): void
     {
         $this->testObject->hydrate(['first' => false]);
         $this->assertNull($this->testObject->getFirst());
@@ -61,7 +62,7 @@ class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->testObject->getFirst());
     }
 
-    public function testHydrateAllData()
+    public function testHydrateAllData(): void
     {
         $data = [
             'first' => 10,
@@ -74,7 +75,7 @@ class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test', $this->testObject->getSecond());
     }
 
-    public function testNonHydrateNonExistingData()
+    public function testNonHydrateNonExistingData(): void
     {
         $data = [
             'third' => 10,
@@ -86,7 +87,7 @@ class ObjectHydrateHelperTraitTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($this->testObject->getSecond());
     }
 
-    public function testHydrateWithCustomMappingData()
+    public function testHydrateWithCustomMappingData(): void
     {
         $data = [
             'third' => 10,
