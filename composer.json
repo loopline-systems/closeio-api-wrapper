@@ -20,7 +20,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "ext-json": "*",
-        "doctrine/inflector": "^2.0",
+        "doctrine/inflector": "^1.4",
         "fig/http-message-util": "^1.1",
         "php-http/client-common": "^1.5|^2.0",
         "php-http/client-implementation": "^1.0",
