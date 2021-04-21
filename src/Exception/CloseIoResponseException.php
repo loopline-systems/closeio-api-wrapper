@@ -41,7 +41,17 @@ class CloseIoResponseException extends CloseIoException
     {
         $this->response = $response;
 
-        parent::__construct($response->getDecodedBody()['error'] ?? self::UNKNOWN_ERROR_MESSAGE, 0, $previous);
+        $error = $response->getDecodedBody()['error'] ?? null;
+        $errorMessage = self::UNKNOWN_ERROR_MESSAGE;
+
+        if (is_array($error)) {
+            $errorMessage = $error['message'] ?? self::UNKNOWN_ERROR_MESSAGE;
+        }
+        if (is_string($error)) {
+            $errorMessage = $error;
+        }
+
+        parent::__construct($errorMessage , 0, $previous);
     }
 
     /**
