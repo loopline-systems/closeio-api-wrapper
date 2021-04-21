@@ -1,10 +1,11 @@
 language: php
 
 php:
-    - 7.1
     - 7.2
     - 7.3
-    - 7.4snapshot
+    - 7.4
+    - 8.0
+    - nightly
 
 env:
     - dependencies=highest
@@ -13,6 +14,7 @@ env:
 matrix:
     fast_finish: true
     allow_failures:
+        - php: 8.0
         - php: nightly
 
 cache:
@@ -34,7 +36,7 @@ jobs:
           script: composer phpstan
           env: dependencies=highest
         - stage: Code coverage
-          php: 7.3
+          php: 7.4
           env: dependencies=highest
           script: vendor/bin/phpunit --verbose --coverage-clover=build/logs/clover.xml
           after_success:
