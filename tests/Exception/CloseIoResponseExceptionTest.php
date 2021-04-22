@@ -42,6 +42,19 @@ class CloseIoResponseExceptionTest extends TestCase
                 '{"error":"foo"}',
                 'foo',
             ],
+            [
+                '{
+                    "error": {
+                        "message": "API call count exceeded for this period",
+                        "rate_endpoint_group": 85775312284352155935458847415769,
+                        "rate_limit": 240,
+                        "rate_limit_type": "Callable key [mixed arg]",
+                        "rate_reset": 0.130213,
+                        "rate_window": 8
+                    }
+                }',
+                'API call count exceeded for this period',
+            ]
         ];
     }
 

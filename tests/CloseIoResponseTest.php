@@ -17,8 +17,10 @@ use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use LooplineSystems\CloseIoApiWrapper\CloseIoRequest;
 use LooplineSystems\CloseIoApiWrapper\CloseIoResponse;
+use LooplineSystems\CloseIoApiWrapper\Exception\JsonException;
+use PHPUnit\Framework\TestCase;
 
-class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
+class CloseIoResponseTest extends TestCase
 {
     public function testGetters(): void
     {
@@ -52,11 +54,10 @@ class CloseIoResponseTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @expectedException \LooplineSystems\CloseIoApiWrapper\Exception\JsonException
-     */
     public function testResponseThrowsExceptionIfDecodedBodyContainsInvalidJson(): void
     {
+        $this->expectException(JsonException::class);
+
         new CloseIoResponse(new CloseIoRequest('GET', '/foo/'), 200, 'foo');
     }
 

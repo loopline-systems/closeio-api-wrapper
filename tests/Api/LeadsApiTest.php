@@ -20,9 +20,10 @@ use LooplineSystems\CloseIoApiWrapper\Client;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Model\Lead;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
-class LeadsApiTest extends \PHPUnit\Framework\TestCase
+class LeadsApiTest extends TestCase
 {
     /**
      * @var HttpClientMock
@@ -34,7 +35,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      */
     protected $leadApi;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->httpClient = new HttpClientMock();
 
@@ -52,7 +53,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      *
      * @group legacy
      */
-    public function testAddLead(Lead $lead)
+    public function testAddLead(Lead $lead): void
     {
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{"id":"TestIdString"}'));
 
@@ -73,7 +74,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      *
      * @group legacy
      */
-    public function testGetLead($lead)
+    public function testGetLead($lead): void
     {
         $lead->setId('TestId');
 
@@ -91,7 +92,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      *
      * @group legacy
      */
-    public function testGetAllLeads($leadsArray)
+    public function testGetAllLeads($leadsArray): void
     {
         $responseBody = [
             'has_more' => false,
@@ -116,7 +117,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
      *
      * @group legacy
      */
-    public function testUpdateLead($lead)
+    public function testUpdateLead($lead): void
     {
         $lead->setId('TestId');
         $originalLead = clone $lead;
@@ -136,7 +137,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
     /**
      * @group legacy
      */
-    public function testDeleteLead()
+    public function testDeleteLead(): void
     {
         $this->httpClient->addResponse(MessageFactoryDiscovery::find()->createResponse(200, null, [], '{}'));
 
@@ -152,7 +153,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
     /**
      * @return array
      */
-    public function leadProvider()
+    public function leadProvider(): array
     {
         return [
             [
@@ -164,7 +165,7 @@ class LeadsApiTest extends \PHPUnit\Framework\TestCase
     /**
      * @return array
      */
-    public function leadArrayProvider()
+    public function leadArrayProvider(): array
     {
         $lead = new Lead(['name' => 'Test Name', 'description' => 'Test Description']);
 

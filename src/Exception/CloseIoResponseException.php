@@ -37,11 +37,21 @@ class CloseIoResponseException extends CloseIoException
      * @param CloseIoResponse $response The response that threw the exception
      * @param Throwable|null  $previous The previous throwable used for the exception chaining
      */
-    public function __construct(CloseIoResponse $response, Throwable $previous = null)
+    final public function __construct(CloseIoResponse $response, Throwable $previous = null)
     {
         $this->response = $response;
 
-        parent::__construct($response->getDecodedBody()['error'] ?? self::UNKNOWN_ERROR_MESSAGE, 0, $previous);
+        $error = $response->getDecodedBody()['error'] ?? null;
+        $errorMessage = self::UNKNOWN_ERROR_MESSAGE;
+
+        if (is_array($error)) {
+            $errorMessage = $error['message'] ?? self::UNKNOWN_ERROR_MESSAGE;
+        }
+        if (is_string($error)) {
+            $errorMessage = $error;
+        }
+
+        parent::__construct($errorMessage , 0, $previous);
     }
 
     /**

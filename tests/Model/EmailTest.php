@@ -15,10 +15,11 @@ namespace Tests\LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Model\Email;
+use PHPUnit\Framework\TestCase;
 
-class EmailTest extends \PHPUnit\Framework\TestCase
+class EmailTest extends TestCase
 {
-    public function testInstantiateWithoutData()
+    public function testInstantiateWithoutData(): void
     {
         $email = new Email();
 
@@ -26,7 +27,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($email->getType());
     }
 
-    public function testInstantiateWithFullData()
+    public function testInstantiateWithFullData(): void
     {
         $email = new Email([
             'email' => 'user@test.com',
@@ -37,7 +38,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('home', $email->getType());
     }
 
-    public function testInstantiateWithPartialData()
+    public function testInstantiateWithPartialData(): void
     {
         $email = new Email([
             'email' => 'user@test.com',
@@ -47,7 +48,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($email->getType());
     }
 
-    public function testInstantiateWithUnrequiredData()
+    public function testInstantiateWithUnrequiredData(): void
     {
         $email = new Email([
             'extra' => 'demo',
@@ -57,7 +58,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($email->getType());
     }
 
-    public function testThrowExceptionForWrongEmailAddress()
+    public function testThrowExceptionForWrongEmailAddress(): void
     {
         $this->expectException(InvalidParamException::class);
 
@@ -69,14 +70,14 @@ class EmailTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider provideSerializedData
      */
-    public function testSerializedOutput(array $data, $json)
+    public function testSerializedOutput(array $data, $json): void
     {
         $email = new Email($data);
 
         $this->assertJsonStringEqualsJsonString($json, json_encode($email));
     }
 
-    public function provideSerializedData()
+    public function provideSerializedData(): array
     {
         return [
             [
