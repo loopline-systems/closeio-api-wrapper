@@ -46,8 +46,6 @@ class LeadsApiTest extends TestCase
     }
 
     /**
-     * @param Lead $lead
-     *
      * @description tests adding a lead using mock curl object
      * @dataProvider leadProvider
      *
@@ -150,9 +148,6 @@ class LeadsApiTest extends TestCase
         $this->assertEquals('DELETE', $lastRequest->getMethod());
     }
 
-    /**
-     * @return array
-     */
     public function leadProvider(): array
     {
         return [
@@ -162,9 +157,6 @@ class LeadsApiTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
     public function leadArrayProvider(): array
     {
         $lead = new Lead(['name' => 'Test Name', 'description' => 'Test Description']);

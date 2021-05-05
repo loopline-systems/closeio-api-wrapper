@@ -68,7 +68,6 @@ class CustomFieldApiTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider customFieldDataProvider
      *
      * @param CustomField $customField
@@ -92,9 +91,6 @@ class CustomFieldApiTest extends TestCase
         $this->assertEquals($originalCustomField->getId(), $response->getId());
     }
 
-    /**
-     * @return array
-     */
     public function customFieldDataProvider(): array
     {
         return [
@@ -104,9 +100,6 @@ class CustomFieldApiTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
     public function customFieldArrayProvider(): array
     {
         $customField = new CustomField(['name' => 'Test Name']);

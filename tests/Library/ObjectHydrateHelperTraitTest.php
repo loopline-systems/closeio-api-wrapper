@@ -23,7 +23,7 @@ class ObjectHydrateHelperTraitTest extends TestCase
      */
     private $testObject;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->testObject = new ObjectHydrateHelperDemo();
     }

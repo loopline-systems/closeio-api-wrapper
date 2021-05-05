@@ -72,8 +72,6 @@ class NoteActivityApi extends AbstractApi
      *
      * @param string   $id     The ID of the activity
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return NoteActivity
      */
     public function get(string $id, array $fields = []): NoteActivity
     {
@@ -86,8 +84,6 @@ class NoteActivityApi extends AbstractApi
      * Creates a new note activity using the given information.
      *
      * @param NoteActivity $activity The information of the activity to create
-     *
-     * @return NoteActivity
      */
     public function create(NoteActivity $activity): NoteActivity
     {
@@ -101,8 +97,6 @@ class NoteActivityApi extends AbstractApi
      * Updates the given note activity.
      *
      * @param NoteActivity $activity The activity to update
-     *
-     * @return NoteActivity
      */
     public function update(NoteActivity $activity): NoteActivity
     {

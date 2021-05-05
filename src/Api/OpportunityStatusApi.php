@@ -72,8 +72,6 @@ class OpportunityStatusApi extends AbstractApi
      *
      * @param string   $id     The ID of the opportunityStatus
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return OpportunityStatus
      */
     public function get(string $id, array $fields = []): OpportunityStatus
     {
@@ -86,8 +84,6 @@ class OpportunityStatusApi extends AbstractApi
      * Creates a new opportunity status using the given information.
      *
      * @param OpportunityStatus $opportunityStatus The opportunity status to create
-     *
-     * @return OpportunityStatus
      */
     public function create(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
@@ -101,8 +97,6 @@ class OpportunityStatusApi extends AbstractApi
      * Updates the given opportunity status.
      *
      * @param OpportunityStatus $opportunityStatus The opportunity status to update
-     *
-     * @return OpportunityStatus
      */
     public function update(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
@@ -135,13 +129,11 @@ class OpportunityStatusApi extends AbstractApi
      *
      * @param OpportunityStatus $opportunityStatus The opportunity status to create
      *
-     * @return OpportunityStatus
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
      */
     public function addStatus(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->create($opportunityStatus);
     }
@@ -151,13 +143,11 @@ class OpportunityStatusApi extends AbstractApi
      *
      * @param OpportunityStatus $opportunityStatus The opportunity status to update
      *
-     * @return OpportunityStatus
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateStatus(OpportunityStatus $opportunityStatus): OpportunityStatus
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($opportunityStatus);
     }
@@ -171,7 +161,7 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function getAllStatus(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -181,12 +171,10 @@ class OpportunityStatusApi extends AbstractApi
      * ID.
      *
      * @param string $opportunityStatusId The ID of the opportunityStatus
-     *
-     * @return OpportunityStatus
      */
     public function getStatus($opportunityStatusId): OpportunityStatus
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($opportunityStatusId);
     }
@@ -200,7 +188,7 @@ class OpportunityStatusApi extends AbstractApi
      */
     public function deleteStatus(string $id): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-status', ['id' => $id]));
     }

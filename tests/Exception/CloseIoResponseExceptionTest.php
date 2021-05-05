@@ -54,7 +54,7 @@ class CloseIoResponseExceptionTest extends TestCase
                     }
                 }',
                 'API call count exceeded for this period',
-            ]
+            ],
         ];
     }
 

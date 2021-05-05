@@ -46,7 +46,7 @@ final class Configuration
 
         $encodedBaseUrl = urlencode($baseUrl);
 
-        if (!filter_var($encodedBaseUrl, FILTER_VALIDATE_URL)) {
+        if (!filter_var($encodedBaseUrl, \FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException('The $baseUrl argument must be an absolute URL.');
         }
 
@@ -56,8 +56,6 @@ final class Configuration
 
     /**
      * Gets the URL of the server where the REST APIs are located.
-     *
-     * @return string
      */
     public function getBaseUrl(): string
     {
@@ -66,8 +64,6 @@ final class Configuration
 
     /**
      * Gets the API key used to authenticate with the server.
-     *
-     * @return string
      */
     public function getApiKey(): string
     {

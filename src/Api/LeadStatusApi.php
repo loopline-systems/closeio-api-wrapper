@@ -71,8 +71,6 @@ class LeadStatusApi extends AbstractApi
      *
      * @param string   $id     The ID of the lead status
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return LeadStatus
      */
     public function get(string $id, array $fields = []): LeadStatus
     {
@@ -85,8 +83,6 @@ class LeadStatusApi extends AbstractApi
      * Creates a new lead status using the given information.
      *
      * @param LeadStatus $leadStatus The information of the lead status to create
-     *
-     * @return LeadStatus
      */
     public function create(LeadStatus $leadStatus): LeadStatus
     {
@@ -100,8 +96,6 @@ class LeadStatusApi extends AbstractApi
      * Updates the given lead status.
      *
      * @param LeadStatus $leadStatus The lead status to update
-     *
-     * @return LeadStatus
      */
     public function update(LeadStatus $leadStatus): LeadStatus
     {
@@ -134,13 +128,11 @@ class LeadStatusApi extends AbstractApi
      *
      * @param LeadStatus $leadStatus The information of the lead status to create
      *
-     * @return LeadStatus
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
      */
     public function addStatus(LeadStatus $leadStatus): LeadStatus
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->create($leadStatus);
     }
@@ -150,13 +142,11 @@ class LeadStatusApi extends AbstractApi
      *
      * @param LeadStatus $leadStatus The lead status to update
      *
-     * @return LeadStatus
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateStatus(LeadStatus $leadStatus): LeadStatus
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($leadStatus);
     }
@@ -170,7 +160,7 @@ class LeadStatusApi extends AbstractApi
      */
     public function getAllStatus(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -180,13 +170,11 @@ class LeadStatusApi extends AbstractApi
      *
      * @param string $leadStatusId The ID of the lead status
      *
-     * @return LeadStatus
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getStatus(string $leadStatusId): LeadStatus
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($leadStatusId);
     }
@@ -200,7 +188,7 @@ class LeadStatusApi extends AbstractApi
      */
     public function deleteStatus(string $id): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-status', ['id' => $id]));
     }

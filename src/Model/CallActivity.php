@@ -18,8 +18,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class CallActivity extends Activity implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     const STATUS_COMPLETED = 'completed';
 

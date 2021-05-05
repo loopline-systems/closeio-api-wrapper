@@ -72,8 +72,6 @@ class EmailActivityApi extends AbstractApi
      *
      * @param string   $id     The ID of the activity
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return EmailActivity
      */
     public function get(string $id, array $fields = []): EmailActivity
     {
@@ -87,8 +85,6 @@ class EmailActivityApi extends AbstractApi
      *
      * @param EmailActivity $activity The information of the email activity to
      *                                create
-     *
-     * @return EmailActivity
      */
     public function create(EmailActivity $activity): EmailActivity
     {
@@ -102,8 +98,6 @@ class EmailActivityApi extends AbstractApi
      * Updates the given email activity.
      *
      * @param EmailActivity $activity The activity to update
-     *
-     * @return EmailActivity
      */
     public function update(EmailActivity $activity): EmailActivity
     {

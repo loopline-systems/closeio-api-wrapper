@@ -19,10 +19,6 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 trait ObjectHydrateHelperTrait
 {
     /**
-     * @param array $data
-     * @param array $nestedObjects
-     * @param array $method_mapper
-     *
      * @throws InvalidParamException
      */
     public function hydrate(array $data, array $nestedObjects = [], array $method_mapper = [])

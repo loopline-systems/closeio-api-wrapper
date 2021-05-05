@@ -19,8 +19,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Contact implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     /**
      * @var string
@@ -103,8 +103,6 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param Email $email
-     *
      * @return $this
      */
     public function addEmail(Email $email)
@@ -155,8 +153,6 @@ class Contact implements \JsonSerializable
     }
 
     /**
-     * @param Phone $phone
-     *
      * @return $this
      */
     public function addPhone(Phone $phone)

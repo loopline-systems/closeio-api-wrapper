@@ -20,13 +20,12 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Lead implements \JsonSerializable
 {
+    use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
     const LEAD_STATUS_POTENTIAL = 'Potential';
     const LEAD_STATUS_BAD_FIT = 'Bad Fit';
     const LEAD_STATUS_QUALIFIED = 'Qualified';
     const LEAD_STATUS_CUSTOMER = 'Customer';
-
-    use ObjectHydrateHelperTrait;
-    use JsonSerializableHelperTrait;
 
     /**
      * @var string
@@ -188,8 +187,6 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param Address $address
-     *
      * @return $this
      */
     public function addAddress(Address $address)
@@ -220,8 +217,6 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param Contact $contact
-     *
      * @return $this
      */
     public function addContact(Contact $contact)
@@ -517,7 +512,7 @@ class Lead implements \JsonSerializable
         $encodedUrl = urlencode($url);
 
         // validate url
-        if (filter_var($encodedUrl, FILTER_VALIDATE_URL)) {
+        if (filter_var($encodedUrl, \FILTER_VALIDATE_URL)) {
             $this->url = $encodedUrl;
         } else {
             throw new InvalidUrlException('"' . $encodedUrl . '" is not a valid URL');
@@ -649,7 +644,7 @@ class Lead implements \JsonSerializable
     public function __set(string $name, $value)
     {
         if (strpos($name, 'custom.') === 0) {
-            @trigger_error('Setting a custom field using the $object->$fieldName syntax is deprecated since version 0.8. Use the setCustomField() method instead.', E_USER_DEPRECATED);
+            @trigger_error('Setting a custom field using the $object->$fieldName syntax is deprecated since version 0.8. Use the setCustomField() method instead.', \E_USER_DEPRECATED);
 
             $this->custom[substr($name, 7)] = $value;
         } else {

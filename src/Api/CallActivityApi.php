@@ -74,8 +74,6 @@ class CallActivityApi extends AbstractApi
      *
      * @param string   $id     The ID of the activity
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return CallActivity
      */
     public function get(string $id, array $fields = []): CallActivity
     {
@@ -89,8 +87,6 @@ class CallActivityApi extends AbstractApi
      *
      * @param CallActivity $activity The information of the call activity
      *                               to create
-     *
-     * @return CallActivity
      */
     public function create(CallActivity $activity): CallActivity
     {
