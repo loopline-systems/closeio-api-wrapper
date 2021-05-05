@@ -27,6 +27,7 @@
         "php-http/discovery": "^1.6",
         "php-http/httplug": "^1.1|^2.0",
         "psr/http-message-implementation": "^1.0",
+        "symfony/polyfill-intl-idn": "^1.22",
         "symfony/polyfill-php74": "^1.22",
         "symfony/polyfill-php80": "^1.22",
         "symfony/polyfill-php81": "^1.22"
