@@ -44,11 +44,13 @@ final class Configuration
             throw new \InvalidArgumentException('The API key must not be an empty string.');
         }
 
-        if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+        $encodedBaseUrl = urlencode($baseUrl);
+
+        if (!filter_var($encodedBaseUrl, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException('The $baseUrl argument must be an absolute URL.');
         }
 
-        $this->baseUrl = $baseUrl;
+        $this->baseUrl = $encodedBaseUrl;
         $this->apiKey = $apiKey;
     }
 

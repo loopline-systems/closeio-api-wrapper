@@ -514,11 +514,13 @@ class Lead implements \JsonSerializable
      */
     public function setUrl($url)
     {
+        $encodedUrl = urlencode($url);
+
         // validate url
-        if (filter_var($url, FILTER_VALIDATE_URL)) {
-            $this->url = $url;
+        if (filter_var($encodedUrl, FILTER_VALIDATE_URL)) {
+            $this->url = $encodedUrl;
         } else {
-            throw new InvalidUrlException('"' . $url . '" is not a valid URL');
+            throw new InvalidUrlException('"' . $encodedUrl . '" is not a valid URL');
         }
 
         return $this;
