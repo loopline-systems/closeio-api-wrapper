@@ -10,7 +10,7 @@ final class UrlUtils
     {
         $host = parse_url($url, PHP_URL_HOST) ?: "";
 
-        $encodedHost = idn_to_ascii($host);
+        $encodedHost = idn_to_ascii($host, INTL_IDNA_VARIANT_UTS46);
         $url = str_replace($host, $encodedHost, $url);
 
         $path = parse_url($url, PHP_URL_PATH) ?: "";
