@@ -93,7 +93,7 @@ class ActivityApi extends AbstractApi
      */
     public function addNote(NoteActivity $activity)
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use NoteActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use NoteActivityApi::create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var NoteActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getNoteActivitiesApi();
@@ -113,7 +113,7 @@ class ActivityApi extends AbstractApi
      */
     public function addCall(CallActivity $activity)
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use CallActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use CallActivityApi::create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var CallActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getCallActivitiesApi();
@@ -133,7 +133,7 @@ class ActivityApi extends AbstractApi
      */
     public function addEmail(EmailActivity $activity)
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use EmailActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use EmailActivityApi::create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var EmailActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getEmailActivitiesApi();
@@ -152,7 +152,7 @@ class ActivityApi extends AbstractApi
      */
     public function getNotes(array $filters): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use NoteActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use NoteActivityApi::list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var NoteActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getNoteActivitiesApi();
@@ -171,7 +171,7 @@ class ActivityApi extends AbstractApi
      */
     public function getCalls(array $filters): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use CallActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use CallActivityApi::list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var CallActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getCallActivitiesApi();
@@ -190,7 +190,7 @@ class ActivityApi extends AbstractApi
      */
     public function getEmails(array $filters): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use EmailActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use EmailActivityApi::list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var EmailActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getEmailActivitiesApi();
@@ -209,7 +209,7 @@ class ActivityApi extends AbstractApi
      */
     public function getSmss(array $filters): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
@@ -222,13 +222,11 @@ class ActivityApi extends AbstractApi
      *
      * @param string $id The ID of the activity
      *
-     * @return SmsActivity
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::get() instead.
      */
     public function getSms(string $id): SmsActivity
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
@@ -241,13 +239,11 @@ class ActivityApi extends AbstractApi
      *
      * @param SmsActivity $activity The activity to update
      *
-     * @return SmsActivity
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::update() instead.
      */
     public function updateSms(SmsActivity $activity): SmsActivity
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
@@ -260,13 +256,11 @@ class ActivityApi extends AbstractApi
      *
      * @param SmsActivity $activity The information of the activity to create
      *
-     * @return SmsActivity
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use SmsActivityApi::create() instead.
      */
     public function addSms(SmsActivity $activity): SmsActivity
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         /** @var SmsActivityApi $apiHandler */
         $apiHandler = $this->closeIoApiWrapper->getSmsActivitiesApi();
@@ -283,7 +277,7 @@ class ActivityApi extends AbstractApi
      */
     public function deleteSms(string $activityId): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use SmsActivityApi::delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-sms', ['id' => $activityId]));
     }

@@ -68,8 +68,6 @@ class CustomFieldApi extends AbstractApi
      *
      * @param string   $id     The ID of the custom field
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return CustomField
      */
     public function get(string $id, array $fields = []): CustomField
     {
@@ -82,8 +80,6 @@ class CustomFieldApi extends AbstractApi
      * Creates a new custom field using the given information.
      *
      * @param CustomField $customField The information of the custom field to create
-     *
-     * @return CustomField
      */
     public function create(CustomField $customField): CustomField
     {
@@ -97,8 +93,6 @@ class CustomFieldApi extends AbstractApi
      * Updates the given custom field.
      *
      * @param CustomField $customField The custom field to update
-     *
-     * @return CustomField
      */
     public function update(CustomField $customField): CustomField
     {
@@ -136,7 +130,7 @@ class CustomFieldApi extends AbstractApi
      */
     public function getAllCustomFields(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -146,13 +140,11 @@ class CustomFieldApi extends AbstractApi
      *
      * @param CustomField $customField The custom field to update
      *
-     * @return CustomField
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateCustomField(CustomField $customField): CustomField
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($customField);
     }

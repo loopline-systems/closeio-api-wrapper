@@ -18,8 +18,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class SmsActivity extends Activity implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     const DIRECTION_OUTBOUND = 'outbound';
     const DIRECTION_INBOUND = 'inbound';

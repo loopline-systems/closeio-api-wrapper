@@ -19,10 +19,9 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Url implements \JsonSerializable
 {
-    const URL_TYPE_URL = 'url';
-
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
+    const URL_TYPE_URL = 'url';
 
     /**
      * @var string

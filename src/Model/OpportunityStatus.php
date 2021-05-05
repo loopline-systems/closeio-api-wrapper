@@ -19,8 +19,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class OpportunityStatus implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     const OPPORTUNITY_TYPE_ACTIVE = 'active';
     const OPPORTUNITY_TYPE_WON = 'won';

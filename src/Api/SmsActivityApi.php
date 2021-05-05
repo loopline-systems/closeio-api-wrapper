@@ -72,8 +72,6 @@ class SmsActivityApi extends AbstractApi
      *
      * @param string   $id     The ID of the activity
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return SmsActivity
      */
     public function get(string $id, array $fields = []): SmsActivity
     {
@@ -86,8 +84,6 @@ class SmsActivityApi extends AbstractApi
      * Creates a new SMS activity using the given information.
      *
      * @param SmsActivity $activity The information of the activity to create
-     *
-     * @return SmsActivity
      */
     public function create(SmsActivity $activity): SmsActivity
     {
@@ -101,8 +97,6 @@ class SmsActivityApi extends AbstractApi
      * Updates the given SMS activity.
      *
      * @param SmsActivity $activity The activity to update
-     *
-     * @return SmsActivity
      */
     public function update(SmsActivity $activity): SmsActivity
     {

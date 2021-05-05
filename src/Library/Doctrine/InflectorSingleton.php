@@ -2,8 +2,8 @@
 
 namespace LooplineSystems\CloseIoApiWrapper\Library\Doctrine;
 
-use Doctrine\Inflector\InflectorFactory;
 use Doctrine\Inflector\Inflector;
+use Doctrine\Inflector\InflectorFactory;
 
 final class InflectorSingleton
 {
@@ -12,7 +12,9 @@ final class InflectorSingleton
      */
     private static $instance;
 
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * @return Inflector

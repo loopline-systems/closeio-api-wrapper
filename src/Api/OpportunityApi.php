@@ -77,8 +77,6 @@ class OpportunityApi extends AbstractApi
      *
      * @param string   $id     The ID of the opportunity
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return Opportunity
      */
     public function get(string $id, array $fields = []): Opportunity
     {
@@ -92,8 +90,6 @@ class OpportunityApi extends AbstractApi
      *
      * @param Opportunity $opportunity The information of the opportunity to
      *                                 create
-     *
-     * @return Opportunity
      */
     public function create(Opportunity $opportunity): Opportunity
     {
@@ -107,8 +103,6 @@ class OpportunityApi extends AbstractApi
      * Updates the given opportunity.
      *
      * @param Opportunity $opportunity The opportunity to update
-     *
-     * @return Opportunity
      */
     public function update(Opportunity $opportunity): Opportunity
     {
@@ -145,7 +139,7 @@ class OpportunityApi extends AbstractApi
      */
     public function getAllOpportunities(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -155,13 +149,11 @@ class OpportunityApi extends AbstractApi
      *
      * @param string $opportunityId The ID of the opportunity
      *
-     * @return Opportunity
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getOpportunity($opportunityId): Opportunity
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($opportunityId);
     }
@@ -172,13 +164,11 @@ class OpportunityApi extends AbstractApi
      * @param Opportunity $opportunity The information of the opportunity to
      *                                 create
      *
-     * @return Opportunity
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
      */
     public function addOpportunity(Opportunity $opportunity): Opportunity
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->create($opportunity);
     }
@@ -187,12 +177,10 @@ class OpportunityApi extends AbstractApi
      * Updates the given opportunity.
      *
      * @param Opportunity $opportunity The opportunity to update
-     *
-     * @return Opportunity
      */
     public function updateOpportunity(Opportunity $opportunity): Opportunity
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($opportunity);
     }
@@ -206,14 +194,12 @@ class OpportunityApi extends AbstractApi
      */
     public function deleteOpportunity(string $id): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-opportunity', ['id' => $id]));
     }
 
     /**
-     * @param array $params
-     *
      * @return string
      */
     private function buildQueryString(array $params)

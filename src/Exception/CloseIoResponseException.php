@@ -44,14 +44,14 @@ class CloseIoResponseException extends CloseIoException
         $error = $response->getDecodedBody()['error'] ?? null;
         $errorMessage = self::UNKNOWN_ERROR_MESSAGE;
 
-        if (is_array($error)) {
+        if (\is_array($error)) {
             $errorMessage = $error['message'] ?? self::UNKNOWN_ERROR_MESSAGE;
         }
-        if (is_string($error)) {
+        if (\is_string($error)) {
             $errorMessage = $error;
         }
 
-        parent::__construct($errorMessage , 0, $previous);
+        parent::__construct($errorMessage, 0, $previous);
     }
 
     /**
@@ -59,8 +59,6 @@ class CloseIoResponseException extends CloseIoException
      * response from Close.io.
      *
      * @param CloseIoResponse $response The response that threw the exception
-     *
-     * @return self
      */
     public static function create(CloseIoResponse $response): self
     {
@@ -80,8 +78,6 @@ class CloseIoResponseException extends CloseIoException
 
     /**
      * Gets the response that threw the exception.
-     *
-     * @return CloseIoResponse
      */
     public function getResponse(): CloseIoResponse
     {

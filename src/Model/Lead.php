@@ -17,16 +17,16 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidUrlException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\UrlUtils;
 
 class Lead implements \JsonSerializable
 {
+    use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
     const LEAD_STATUS_POTENTIAL = 'Potential';
     const LEAD_STATUS_BAD_FIT = 'Bad Fit';
     const LEAD_STATUS_QUALIFIED = 'Qualified';
     const LEAD_STATUS_CUSTOMER = 'Customer';
-
-    use ObjectHydrateHelperTrait;
-    use JsonSerializableHelperTrait;
 
     /**
      * @var string
@@ -188,8 +188,6 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param Address $address
-     *
      * @return $this
      */
     public function addAddress(Address $address)
@@ -220,8 +218,6 @@ class Lead implements \JsonSerializable
     }
 
     /**
-     * @param Contact $contact
-     *
      * @return $this
      */
     public function addContact(Contact $contact)
@@ -514,12 +510,11 @@ class Lead implements \JsonSerializable
      */
     public function setUrl($url)
     {
-        // validate url
-        if (filter_var($url, FILTER_VALIDATE_URL)) {
-            $this->url = $url;
-        } else {
+        if (!UrlUtils::validate($url)) {
             throw new InvalidUrlException('"' . $url . '" is not a valid URL');
         }
+
+        $this->url = $url;
 
         return $this;
     }
@@ -647,7 +642,7 @@ class Lead implements \JsonSerializable
     public function __set(string $name, $value)
     {
         if (strpos($name, 'custom.') === 0) {
-            @trigger_error('Setting a custom field using the $object->$fieldName syntax is deprecated since version 0.8. Use the setCustomField() method instead.', E_USER_DEPRECATED);
+            @trigger_error('Setting a custom field using the $object->$fieldName syntax is deprecated since version 0.8. Use the setCustomField() method instead.', \E_USER_DEPRECATED);
 
             $this->custom[substr($name, 7)] = $value;
         } else {
