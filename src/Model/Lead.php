@@ -17,6 +17,7 @@ use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidParamException;
 use LooplineSystems\CloseIoApiWrapper\Library\Exception\InvalidUrlException;
 use LooplineSystems\CloseIoApiWrapper\Library\JsonSerializableHelperTrait;
 use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
+use LooplineSystems\CloseIoApiWrapper\Library\UrlUtils;
 
 class Lead implements \JsonSerializable
 {
@@ -515,7 +516,7 @@ class Lead implements \JsonSerializable
     public function setUrl($url)
     {
         // validate url
-        if (filter_var($url, FILTER_VALIDATE_URL)) {
+        if (!UrlUtils::validate($url)) {
             $this->url = $url;
         } else {
             throw new InvalidUrlException('"' . $url . '" is not a valid URL');

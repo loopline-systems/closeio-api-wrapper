@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace LooplineSystems\CloseIoApiWrapper;
 
+use LooplineSystems\CloseIoApiWrapper\Library\UrlUtils;
+
 /**
  * This class stores the configuration of the Close.io client.
  *
@@ -44,7 +46,7 @@ final class Configuration
             throw new \InvalidArgumentException('The API key must not be an empty string.');
         }
 
-        if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+        if (!UrlUtils::validate($baseUrl)) {
             throw new \InvalidArgumentException('The $baseUrl argument must be an absolute URL.');
         }
 
