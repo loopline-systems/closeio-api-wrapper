@@ -19,8 +19,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Phone implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     const PHONE_TYPE_HOME = 'home';
     const PHONE_TYPE_OFFICE = 'office';

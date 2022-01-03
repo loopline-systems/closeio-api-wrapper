@@ -111,105 +111,66 @@ class CloseIoApiWrapper
         $this->userApi = new UserApi($client);
     }
 
-    /**
-     * @return LeadApi
-     */
     public function getLeadApi(): LeadApi
     {
         return $this->leadApi;
     }
 
-    /**
-     * @return CustomFieldApi
-     */
     public function getCustomFieldApi(): CustomFieldApi
     {
         return $this->customFieldApi;
     }
 
-    /**
-     * @return OpportunityApi
-     */
     public function getOpportunityApi(): OpportunityApi
     {
         return $this->opportunityApi;
     }
 
-    /**
-     * @return LeadStatusApi
-     */
     public function getLeadStatusesApi(): LeadStatusApi
     {
         return $this->leadStatusesApi;
     }
 
-    /**
-     * @return OpportunityStatusApi
-     */
     public function getOpportunityStatusesApi(): OpportunityStatusApi
     {
         return $this->opportunityStatusesApi;
     }
 
-    /**
-     * @return ContactApi
-     */
     public function getContactApi(): ContactApi
     {
         return $this->contactApi;
     }
 
-    /**
-     * @return ActivityApi
-     */
     public function getActivitiesApi(): ActivityApi
     {
         return $this->activitiesApi;
     }
 
-    /**
-     * @return CallActivityApi
-     */
     public function getCallActivitiesApi(): CallActivityApi
     {
         return $this->callActivitiesApi;
     }
 
-    /**
-     * @return SmsActivityApi
-     */
     public function getSmsActivitiesApi(): SmsActivityApi
     {
         return $this->smsActivitiesApi;
     }
 
-    /**
-     * @return EmailActivityApi
-     */
     public function getEmailActivitiesApi(): EmailActivityApi
     {
         return $this->emailActivitiesApi;
     }
 
-    /**
-     * @return NoteActivityApi
-     */
     public function getNoteActivitiesApi(): NoteActivityApi
     {
         return $this->noteActivitiesApi;
     }
 
-    /**
-     * @return TaskApi
-     */
     public function getTaskApi(): TaskApi
     {
         return $this->taskApi;
     }
 
-    /**
-     * @return UserApi
-     */
     public function getUserApi(): UserApi
     {
         return $this->userApi;

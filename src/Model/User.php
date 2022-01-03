@@ -18,8 +18,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class User implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     /**
      * @var string

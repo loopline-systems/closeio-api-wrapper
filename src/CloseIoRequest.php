@@ -67,8 +67,6 @@ class CloseIoRequest
 
     /**
      * Gets the HTTP method for this request.
-     *
-     * @return string
      */
     public function getMethod(): string
     {
@@ -77,8 +75,6 @@ class CloseIoRequest
 
     /**
      * Gets the REST endpoint for this request.
-     *
-     * @return string
      */
     public function getEndpoint(): string
     {
@@ -87,8 +83,6 @@ class CloseIoRequest
 
     /**
      * Gets the parameters to send in the query string.
-     *
-     * @return array
      */
     public function getQueryParams(): array
     {
@@ -108,8 +102,6 @@ class CloseIoRequest
     /**
      * Gets the parameters to send as body of this request (only POST and PUT
      * HTTP methods can contain a body).
-     *
-     * @return array
      */
     public function getBodyParams(): array
     {
@@ -128,8 +120,6 @@ class CloseIoRequest
 
     /**
      * Gets the URL for this request.
-     *
-     * @return string
      */
     public function getUrl(): string
     {
@@ -141,8 +131,6 @@ class CloseIoRequest
      *
      * @param string $url    The URL the params will be appended to
      * @param array  $params The params to append to the URL
-     *
-     * @return string
      */
     protected function appendParamsToUrl(string $url, array $params): string
     {

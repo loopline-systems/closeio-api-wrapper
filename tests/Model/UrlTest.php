@@ -14,10 +14,11 @@ declare(strict_types=1);
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Model\Url;
+use PHPUnit\Framework\TestCase;
 
-class UrlTest extends \PHPUnit\Framework\TestCase
+class UrlTest extends TestCase
 {
-    public function testInstantiateWithoutData()
+    public function testInstantiateWithoutData(): void
     {
         $url = new Url();
 
@@ -25,7 +26,7 @@ class UrlTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($url->getUrl());
     }
 
-    public function testInstantiateWithFullData()
+    public function testInstantiateWithFullData(): void
     {
         $url = new Url([
             'url' => 'https://www.test.com',
@@ -36,7 +37,7 @@ class UrlTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('https://www.test.com', $url->getUrl());
     }
 
-    public function testInstantiateWithPartialData()
+    public function testInstantiateWithPartialData(): void
     {
         $url = new Url([
             'url' => 'https://www.test.com',
@@ -46,7 +47,7 @@ class UrlTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('https://www.test.com', $url->getUrl());
     }
 
-    public function testInstantiateWithUnrequiredData()
+    public function testInstantiateWithUnrequiredData(): void
     {
         $url = new Url([
             'extra' => 'demo',
@@ -59,14 +60,14 @@ class UrlTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider provideSerializedData
      */
-    public function testSerializedOutput(array $data, $json)
+    public function testSerializedOutput(array $data, $json): void
     {
         $url = new Url($data);
 
         $this->assertJsonStringEqualsJsonString($json, json_encode($url));
     }
 
-    public function provideSerializedData()
+    public function provideSerializedData(): array
     {
         return [
             [

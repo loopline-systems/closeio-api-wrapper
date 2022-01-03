@@ -19,8 +19,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Activity implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     const ACTIVITY_TYPE_CALL = 'Call';
     const ACTIVITY_TYPE_EMAIL = 'Email';

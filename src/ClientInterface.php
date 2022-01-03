@@ -28,15 +28,11 @@ interface ClientInterface
 {
     /**
      * Gets the client configuration.
-     *
-     * @return Configuration
      */
     public function getConfiguration(): Configuration;
 
     /**
      * Gets the HTTP client, configured to authenticate with the server.
-     *
-     * @return HttpClientInterface
      */
     public function getHttpClient(): HttpClientInterface;
 
@@ -45,8 +41,6 @@ interface ClientInterface
      *
      * @param string $endpoint    The REST endpoint for the request
      * @param array  $queryParams The parameters to send in the query string
-     *
-     * @return CloseIoResponse
      *
      * @throws CloseIoException         If an error happens while processing the request
      * @throws CloseIoResponseException If the response errored
@@ -61,8 +55,6 @@ interface ClientInterface
      * @param array  $queryParams The parameters to send in the query string
      * @param array  $bodyParams  The parameters to send as body of the request
      *
-     * @return CloseIoResponse
-     *
      * @throws CloseIoException         If an error happens while processing the request
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
@@ -76,8 +68,6 @@ interface ClientInterface
      * @param array  $queryParams The parameters to send in the query string
      * @param array  $bodyParams  The parameters to send as body of the request
      *
-     * @return CloseIoResponse
-     *
      * @throws CloseIoException         If an error happens while processing the request
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
@@ -90,8 +80,6 @@ interface ClientInterface
      * @param string $endpoint    The REST endpoint for the request
      * @param array  $queryParams The parameters to send in the query string
      *
-     * @return CloseIoResponse
-     *
      * @throws CloseIoException         If an error happens while processing the request
      * @throws CloseIoResponseException If the response errored
      * @throws JsonException            If the response body could not be parsed as JSON
@@ -102,8 +90,6 @@ interface ClientInterface
      * Sends a request to the server and returns the response.
      *
      * @param CloseIoRequest $request The request
-     *
-     * @return CloseIoResponse
      *
      * @throws CloseIoException         If an error happens while processing the request
      * @throws CloseIoResponseException If the response errored

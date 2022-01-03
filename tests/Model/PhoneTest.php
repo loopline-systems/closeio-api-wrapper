@@ -14,10 +14,11 @@ declare(strict_types=1);
 namespace Tests\LooplineSystems\CloseIoApiWrapper\Model;
 
 use LooplineSystems\CloseIoApiWrapper\Model\Phone;
+use PHPUnit\Framework\TestCase;
 
-class PhoneTest extends \PHPUnit\Framework\TestCase
+class PhoneTest extends TestCase
 {
-    public function testInstantiateWithoutData()
+    public function testInstantiateWithoutData(): void
     {
         $phone = new Phone();
 
@@ -26,7 +27,7 @@ class PhoneTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($phone->getType());
     }
 
-    public function testInstantiateWithFullData()
+    public function testInstantiateWithFullData(): void
     {
         $phone = new Phone([
             'phone' => '+393331234567',
@@ -39,7 +40,7 @@ class PhoneTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('mobile', $phone->getType());
     }
 
-    public function testInstantiateWithPartialData()
+    public function testInstantiateWithPartialData(): void
     {
         $phone = new Phone([
             'phone' => '+3902098765',
@@ -51,7 +52,7 @@ class PhoneTest extends \PHPUnit\Framework\TestCase
         $this->assertSame('mobile', $phone->getType());
     }
 
-    public function testInstantiateWithUnrequiredData()
+    public function testInstantiateWithUnrequiredData(): void
     {
         $phone = new Phone([
             'extra' => 'demo',
@@ -65,14 +66,14 @@ class PhoneTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider provideSerializedData
      */
-    public function testSerializedOutput(array $data, $json)
+    public function testSerializedOutput(array $data, $json): void
     {
         $phone = new Phone($data);
 
         $this->assertJsonStringEqualsJsonString($json, json_encode($phone));
     }
 
-    public function provideSerializedData()
+    public function provideSerializedData(): array
     {
         return [
             [

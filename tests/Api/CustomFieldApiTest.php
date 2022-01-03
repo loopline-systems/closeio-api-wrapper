@@ -20,8 +20,9 @@ use LooplineSystems\CloseIoApiWrapper\Client;
 use LooplineSystems\CloseIoApiWrapper\CloseIoApiWrapper;
 use LooplineSystems\CloseIoApiWrapper\Configuration;
 use LooplineSystems\CloseIoApiWrapper\Model\CustomField;
+use PHPUnit\Framework\TestCase;
 
-class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
+class CustomFieldApiTest extends TestCase
 {
     /**
      * @var HttpClientMock
@@ -33,7 +34,7 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
      */
     protected $customFieldApi;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->httpClient = new HttpClientMock();
 
@@ -50,7 +51,7 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
      *
      * @group legacy
      */
-    public function testGetCustomFields($customFieldArray)
+    public function testGetCustomFields($customFieldArray): void
     {
         $responseBody = [
             'has_more' => false,
@@ -67,14 +68,13 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @test
      * @dataProvider customFieldDataProvider
      *
      * @param CustomField $customField
      *
      * @group legacy
      */
-    public function testUpdateCustomField($customField)
+    public function testUpdateCustomField($customField): void
     {
         $customField->setId('TestId');
         $originalCustomField = clone $customField;
@@ -91,10 +91,7 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($originalCustomField->getId(), $response->getId());
     }
 
-    /**
-     * @return array
-     */
-    public function customFieldDataProvider()
+    public function customFieldDataProvider(): array
     {
         return [
             [
@@ -103,10 +100,7 @@ class CustomFieldApiTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function customFieldArrayProvider()
+    public function customFieldArrayProvider(): array
     {
         $customField = new CustomField(['name' => 'Test Name']);
 

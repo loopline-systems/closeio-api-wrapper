@@ -69,8 +69,6 @@ class CloseIoResponse
 
     /**
      * Gets the original request that returned this response.
-     *
-     * @return CloseIoRequest
      */
     public function getRequest(): CloseIoRequest
     {
@@ -79,8 +77,6 @@ class CloseIoResponse
 
     /**
      * Gets the HTTP status code returned by this response.
-     *
-     * @return int
      */
     public function getHttpStatusCode(): int
     {
@@ -89,8 +85,6 @@ class CloseIoResponse
 
     /**
      * Gets the body content returned by this response.
-     *
-     * @return string|null
      */
     public function getBody(): ?string
     {
@@ -99,8 +93,6 @@ class CloseIoResponse
 
     /**
      * Gets the decoded body response.
-     *
-     * @return array
      */
     public function getDecodedBody(): array
     {
@@ -109,8 +101,6 @@ class CloseIoResponse
 
     /**
      * Gets whether the Close.io server returned an error.
-     *
-     * @return bool
      */
     public function hasError(): bool
     {
@@ -119,8 +109,6 @@ class CloseIoResponse
 
     /**
      * Gets the HTTP headers returned by this response.
-     *
-     * @return array
      */
     public function getHeaders(): array
     {
@@ -142,7 +130,7 @@ class CloseIoResponse
 
         $this->decodedBody = json_decode($this->body, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) {
+        if (json_last_error() !== \JSON_ERROR_NONE) {
             throw new JsonException('The body of the response could not be decoded as JSON.');
         }
 

@@ -29,7 +29,7 @@ class ConfigurationTest extends TestCase
     /**
      * @dataProvider serverOptionIsValidatedCorrectly
      */
-    public function testServerOptionIsValidatedCorrectly(string $baseUrl, bool $isValid)
+    public function testServerOptionIsValidatedCorrectly(string $baseUrl, bool $isValid): void
     {
         if ($isValid) {
             $this->expectNotToPerformAssertions();

@@ -70,8 +70,6 @@ class ContactApi extends AbstractApi
      *
      * @param string   $id     The ID of the contact
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return Contact
      */
     public function get(string $id, array $fields = []): Contact
     {
@@ -84,8 +82,6 @@ class ContactApi extends AbstractApi
      * Creates a new contact using the given information.
      *
      * @param Contact $contact The information of the contact to create
-     *
-     * @return Contact
      */
     public function create(Contact $contact): Contact
     {
@@ -99,8 +95,6 @@ class ContactApi extends AbstractApi
      * Updates the given contact.
      *
      * @param Contact $contact The contact to update
-     *
-     * @return Contact
      */
     public function update(Contact $contact): Contact
     {
@@ -137,7 +131,7 @@ class ContactApi extends AbstractApi
      */
     public function getAllContacts(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -147,13 +141,11 @@ class ContactApi extends AbstractApi
      *
      * @param string $contactId The ID of the contact
      *
-     * @return Contact
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getContact($contactId): Contact
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($contactId);
     }
@@ -163,13 +155,11 @@ class ContactApi extends AbstractApi
      *
      * @param Contact $contact The information of the contact to create
      *
-     * @return Contact
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
      */
     public function addContact(Contact $contact): Contact
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->create($contact);
     }
@@ -179,13 +169,11 @@ class ContactApi extends AbstractApi
      *
      * @param Contact $contact The contact to update
      *
-     * @return Contact
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateContact(Contact $contact): Contact
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($contact);
     }
@@ -199,7 +187,7 @@ class ContactApi extends AbstractApi
      */
     public function deleteContact(string $id): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-contact', ['id' => $id]));
     }

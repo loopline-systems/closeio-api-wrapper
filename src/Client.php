@@ -143,7 +143,7 @@ final class Client implements ClientInterface
 
             foreach ($params as $name => $value) {
                 if ($value instanceof \DateTimeInterface) {
-                    $params[$name] = $value->format(DATE_ATOM);
+                    $params[$name] = $value->format(\DATE_ATOM);
                 }
             }
 
@@ -173,8 +173,6 @@ final class Client implements ClientInterface
      * the Basic Auth.
      *
      * @param HttpClientInterface $httpClient The HTTP client to decorate
-     *
-     * @return HttpClientInterface
      */
     private function createHttpClientInstance(HttpClientInterface $httpClient): HttpClientInterface
     {

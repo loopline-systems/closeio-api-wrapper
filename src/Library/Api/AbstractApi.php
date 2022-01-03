@@ -48,7 +48,6 @@ abstract class AbstractApi
 
     /**
      * @param string $urlKey
-     * @param array  $replacements
      *
      * @return mixed|string
      */

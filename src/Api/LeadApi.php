@@ -74,8 +74,6 @@ class LeadApi extends AbstractApi
      *
      * @param string   $id     The ID of the lead
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return Lead
      */
     public function get(string $id, array $fields = []): Lead
     {
@@ -88,8 +86,6 @@ class LeadApi extends AbstractApi
      * Creates a new lead using the given information.
      *
      * @param Lead $lead The information of the lead to create
-     *
-     * @return Lead
      *
      * @throws InvalidNewLeadPropertyException
      */
@@ -107,8 +103,6 @@ class LeadApi extends AbstractApi
      * Updates the given lead.
      *
      * @param Lead $lead The lead to update
-     *
-     * @return Lead
      */
     public function update(Lead $lead): Lead
     {
@@ -165,7 +159,7 @@ class LeadApi extends AbstractApi
      */
     public function getAllLeads(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -181,7 +175,7 @@ class LeadApi extends AbstractApi
      */
     public function findLeads(array $queryParams): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list(0, self::MAX_ITEMS_PER_REQUEST, $queryParams);
     }
@@ -191,13 +185,11 @@ class LeadApi extends AbstractApi
      *
      * @param string $id The ID of the lead
      *
-     * @return Lead
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead.
      */
     public function getLead(string $id): Lead
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($id);
     }
@@ -207,13 +199,11 @@ class LeadApi extends AbstractApi
      *
      * @param Lead $lead The information of the lead to create
      *
-     * @return Lead
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
      */
     public function addLead(Lead $lead): Lead
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->create($lead);
     }
@@ -223,13 +213,11 @@ class LeadApi extends AbstractApi
      *
      * @param Lead $lead The lead to update
      *
-     * @return Lead
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateLead(Lead $lead): Lead
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($lead);
     }
@@ -243,14 +231,12 @@ class LeadApi extends AbstractApi
      */
     public function deleteLead(string $id): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-lead', ['id' => $id]));
     }
 
     /**
-     * @param Lead $lead
-     *
      * @throws InvalidNewLeadPropertyException
      */
     public function validateLeadForPost(Lead $lead)

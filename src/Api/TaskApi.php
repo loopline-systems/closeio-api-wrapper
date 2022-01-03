@@ -70,8 +70,6 @@ class TaskApi extends AbstractApi
      *
      * @param string   $id     The ID of the task
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return Task
      */
     public function get(string $id, array $fields = []): Task
     {
@@ -84,8 +82,6 @@ class TaskApi extends AbstractApi
      * Creates a new task using the given information.
      *
      * @param Task $task The information of the task to create
-     *
-     * @return Task
      */
     public function create(Task $task): Task
     {
@@ -99,8 +95,6 @@ class TaskApi extends AbstractApi
      * Updates the given task.
      *
      * @param Task $task The task to update
-     *
-     * @return Task
      */
     public function update(Task $task): Task
     {
@@ -145,13 +139,11 @@ class TaskApi extends AbstractApi
      *
      * @param string $id The ID of the task
      *
-     * @return Task
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getTask($id): Task
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($id);
     }
@@ -161,13 +153,11 @@ class TaskApi extends AbstractApi
      *
      * @param Task $task The information of the task to create
      *
-     * @return Task
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use create() instead
      */
     public function addTask(Task $task): Task
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use create() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->create($task);
     }
@@ -177,13 +167,11 @@ class TaskApi extends AbstractApi
      *
      * @param Task $task The task to update
      *
-     * @return Task
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use update() instead
      */
     public function updateTask(Task $task): Task
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use update() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->update($task);
     }
@@ -197,7 +185,7 @@ class TaskApi extends AbstractApi
      */
     public function deleteTask($id): void
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use delete() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         $this->client->delete($this->prepareUrlForKey('delete-task', ['id' => $id]));
     }

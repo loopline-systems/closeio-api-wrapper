@@ -69,8 +69,6 @@ class UserApi extends AbstractApi
      *
      * @param string   $id     The ID of the user
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return User
      */
     public function get(string $id, array $fields = []): User
     {
@@ -83,8 +81,6 @@ class UserApi extends AbstractApi
      * Gets the information about the current logged-in user.
      *
      * @param string[] $fields The subset of fields to get (defaults to all)
-     *
-     * @return User
      */
     public function getCurrent(array $fields = []): User
     {
@@ -96,13 +92,11 @@ class UserApi extends AbstractApi
     /**
      * Gets the information about the current logged-in user.
      *
-     * @return User
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use getCurrent() instead
      */
     public function getCurrentUser(): User
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use getCurrent() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use getCurrent() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->getCurrent();
     }
@@ -116,7 +110,7 @@ class UserApi extends AbstractApi
      */
     public function getAllUsers(): array
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use list() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->list();
     }
@@ -126,13 +120,11 @@ class UserApi extends AbstractApi
      *
      * @param string $id The ID of the user
      *
-     * @return User
-     *
      * @deprecated since version 0.8, to be removed in 0.9. Use get() instead
      */
     public function getUser(string $id): User
     {
-        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The %s() method is deprecated since version 0.8. Use get() instead.', __METHOD__), \E_USER_DEPRECATED);
 
         return $this->get($id);
     }

@@ -19,8 +19,8 @@ use LooplineSystems\CloseIoApiWrapper\Library\ObjectHydrateHelperTrait;
 
 class Email implements \JsonSerializable
 {
-    use ObjectHydrateHelperTrait;
     use JsonSerializableHelperTrait;
+    use ObjectHydrateHelperTrait;
 
     const EMAIL_TYPE_HOME = 'home';
     const EMAIL_TYPE_OFFICE = 'office';
@@ -65,7 +65,7 @@ class Email implements \JsonSerializable
      */
     public function setEmail($email)
     {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
             throw new InvalidParamException('Invalid email format: "' . $email . '"');
         } else {
             $this->email = $email;
