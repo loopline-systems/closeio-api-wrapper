@@ -13,6 +13,13 @@ closeio-api-wrapper
 The CloseIo API Wrapper is a package that allows you to access in an object
 oriented way the Close.io REST APIs and fetch or create data.
 
+Archived!
+------------
+
+Unfortunately as most of the original developers on this project are no longer with Loopline, or dealing with close.io we've taken the decision to archive it. This way it should be clear that the repository is not being maintained. For anyone who is interested in maintaining it please fork away and we wish you good luck!
+
+If you want a bit more info on the decision to archive it you can see  https://github.com/loopline-systems/closeio-api-wrapper/issues/122
+
 Installation
 ------------
 
